@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 ## INFO ########################################################################
 ##                                                                            ##
-##                   Python and Cython Syntax Highlighters                    ##
+##                         Coconut Syntax Highlighter                         ##
 ##                   =====================================                    ##
 ##                                                                            ##
-##                       Version: 2.0.00.081 (20141101)                       ##
-##                               File: build.py                               ##
+##                       Version: 2.0.00.015 (20141006)                       ##
+##                            File: src/build.py                              ##
 ##                                                                            ##
 ##            For more information about the project, please visit            ##
 ##                   <https://github.com/petervaro/python>.                   ##
 ##                    Copyright (C) 2013 - 2014 Peter Varo                    ##
+##                   <https://github.com/evhub/sublime-coconut>.              ##
+##                    Copyright (C) 2016 Evan Hubinger                        ##
 ##                                                                            ##
 ##  This program is free software: you can redistribute it and/or modify it   ##
 ##   under the terms of the GNU General Public License as published by the    ##
@@ -62,48 +64,22 @@ except ImportError:
 
 #------------------------------------------------------------------------------#
 # Import user modules
-from src.python  import syntax as py_syntax
-from src.cython  import syntax as cy_syntax
-from src.gloom   import style  as gl_style
+from src.coconut  import syntax as coc_syntax
 
 # I/O Details of languages and themes
-py_details = {'name' : 'Python3',
-              'path' : LANG_PATH,
-              'scope': 'python.3',
-              'comments' : {'lines': '# '},
-              'test_name': 'Python3_TEST',
-              'test_path': '~/Library/Application Support/Sublime Text 3/'
-                           'Packages/User/Python3_TEST'}
-
-cy_details = {'name' : 'Cython',
-              'path' : LANG_PATH,
-              'scope': 'cython',
-              'comments' : {'lines': '# '},
-              'test_name': 'Cython_TEST',
-              'test_path': '~/Library/Application Support/Sublime Text 3/'
-                           'Packages/User/Cython_TEST'}
-
-gl_details = {'name': 'Gloom',
-              'path': THEME_PATH,
-              'test_name': 'Gloom_TEST',
-              'test_path': '~/Library/Application Support/Sublime Text 3/'
-                           'Packages/User/Gloom_TEST'}
-
-# NOTE: Old path to theme files => DO NOT SUPPORT IT:
-# '~/Library/Application Support/Sublime Text 3/Packages/Color Scheme - Default'
+coc_details = {
+    'name' : 'Coconut',
+    'path' : LANG_PATH,
+    'scope': 'coconut',
+    'comments' : {'lines': '# '},
+    'test_name': 'Coconut_TEST',
+    'test_path': '~/Library/Application Support/Sublime Text 3/Packages/User/Coconut_TEST'
+}
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 # Process language files
-for details, syntax in zip((py_details, cy_details), (py_syntax, cy_syntax)):
-    # Setup names and locations
-    lang = Language(**details)
-    # Convert and save language file
-    lang.from_dict(syntax)
-    lang.write()
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 # Setup names and locations
-theme = Theme(**gl_details)
-# Convert and save theme file
-theme.from_dict(gl_style)
-theme.write()
+lang = Language(**coc_details)
+# Convert and save language file
+lang.from_dict(coc_syntax)
+lang.write()

@@ -1,14 +1,16 @@
 ## INFO ########################################################################
 ##                                                                            ##
-##                   Python and Cython Syntax Highlighters                    ##
+##                         Coconut Syntax Highlighter                         ##
 ##                   =====================================                    ##
 ##                                                                            ##
-##                       Version: 2.0.00.071 (20141024)                       ##
+##                       Version: 2.0.00.015 (20141006)                       ##
 ##                            File: src/common.py                             ##
 ##                                                                            ##
 ##            For more information about the project, please visit            ##
 ##                   <https://github.com/petervaro/python>.                   ##
 ##                    Copyright (C) 2013 - 2014 Peter Varo                    ##
+##                   <https://github.com/evhub/sublime-coconut>.              ##
+##                    Copyright (C) 2016 Evan Hubinger                        ##
 ##                                                                            ##
 ##  This program is free software: you can redistribute it and/or modify it   ##
 ##   under the terms of the GNU General Public License as published by the    ##
@@ -35,6 +37,8 @@ syntax = {
     'name': '{NAME}',
     'comment': ('\n\t\tCopyright (C) 2013 - 2014 Peter Varo'
                 '\n\t\t<http://github.com/petervaro/python>'
+                '\n\t\tCopyright (C) 2016 Evan Hubinger'
+                '\n\t\t<http://github.com/evhub/sublime-coconut>'
                 '\n'
                 '\n\t\tThis program is free software: you can redistribute it'
                 '\n\t\tand/or modify it under the terms of the GNU General'
