@@ -5,13 +5,14 @@ sudo: false
 notifications:
   email: false
 
-python: "3.5"
+python: "pypy3"
 
 install:
+  - git clone https://github.com/evhub/coconut.git
   - pip install coconut
   - git clone https://github.com/evhub/tmtools.git
   - pip install tmtools
 
 script:
-  - coconut -s .
+  - coconut . --strict
   - python build.py
