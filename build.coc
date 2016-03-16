@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ## INFO ########################################################################
 ##                                                                            ##
 ##                         Coconut Syntax Highlighter                         ##
@@ -37,29 +36,13 @@ CURRENT_DIR = '.'
 LANG_PATH  = join(CURRENT_DIR, 'langs')
 THEME_PATH = join(CURRENT_DIR, 'themes')
 
-# Import cutils modules
-try:
-    import cutils.ccom
-    import cutils.clic
-    import cutils.cver
-
-    # Update version
-    cutils.cver.version(CURRENT_DIR, sub_max=9, rev_max=99, build_max=999)
-    # Collect all special comments
-    cutils.ccom.collect(CURRENT_DIR)
-    # Update header comments
-    cutils.clic.header(CURRENT_DIR)
-except ImportError:
-    print('[WARNING] cutils modules are missing: '
-          'install it from http://www.cutils.org')
-
 # Import tmtools modules
 try:
     from tmtools.convert import Language, Theme
 except ImportError:
     from sys import exit
     print('[ ERROR ] tmtools modules are missing: '
-          'install it from http://github.com/petervaro/tmtools')
+          'install it from http://github.com/evhub/tmtools')
     exit(-1)
 
 #------------------------------------------------------------------------------#
@@ -71,7 +54,7 @@ coc_details = {
     'name' : 'Coconut',
     'path' : LANG_PATH,
     'scope': 'coconut',
-    'comments' : {'lines': '# '},
+    'comments' : {'lines': '#'},
     'test_name': 'Coconut_TEST',
     'test_path': '~/Library/Application Support/Sublime Text 3/Packages/User/Coconut_TEST'
 }

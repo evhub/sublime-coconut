@@ -123,3 +123,7 @@ target/
 
 # Ipython notebook
 .ipynb_checkpoints
+
+# Compiled python
+build/
+*.py
