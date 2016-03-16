@@ -4,7 +4,7 @@
 ##                   =====================================                    ##
 ##                                                                            ##
 ##                       Version: 2.0.00.015 (20141006)                       ##
-##                            File: build.coc                                 ##
+##                            File: sublime_coconut/__init__.coc              ##
 ##                                                                            ##
 ##            For more information about the project, please visit            ##
 ##                   <https://github.com/petervaro/python>                    ##
@@ -28,41 +28,8 @@
 ##                                                                            ##
 ######################################################################## INFO ##
 
-# Import python modules
-from os.path import join
+"""
+Coconut syntax highlighter for Sublime.
+"""
 
-# Module level constants
-CURRENT_DIR = '.'
-LANG_PATH  = join(CURRENT_DIR, 'langs')
-THEME_PATH = join(CURRENT_DIR, 'themes')
-
-# Import tmtools modules
-try:
-    from tmtools.convert import Language, Theme
-except ImportError:
-    from sys import exit
-    print('[ ERROR ] tmtools modules are missing: '
-          'install it from http://github.com/evhub/tmtools')
-    exit(1)
-
-#------------------------------------------------------------------------------#
-# Import user modules
-from sublime_coconut import syntax as coc_syntax
-
-# I/O Details of languages and themes
-coc_details = {
-    'name' : 'Coconut',
-    'path' : LANG_PATH,
-    'scope': 'coconut',
-    'comments' : {'lines': '#'},
-    'test_name': 'CoconutTEST',
-    'test_path': '~/Library/Application Support/Sublime Text 3/Packages/User/CoconutTEST'
-}
-
-#- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-# Process language files
-# Setup names and locations
-lang = Language(**coc_details)
-# Convert and save language file
-lang.from_dict(coc_syntax)
-lang.write()
+from .definitions import syntax
