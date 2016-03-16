@@ -6,9 +6,8 @@
 	<string>
 		Copyright (C) 2013 - 2014 Peter Varo
 		&lt;http://github.com/petervaro/python&gt;
-
-        Copyright (C) 2016 Evan Hubinger
-        &lt;http://github.com/evhub/sublime-coconut&gt;
+		Copyright (C) 2016 Evan Hubinger
+		&lt;http://github.com/evhub/sublime-coconut&gt;
 
 		This program is free software: you can redistribute it
 		and/or modify it under the terms of the GNU General
@@ -219,7 +218,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>\b(lambda)</string>
+			<string>\b(lambda)\b</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
