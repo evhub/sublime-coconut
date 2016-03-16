@@ -1,0 +1,17 @@
+language: python
+
+sudo: false
+
+notifications:
+  email: false
+
+python: "3.5"
+
+install:
+  - pip install coconut
+  - git clone https://github.com/evhub/tmtools.git
+  - pip install tmtools
+
+script:
+  - coconut -s .
+  - python build.py
