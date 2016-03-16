@@ -31,13 +31,13 @@
 		<string>coc</string>
 	</array>
 	<key>firstLineMatch</key>
-	<string>^#!/.*\bpython[\d.-]*\b</string>
+	<string>^#!/.*\bcoconut[\d.-]*\b</string>
 	<key>foldingStartMarker</key>
-	<string>^\s*(def|class)\s+([.\w&gt;]+)\s*(\((.*)\))?\s*:|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")</string>
+	<string>^\s*(def|class|data)\s+([.\w&gt;]+)\s*(\((.*)\))?\s*:|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")</string>
 	<key>foldingStopMarker</key>
 	<string>^\s*$|^\s*\}|^\s*\]|^\s*\)|^\s*"""\s*$</string>
 	<key>keyEquivalent</key>
-	<string>^~C</string>
+	<string>^~O</string>
 	<key>name</key>
 	<string>Coconut</string>
 	<key>patterns</key>
@@ -48,43 +48,43 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b0b[01]+</string>
+			<string>\b0b[01_]+</string>
 			<key>name</key>
 			<string>constant.numeric.integer.binary.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b0x\h+</string>
+			<string>\b0x[\h_]+</string>
 			<key>name</key>
 			<string>constant.numeric.integer.hexadecimal.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b0o[0-7]+</string>
+			<string>\b0o[0-7_]+</string>
 			<key>name</key>
 			<string>constant.numeric.integer.octal.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;=\W|^)\.\d+([eE][+-]?\d+)?[jJ]?</string>
+			<string>(?&lt;=\W|^)\.\d[\d_]*([eE][+-]?\d[\d_]*)?[iIjJ]?</string>
 			<key>name</key>
 			<string>constant.numeric.float_and_complex.decimal.floatnumber.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\d+\.(\d*([eE][+-]?\d+)?)?[jJ]?(?=\W)</string>
+			<string>\d[\d_]*\.([\d_]*([eE][+-]?\d[\d_]*)?)?[iIjJ]?(?=\W)</string>
 			<key>name</key>
 			<string>constant.numeric.float_and_complex.decimal.pointfloat.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;![\.\d])\d+[eE][+-]?\d+[jJ]?</string>
+			<string>(?&lt;![\.\d_])\d[\d_]*[eE][+-]?\d[\d_]*[iIjJ]?</string>
 			<key>name</key>
 			<string>constant.numeric.float_and_complex.decimal.exponent.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(?&lt;!\.)([1-9]\d*|0)[jJ]?</string>
+			<string>\b(?&lt;!\.)([1-9][\d_]*|0)[iIjJ]?</string>
 			<key>name</key>
 			<string>constant.numeric.integer_and_complex.decimal.coconut</string>
 		</dict>
@@ -102,7 +102,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield)\b</string>
+			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield|match|case)\b</string>
 			<key>name</key>
 			<string>keyword.control.flow_block_delimiters.coconut</string>
 		</dict>
@@ -126,13 +126,13 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+=|-=|\*=|/=|//=|%=|&amp;=|\|=|\^=|&lt;&lt;=|&gt;&gt;=|\*\*=</string>
+			<string>\+=|-=|\*=|/=|//=|%=|&amp;=|\|=|\^=|&lt;&lt;=|&gt;&gt;=|\*\*=|@=|::=|\|&gt;=|&lt;\|=|\|\*&gt;=|&lt;\*\|=|\.\.=</string>
 			<key>name</key>
 			<string>keyword.operator.assignment.augmented.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~</string>
+			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`</string>
 			<key>name</key>
 			<string>keyword.operator.arithmetic.coconut</string>
 		</dict>
@@ -144,7 +144,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*(class)\s+(?=[a-zA-Z_]\w*(\s*\()?)</string>
+			<string>^\s*(class|data)\s+(?=[a-zA-Z_]\w*(\s*\()?)</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -189,7 +189,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(\s*:)</string>
+			<string>(\s*[:=])</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>2</key>
@@ -288,7 +288,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>\)</string>
+			<string>\)(?=\s|$\n?|#)</string>
 			<key>name</key>
 			<string>meta.function.decorator.with_arguments.coconut</string>
 			<key>patterns</key>
@@ -339,7 +339,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(class)\b</string>
+			<string>\b(class|data)\b</string>
 			<key>name</key>
 			<string>storage.type.class.coconut</string>
 		</dict>
@@ -434,7 +434,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\)\s*\(</string>
+			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`|\\)\s*\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
@@ -449,7 +449,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||&lt;|&gt;|~|%|\^|\\|\n)\s*\(</string>
+			<string>(?&lt;!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||&lt;|&gt;|~|%|\^|\\|\n|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`|\\)\s*\$?\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
@@ -476,21 +476,21 @@
 		<key>builtin_exceptions</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!\.)\b((Arithmetic|Buffer|Lookup|Assertion|Attribute|EOF|FloatingPoint|Import|Index|Key|Memory|Name|NotImplemented|OS|Overflow|Reference|Runtime|Syntax|Indentation|Tab|System|Type|UnboundLocal|Unicode|Unicode(Encode|Decode|Translate)?|Value|ZeroDivision|Environment|IO|VMS|Windows|BlockingIO|ChildProcess|BrokenPipe|Connection(Aborted|Refused|Reset)?|FileExists|FileNotFound|Interrupted|(Is|Not)ADirectory|Permission|ProcessLookup|Timeout)Error|(User|Deprecation|PendingDeprecation|Syntax|Runtime|Future|Import|Bytes|Resource)Warning|(Base)?Exception|(Generator|System)Exit|KeyboardInterrupt|StopIteration|Warning)\b</string>
+			<string>(?&lt;!\.)\b((Arithmetic|Buffer|Lookup|Assertion|Attribute|EOF|FloatingPoint|Import|Index|Key|Memory|Name|NotImplemented|OS|Overflow|Reference|Runtime|Syntax|Indentation|Tab|System|Type|UnboundLocal|Unicode|Unicode(Encode|Decode|Translate)?|Value|ZeroDivision|Environment|IO|VMS|Windows|BlockingIO|ChildProcess|BrokenPipe|Connection(Aborted|Refused|Reset)?|FileExists|FileNotFound|Interrupted|(Is|Not)ADirectory|Permission|ProcessLookup|Timeout)Error|(User|Deprecation|PendingDeprecation|Syntax|Runtime|Future|Import|Bytes|Resource)Warning|(Base)?Exception|(Generator|System)Exit|KeyboardInterrupt|StopIteration|Warning|MatchError)\b</string>
 			<key>name</key>
 			<string>support.type.exception.coconut</string>
 		</dict>
 		<key>builtin_functions</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!\.)\b(__import__|abs|all|any|ascii|bin|callable|chr|compile|delattr|dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|help|hex|id|input|isinstance|issubclass|iter|len|locals|map|max|min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|vars|zip)\b</string>
+			<string>(?&lt;!\.)\b(__import__|abs|all|any|ascii|bin|callable|chr|compile|delattr|dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|help|hex|id|input|isinstance|issubclass|iter|len|locals|map|max|min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|vars|zip|parallel_map|count)\b</string>
 			<key>name</key>
 			<string>support.function.builtin.coconut</string>
 		</dict>
 		<key>builtin_types</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!\.)\b(basestring|bool|bytearray|bytes|classmethod|complex|dict|enumerate|float|frozenset|int|list|memoryview|object|open|property|reversed|set|slice|staticmethod|str|super|tuple|type)\b</string>
+			<string>(?&lt;!\.)\b(basestring|bool|bytearray|bytes|classmethod|complex|dict|enumerate|float|frozenset|int|list|memoryview|object|open|property|reversed|set|slice|staticmethod|str|super|tuple|type|reduce|takewhile|dropwhile|tee|recursive|datamaker|consume)\b</string>
 			<key>name</key>
 			<string>support.type.coconut</string>
 		</dict>
@@ -630,7 +630,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(?=\s*:)</string>
+			<string>(?=\s*[:=])</string>
 			<key>patterns</key>
 			<array>
 				<dict>
@@ -837,7 +837,7 @@
 		<key>magic_variable_names</key>
 		<dict>
 			<key>match</key>
-			<string>\b__(all|annotations|bases|builtins|class|debug|dict|doc|file|members|metaclass|mro|name|qualname|slots|weakref)__\b</string>
+			<string>\b__(all|annotations|bases|builtins|class|debug|dict|doc|file|members|metaclass|mro|name|qualname|slots|weakref|coconut_version|coconut_is_lazy)__\b</string>
 			<key>name</key>
 			<string>support.variable.magic.coconut</string>
 		</dict>
@@ -1239,6 +1239,6 @@
 	<key>scopeName</key>
 	<string>source.coconut</string>
 	<key>uuid</key>
-	<string>851B1429-B8B4-4C1E-8030-399BDA994393</string>
+	<string>7da2bcb1-621d-43b0-a187-c42d158b22ed</string>
 </dict>
 </plist>
