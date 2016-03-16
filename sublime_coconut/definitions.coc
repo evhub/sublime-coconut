@@ -43,18 +43,18 @@ syntax = deepcopy(original)
 
 # Auto-recognition
 syntax['fileTypes'] = ['coc']
-syntax['keyEquivalent'] = '^~C'
+syntax['keyEquivalent'] = '^~O'
 
 # Shebang
-syntax['firstLineMatch'] = r'^#!/.*\bpython[\d.-]*\b'
+syntax['firstLineMatch'] = r'^#!/.*\bcoconut[\d.-]*\b'
 
 # Folding marks for the TextEditor
-syntax['foldingStartMarker'] = (r'^\s*(def|class)\s+([.\w>]+)\s*(\((.*)\))?\s*:'
+syntax['foldingStartMarker'] = (r'^\s*(def|class|data)\s+([.\w>]+)\s*(\((.*)\))?\s*:'
                                 r'|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")')
 syntax['foldingStopMarker'] = r'^\s*$|^\s*\}|^\s*\]|^\s*\)|^\s*"""\s*$'
 
 # Language ID
-syntax['uuid'] = '851B1429-B8B4-4C1E-8030-399BDA994393'
+syntax['uuid'] = '7da2bcb1-621d-43b0-a187-c42d158b22ed'
 
 # Patterns
 syntax['patterns'].update({
@@ -80,7 +80,8 @@ syntax['patterns'].update({
             'match':
             (
                 r'\b(elif|else|except|finally|for|if|try|while|'
-                r'with|break|continue|pass|raise|return|yield)\b'
+                r'with|break|continue|pass|raise|return|yield|
+                r'match|case)\b'
             )
         },
 
@@ -98,7 +99,7 @@ syntax['patterns'].update({
         0x0110:
         {
             'name' : 'meta.class.{SCOPE}',
-            'begin': r'^\s*(class)\s+(?=[a-zA-Z_]\w*(\s*\()?)',
+            'begin': r'^\s*(class|data)\s+(?=[a-zA-Z_]\w*(\s*\()?)',
             'beginCaptures':
             {
                 1: {'name': 'storage.type.class.{SCOPE}'}
@@ -135,7 +136,7 @@ syntax['patterns'].update({
                 {'include': '#function_annotation'}
             ],
             # TODO: add illegal
-            'end': r'(\s*:)',
+            'end': r'(\s*[:=])',
             'endCaptures':
             {
                 2: {'name': 'invalid.illegal.missing_section_begin.{SCOPE}'}
@@ -147,7 +148,7 @@ syntax['patterns'].update({
         # ALL ARE COMMON
 
 #-- DECORATOR -----------------------------------------------------------------#
-        # ALL ARE COMMONE
+        # ALL ARE COMMON
 
 #-- CONSTANTS -----------------------------------------------------------------#
         0x0160:
@@ -208,7 +209,7 @@ syntax['repository'].update({
                 r'dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|'
                 r'help|hex|id|input|isinstance|issubclass|iter|len|locals|map|max|'
                 r'min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|'
-                r'vars|zip'
+                r'vars|zip|parallel_map|count'
                 r')\b'
             )
         },
@@ -220,7 +221,8 @@ syntax['repository'].update({
                 r'(?<!\.)\b('
                 r'basestring|bool|bytearray|bytes|classmethod|complex|dict|'
                 r'enumerate|float|frozenset|int|list|memoryview|object|open|'
-                r'property|reversed|set|slice|staticmethod|str|super|tuple|type'
+                r'property|reversed|set|slice|staticmethod|str|super|tuple|type|'
+                r'reduce|takewhile|dropwhile|tee|recursive|datamaker|consume'
                 r')\b'
             )
         },

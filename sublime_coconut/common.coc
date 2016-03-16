@@ -72,46 +72,46 @@ syntax = {
         0x0010:
         {
             'name' : 'constant.numeric.integer.binary.{SCOPE}',
-            'match': r'\b0b[01]+'
+            'match': r'\b0b[01_]+'
         },
 
         0x0020:
         {
             'name' : 'constant.numeric.integer.hexadecimal.{SCOPE}',
-            'match': r'\b0x\h+'
+            'match': r'\b0x[\h_]+'
         },
 
         0x0030:
         {
             'name' : 'constant.numeric.integer.octal.{SCOPE}',
-            'match': r'\b0o[0-7]+'
+            'match': r'\b0o[0-7_]+'
         },
 
         0x0040:
         {
             # .001  .1e6  .1E6  .1e+6  .1E+6  .1e-6  .1E-6
             'name' : 'constant.numeric.float_and_complex.decimal.floatnumber.{SCOPE}',
-            'match': r'(?<=\W|^)\.\d+([eE][+-]?\d+)?[jJ]?'
+            'match': r'(?<=\W|^)\.\d[\d_]*([eE][+-]?\d[\d_]*)?[iIjJ]?'
         },
 
         0x0050:
         {
             # 1.  1.0  1.e10  1.1e6  1.1E6  1.1e+6  1.1E+6  1.1e-6  1.1E-6
             'name' : 'constant.numeric.float_and_complex.decimal.pointfloat.{SCOPE}',
-            'match': r'\d+\.(\d*([eE][+-]?\d+)?)?[jJ]?(?=\W)'
+            'match': r'\d[\d_]*\.([\d_]*([eE][+-]?\d[\d_]*)?)?[iIjJ]?(?=\W)'
         },
 
         0x0060:
         {
             # 1e6  1E6  1e+6  1E+6  1e-6  1E-6
             'name' : 'constant.numeric.float_and_complex.decimal.exponent.{SCOPE}',
-            'match': r'(?<![\.\d])\d+[eE][+-]?\d+[jJ]?'
+            'match': r'(?<![\.\d_])\d[\d_]*[eE][+-]?\d[\d_]*[iIjJ]?'
         },
 
         0x0070:
         {
             'name' : 'constant.numeric.integer_and_complex.decimal.{SCOPE}',
-            'match': r'\b(?<!\.)([1-9]\d*|0)[jJ]?'
+            'match': r'\b(?<!\.)([1-9][\d_]*|0)[iIjJ]?'
         },
 
 
@@ -142,12 +142,14 @@ syntax = {
         {
             'name' : 'keyword.operator.assignment.augmented.{SCOPE}',
             'match': r'\+=|-=|\*=|/=|//=|%=|&=|\|=|\^=|<<=|>>=|\*\*='
+                    r'|@=|::=|\|>=|<\|=|\|\*>=|<\*\|=|\.\.='
         },
 
         0x00F0:
         {
             'name' : 'keyword.operator.arithmetic.{SCOPE}',
             'match': r'\+|-|\*|\*\*|/|//|%|<<|>>|&|\||\^|~'
+                    r'|@|::|\$|\|>|<\||\|\*>|<\*\||\.\.|`'
         },
 
         0x0100:
@@ -220,7 +222,7 @@ syntax = {
                 {'include': '#keyword_arguments'},
                 {'include': '$self'}
             ],
-            'end': r'\)'
+            'end': r'\)(?=\s|$\n?|#)'
         },
 
         # Decorator without arguments
@@ -252,7 +254,7 @@ syntax = {
         0x0190:
         {
             'name' : 'storage.type.class.{SCOPE}',
-            'match': r'\b(class)\b'
+            'match': r'\b(class|data)\b'
         },
 
 
@@ -348,7 +350,7 @@ syntax = {
         # GROUPS, TUPLES
         {
             'name' : 'meta.structure.group.{SCOPE}',
-            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\)\s*\(',
+            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|@|::|\|>|<\||\|\*>|<\*\||\.\.|`|\\)\s*\(',
             'patterns':
             [
                 {'include': '$self'}
@@ -361,7 +363,7 @@ syntax = {
         0x0250:
         {
             'name' : 'meta.function_call.{SCOPE}',
-            'begin': r'(?<!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||<|>|~|%|\^|\\|\n)\s*\(',
+            'begin': r'(?<!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||<|>|~|%|\^|\\|\n|@|::|\|>|<\||\|\*>|<\*\||\.\.|`|\\)\s*\$?\(',
             'patterns':
             [
                 {'include': '#keyword_arguments'},
@@ -516,7 +518,7 @@ syntax = {
             [
                 {'include': '$self'}
             ],
-            'end': r'(?=\s*:)'
+            'end': r'(?=\s*[:=])'
         },
 
 
@@ -537,7 +539,7 @@ syntax = {
                 r'Permission|ProcessLookup|Timeout)Error|(User|Deprecation|'
                 r'PendingDeprecation|Syntax|Runtime|Future|Import|Bytes|'
                 r'Resource)Warning|(Base)?Exception|(Generator|System)Exit|'
-                r'KeyboardInterrupt|StopIteration|Warning'
+                r'KeyboardInterrupt|StopIteration|Warning|MatchError'
                 r')\b'
             )
         },
@@ -593,7 +595,8 @@ syntax = {
             (
                 r'\b__('
                 r'all|annotations|bases|builtins|class|debug|dict|doc|file|'
-                r'members|metaclass|mro|name|qualname|slots|weakref'
+                r'members|metaclass|mro|name|qualname|slots|weakref|'
+                r'coconut_version|coconut_is_lazy'
                 r')__\b'
             )
         },
