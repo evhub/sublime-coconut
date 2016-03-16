@@ -9,10 +9,10 @@ python: "pypy3"
 
 install:
   - git clone https://github.com/evhub/coconut.git
-  - pip install coconut
+  - pip install ./coconut
   - git clone https://github.com/evhub/tmtools.git
-  - pip install tmtools
+  - pip install ./tmtools
 
 script:
-  - coconut . --strict
+  - coconut -s .
   - python build.py
