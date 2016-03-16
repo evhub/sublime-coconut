@@ -8,7 +8,7 @@ notifications:
 python: "3.5"
 
 install:
-  - git clone https://github.com/evhub/coconut.git
+  - git clone https://github.com/evhub/coconut.git -b develop
   - pip install ./coconut
   - git clone https://github.com/evhub/tmtools.git
   - pip install ./tmtools
