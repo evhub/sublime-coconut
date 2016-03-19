@@ -49,7 +49,7 @@ syntax['keyEquivalent'] = '^~O'
 syntax['firstLineMatch'] = r'^#!/.*\bcoconut[\d.-]*\b'
 
 # Folding marks for the TextEditor
-syntax['foldingStartMarker'] = (r'^\s*(def|class|data)\s+([.\w>]+)\s*(\((.*)\))?\s*:'
+syntax['foldingStartMarker'] = (r'^\s*(def|class|(?<!\\)data)\s+([.\w>]+)\s*(\((.*)\))?\s*:'
                                 r'|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")')
 syntax['foldingStopMarker'] = r'^\s*$|^\s*\}|^\s*\]|^\s*\)|^\s*"""\s*$'
 
@@ -81,7 +81,7 @@ syntax['patterns'].update({
             (
                 r'\b(elif|else|except|finally|for|if|try|while|'
                 r'with|break|continue|pass|raise|return|yield|'
-                r'match|case)\b'
+                r'(?<!\\)(async|await|match|case))\b'
             )
         },
 
@@ -99,7 +99,7 @@ syntax['patterns'].update({
         0x0110:
         {
             'name' : 'meta.class.{SCOPE}',
-            'begin': r'^\s*(class|data)\s+(?=[a-zA-Z_]\w*(\s*\()?)',
+            'begin': r'^\s*(class|(?<!\\)data)\s+(?=[a-zA-Z_]\w*(\s*\()?)',
             'beginCaptures':
             {
                 1: {'name': 'storage.type.class.{SCOPE}'}
@@ -136,7 +136,7 @@ syntax['patterns'].update({
                 {'include': '#function_annotation'}
             ],
             # TODO: add illegal
-            'end': r'(\s*[:=])',
+            'end': r'(\s*(:|(?==)))',
             'endCaptures':
             {
                 2: {'name': 'invalid.illegal.missing_section_begin.{SCOPE}'}

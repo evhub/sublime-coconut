@@ -33,7 +33,7 @@
 	<key>firstLineMatch</key>
 	<string>^#!/.*\bcoconut[\d.-]*\b</string>
 	<key>foldingStartMarker</key>
-	<string>^\s*(def|class|data)\s+([.\w&gt;]+)\s*(\((.*)\))?\s*:|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")</string>
+	<string>^\s*(def|class|(?&lt;!\\)data)\s+([.\w&gt;]+)\s*(\((.*)\))?\s*:|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")</string>
 	<key>foldingStopMarker</key>
 	<string>^\s*$|^\s*\}|^\s*\]|^\s*\)|^\s*"""\s*$</string>
 	<key>keyEquivalent</key>
@@ -102,7 +102,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield|match|case)\b</string>
+			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield|(?&lt;!\\)(async|await|match|case))\b</string>
 			<key>name</key>
 			<string>keyword.control.flow_block_delimiters.coconut</string>
 		</dict>
@@ -126,13 +126,13 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+=|-=|\*=|/=|//=|%=|&amp;=|\|=|\^=|&lt;&lt;=|&gt;&gt;=|\*\*=|(?&lt;!^\s*)@=|::=|\|&gt;=|&lt;\|=|\|\*&gt;=|&lt;\*\|=|\.\.=</string>
+			<string>\+=|-=|\*=|/=|//=|%=|&amp;=|\|=|\^=|&lt;&lt;=|&gt;&gt;=|\*\*=|@=|::=|\|&gt;=|&lt;\|=|\|\*&gt;=|&lt;\*\|=|\.\.=</string>
 			<key>name</key>
 			<string>keyword.operator.assignment.augmented.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~|(?&lt;!^\s*)@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`</string>
+			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`</string>
 			<key>name</key>
 			<string>keyword.operator.arithmetic.coconut</string>
 		</dict>
@@ -144,7 +144,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*(class|data)\s+(?=[a-zA-Z_]\w*(\s*\()?)</string>
+			<string>^\s*(class|(?&lt;!\\)data)\s+(?=[a-zA-Z_]\w*(\s*\()?)</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -189,7 +189,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(\s*[:=])</string>
+			<string>(\s*(:|(?==)))</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>2</key>
@@ -277,33 +277,6 @@
 			</array>
 		</dict>
 		<dict>
-			<key>begin</key>
-			<string>^\s*@</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>support.function.decorator.coconut</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>(?=\s|$\n?|#)</string>
-			<key>name</key>
-			<string>meta.function.decorator.with_arguments.coconut</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#keyword_arguments</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>$self</string>
-				</dict>
-			</array>
-		</dict>
-		<dict>
 			<key>match</key>
 			<string>\b(None|True|False|Ellipsis|NotImplemented)\b</string>
 			<key>name</key>
@@ -323,7 +296,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(class|data)\b</string>
+			<string>\b(class|(?&lt;!\\)data)\b</string>
 			<key>name</key>
 			<string>storage.type.class.coconut</string>
 		</dict>
@@ -346,10 +319,6 @@
 		<dict>
 			<key>include</key>
 			<string>#magic_variable_names</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#line_continuation</string>
 		</dict>
 		<dict>
 			<key>include</key>
@@ -418,7 +387,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|(?&lt;!^\s*)@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`|\\)\s*\(</string>
+			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`|\\)\s*\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
@@ -792,24 +761,6 @@
 			<string>(?&lt;!\.)\b(self|cls)\b</string>
 			<key>name</key>
 			<string>variable.language.coconut</string>
-		</dict>
-		<key>line_continuation</key>
-		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.separator.continuation.line.coconut</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>invalid.illegal.unexpected_text.coconut</string>
-				</dict>
-			</dict>
-			<key>match</key>
-			<string>(\\)(.*)$\n?</string>
 		</dict>
 		<key>magic_function_names</key>
 		<dict>

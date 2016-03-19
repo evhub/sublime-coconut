@@ -142,14 +142,14 @@ syntax = {
         {
             'name' : 'keyword.operator.assignment.augmented.{SCOPE}',
             'match': r'\+=|-=|\*=|/=|//=|%=|&=|\|=|\^=|<<=|>>=|\*\*='
-                    r'|(?<!^\s*)@=|::=|\|>=|<\|=|\|\*>=|<\*\|=|\.\.='
+                    r'|@=|::=|\|>=|<\|=|\|\*>=|<\*\|=|\.\.='
         },
 
         0x00F0:
         {
             'name' : 'keyword.operator.arithmetic.{SCOPE}',
             'match': r'\+|-|\*|\*\*|/|//|%|<<|>>|&|\||\^|~'
-                    r'|(?<!^\s*)@|::|\$|\|>|<\||\|\*>|<\*\||\.\.|`'
+                    r'|@|::|\$|\|>|<\||\|\*>|<\*\||\.\.|`'
         },
 
         0x0100:
@@ -209,21 +209,20 @@ syntax = {
 
 #-- DECORATOR -----------------------------------------------------------------#
         # Decorator with arguments
-        0x0140:
-        {
-            'name' : 'meta.function.decorator.with_arguments.{SCOPE}',
-            'begin': r'^\s*@',
-            'beginCaptures':
-            {
-                1: {'name': 'support.function.decorator.{SCOPE}'}
-            },
-            'patterns':
-            [
-                {'include': '#keyword_arguments'},
-                {'include': '$self'}
-            ],
-            'end': r'(?=\s|$\n?|#)'
-        },
+        # 0x0140:
+        # {
+        #     'name' : 'meta.function.decorator.with_arguments.{SCOPE}',
+        #     'begin': r'^\s*@',
+        #     'beginCaptures':
+        #     {
+        #         1: {'name': 'support.function.decorator.{SCOPE}'}
+        #     },
+        #     'patterns':
+        #     [
+        #         {'include': '$self'}
+        #     ],
+        #     'end': r'(?=\s|$\n?|#)'
+        # },
 
 
 #-- CONSTANTS -----------------------------------------------------------------#
@@ -242,7 +241,7 @@ syntax = {
         0x0190:
         {
             'name' : 'storage.type.class.{SCOPE}',
-            'match': r'\b(class|data)\b'
+            'match': r'\b(class|(?<!\\)data)\b'
         },
 
 
@@ -276,10 +275,10 @@ syntax = {
 
 
 #-- ETC -----------------------------------------------------------------------#
-        0x0200:
-        {
-            'include': '#line_continuation'
-        },
+        # 0x0200:
+        # {
+        #     'include': '#line_continuation'
+        # },
 
         0x0210:
         {
@@ -338,7 +337,7 @@ syntax = {
         # GROUPS, TUPLES
         {
             'name' : 'meta.structure.group.{SCOPE}',
-            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|(?<!^\s*)@|::|\|>|<\||\|\*>|<\*\||\.\.|`|\\)\s*\(',
+            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|@|::|\|>|<\||\|\*>|<\*\||\.\.|`|\\)\s*\(',
             'patterns':
             [
                 {'include': '$self'}
@@ -594,15 +593,15 @@ syntax = {
             'name' : 'variable.language.{SCOPE}',
             'match': r'(?<!\.)\b(self|cls)\b'
         },
-        'line_continuation':
-        {
-            'match': r'(\\)(.*)$\n?',
-            'captures':
-            {
-                1: {'name': 'punctuation.separator.continuation.line.{SCOPE}'},
-                2: {'name': 'invalid.illegal.unexpected_text.{SCOPE}'}
-            }
-        },
+        # 'line_continuation':
+        # {
+        #     'match': r'(\\)(.*)$\n?',
+        #     'captures':
+        #     {
+        #         1: {'name': 'punctuation.separator.continuation.line.{SCOPE}'},
+        #         2: {'name': 'invalid.illegal.unexpected_text.{SCOPE}'}
+        #     }
+        # },
 
 
 #-- STRING --------------------------------------------------------------------#
