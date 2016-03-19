@@ -32,4 +32,4 @@
 Coconut syntax highlighter for Sublime.
 """
 
-from .definitions import syntax
+from .specification import syntax

@@ -142,14 +142,14 @@ syntax = {
         {
             'name' : 'keyword.operator.assignment.augmented.{SCOPE}',
             'match': r'\+=|-=|\*=|/=|//=|%=|&=|\|=|\^=|<<=|>>=|\*\*='
-                    r'|@=|::=|\|>=|<\|=|\|\*>=|<\*\|=|\.\.='
+                    r'|(?<!^\s*)@=|::=|\|>=|<\|=|\|\*>=|<\*\|=|\.\.='
         },
 
         0x00F0:
         {
             'name' : 'keyword.operator.arithmetic.{SCOPE}',
             'match': r'\+|-|\*|\*\*|/|//|%|<<|>>|&|\||\^|~'
-                    r'|@|::|\$|\|>|<\||\|\*>|<\*\||\.\.|`'
+                    r'|(?<!^\s*)@|::|\$|\|>|<\||\|\*>|<\*\||\.\.|`'
         },
 
         0x0100:
@@ -212,7 +212,7 @@ syntax = {
         0x0140:
         {
             'name' : 'meta.function.decorator.with_arguments.{SCOPE}',
-            'begin': r'^\s*(@\s*[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)*)\s*\(',
+            'begin': r'^\s*@',
             'beginCaptures':
             {
                 1: {'name': 'support.function.decorator.{SCOPE}'}
@@ -222,18 +222,6 @@ syntax = {
                 {'include': '#keyword_arguments'},
                 {'include': '$self'}
             ],
-            'end': r'\)(?=\s|$\n?|#)'
-        },
-
-        # Decorator without arguments
-        0x0150:
-        {
-            'name' : 'meta.function.decorator.without_arguments.{SCOPE}',
-            'begin': r'^\s*(@\s*[a-zA-Z_]\w*(\.[a-zA-Z_]\w*)*)',
-            'beginCaptures':
-            {
-                1: {'name': 'support.function.decorator.{SCOPE}'}
-            },
             'end': r'(?=\s|$\n?|#)'
         },
 
@@ -350,7 +338,7 @@ syntax = {
         # GROUPS, TUPLES
         {
             'name' : 'meta.structure.group.{SCOPE}',
-            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|@|::|\|>|<\||\|\*>|<\*\||\.\.|`|\\)\s*\(',
+            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|(?<!^\s*)@|::|\|>|<\||\|\*>|<\*\||\.\.|`|\\)\s*\(',
             'patterns':
             [
                 {'include': '$self'}
