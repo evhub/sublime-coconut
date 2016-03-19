@@ -207,9 +207,9 @@ syntax['repository'].update({
                 r'(?<!\.)\b('
                 r'__import__|abs|all|any|ascii|bin|callable|chr|compile|delattr|'
                 r'dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|'
-                r'help|hex|id|input|isinstance|issubclass|iter|len|locals|map|max|'
+                r'help|hex|id|input|isinstance|issubclass|iter|len|locals|vars|max|'
                 r'min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|'
-                r'vars|zip|parallel_map|count'
+                r'reduce|takewhile|dropwhile|tee|recursive|datamaker|consume'
                 r')\b'
             )
         },
@@ -222,7 +222,7 @@ syntax['repository'].update({
                 r'basestring|bool|bytearray|bytes|classmethod|complex|dict|'
                 r'enumerate|float|frozenset|int|list|memoryview|object|open|'
                 r'property|reversed|set|slice|staticmethod|str|super|tuple|type|'
-                r'reduce|takewhile|dropwhile|tee|recursive|datamaker|consume'
+                r'map|zip|parallel_map|count'
                 r')\b'
             )
         },
