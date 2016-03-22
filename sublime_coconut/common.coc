@@ -518,7 +518,7 @@ syntax = {
                 r'(?<!\.)\b('
                 r'(Arithmetic|Buffer|Lookup|Assertion|Attribute|EOF|FloatingPoint|'
                 r'Import|Index|Key|Memory|Name|NotImplemented|OS|Overflow|Reference|'
-                r'Runtime|Syntax|Indentation|Tab|System|Type|UnboundLocal|Unicode|'
+                r'Runtime|Syntax|Indentation|Tab|System|Type|UnboundLocal|'
                 r'Unicode(Encode|Decode|Translate)?|Value|ZeroDivision|'
                 r'Environment|IO|VMS|Windows|BlockingIO|ChildProcess|'
                 r'BrokenPipe|Connection(Aborted|Refused|Reset)?|'
