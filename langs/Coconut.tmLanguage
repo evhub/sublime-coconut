@@ -132,7 +132,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`</string>
+			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|(?!\.\.\.)\.\.</string>
 			<key>name</key>
 			<string>keyword.operator.arithmetic.coconut</string>
 		</dict>
@@ -387,7 +387,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`|\\)\s*\(</string>
+			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|(?!\.\.\.)\.\.|\\)\s*\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
@@ -402,7 +402,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||&lt;|&gt;|~|%|\^|\\|\n|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||\.\.|`|\\)\s*\$?\(</string>
+			<string>(?&lt;!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||&lt;|&gt;|~|%|\^|\\|\n|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|(?!\.\.\.)\.\.|\\)\s*\$?\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
@@ -429,21 +429,21 @@
 		<key>builtin_exceptions</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!\.)\b((Arithmetic|Buffer|Lookup|Assertion|Attribute|EOF|FloatingPoint|Import|Index|Key|Memory|Name|NotImplemented|OS|Overflow|Reference|Runtime|Syntax|Indentation|Tab|System|Type|UnboundLocal|Unicode(Encode|Decode|Translate)?|Value|ZeroDivision|Environment|IO|VMS|Windows|BlockingIO|ChildProcess|BrokenPipe|Connection(Aborted|Refused|Reset)?|FileExists|FileNotFound|Interrupted|(Is|Not)ADirectory|Permission|ProcessLookup|Timeout)Error|(User|Deprecation|PendingDeprecation|Syntax|Runtime|Future|Import|Bytes|Resource)Warning|(Base)?Exception|(Generator|System)Exit|KeyboardInterrupt|StopIteration|Warning|MatchError)\b</string>
+			<string>\b((Arithmetic|Buffer|Lookup|Assertion|Attribute|EOF|FloatingPoint|Import|Index|Key|Memory|Name|NotImplemented|OS|Overflow|Reference|Runtime|Syntax|Indentation|Tab|System|Type|UnboundLocal|Unicode(Encode|Decode|Translate)?|Value|ZeroDivision|Environment|IO|VMS|Windows|BlockingIO|ChildProcess|BrokenPipe|Connection(Aborted|Refused|Reset)?|FileExists|FileNotFound|Interrupted|(Is|Not)ADirectory|Permission|ProcessLookup|Timeout)Error|(User|Deprecation|PendingDeprecation|Syntax|Runtime|Future|Import|Bytes|Resource)Warning|(Base)?Exception|(Generator|System)Exit|KeyboardInterrupt|StopIteration|Warning|MatchError)\b</string>
 			<key>name</key>
 			<string>support.type.exception.coconut</string>
 		</dict>
 		<key>builtin_functions</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!\.)\b(__import__|abs|all|any|ascii|bin|callable|chr|compile|delattr|dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|help|hex|id|input|isinstance|issubclass|iter|len|locals|vars|max|min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|reduce|takewhile|dropwhile|tee|recursive|datamaker|consume)\b</string>
+			<string>\b(__import__|abs|all|any|ascii|bin|callable|chr|compile|delattr|dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|help|hex|id|input|isinstance|issubclass|iter|len|locals|vars|max|min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|reduce|takewhile|dropwhile|tee|recursive|datamaker|consume)\b</string>
 			<key>name</key>
 			<string>support.function.builtin.coconut</string>
 		</dict>
 		<key>builtin_types</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!\.)\b(basestring|bool|bytearray|bytes|classmethod|complex|dict|enumerate|float|frozenset|int|list|memoryview|object|open|property|reversed|set|slice|staticmethod|str|super|tuple|type|map|zip|parallel_map|count)\b</string>
+			<string>\b(basestring|bool|bytearray|bytes|classmethod|complex|dict|enumerate|float|frozenset|int|list|memoryview|object|open|property|reversed|set|slice|staticmethod|str|super|tuple|type|map|zip|parallel_map|count)\b</string>
 			<key>name</key>
 			<string>support.type.coconut</string>
 		</dict>
@@ -724,7 +724,7 @@
 		<key>illegal_names</key>
 		<dict>
 			<key>match</key>
-			<string>\b(and|as|assert|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)\b</string>
+			<string>\b(and|as|assert|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|_coconut.*)\b</string>
 			<key>name</key>
 			<string>invalid.illegal_names.name.coconut</string>
 		</dict>
@@ -758,7 +758,7 @@
 		<key>language_variables</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!\.)\b(self|cls)\b</string>
+			<string>\b(self|cls)\b</string>
 			<key>name</key>
 			<string>variable.language.coconut</string>
 		</dict>

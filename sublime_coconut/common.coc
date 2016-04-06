@@ -149,7 +149,7 @@ syntax = {
         {
             'name' : 'keyword.operator.arithmetic.{SCOPE}',
             'match': r'\+|-|\*|\*\*|/|//|%|<<|>>|&|\||\^|~'
-                    r'|@|::|\$|\|>|<\||\|\*>|<\*\||\.\.|`'
+                    r'|@|::|\$|\|>|<\||\|\*>|<\*\||`|(?!\.\.\.)\.\.'
         },
 
         0x0100:
@@ -337,7 +337,7 @@ syntax = {
         # GROUPS, TUPLES
         {
             'name' : 'meta.structure.group.{SCOPE}',
-            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|@|::|\|>|<\||\|\*>|<\*\||\.\.|`|\\)\s*\(',
+            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|@|::|\|>|<\||\|\*>|<\*\||`|(?!\.\.\.)\.\.|\\)\s*\(',
             'patterns':
             [
                 {'include': '$self'}
@@ -350,7 +350,7 @@ syntax = {
         0x0250:
         {
             'name' : 'meta.function_call.{SCOPE}',
-            'begin': r'(?<!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||<|>|~|%|\^|\\|\n|@|::|\|>|<\||\|\*>|<\*\||\.\.|`|\\)\s*\$?\(',
+            'begin': r'(?<!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||<|>|~|%|\^|\\|\n|@|::|\|>|<\||\|\*>|<\*\||`|(?!\.\.\.)\.\.|\\)\s*\$?\(',
             'patterns':
             [
                 {'include': '#keyword_arguments'},
@@ -515,7 +515,7 @@ syntax = {
             'name' : 'support.type.exception.{SCOPE}',
             'match':
             (
-                r'(?<!\.)\b('
+                r'\b('
                 r'(Arithmetic|Buffer|Lookup|Assertion|Attribute|EOF|FloatingPoint|'
                 r'Import|Index|Key|Memory|Name|NotImplemented|OS|Overflow|Reference|'
                 r'Runtime|Syntax|Indentation|Tab|System|Type|UnboundLocal|'
@@ -591,7 +591,7 @@ syntax = {
         'language_variables':
         {
             'name' : 'variable.language.{SCOPE}',
-            'match': r'(?<!\.)\b(self|cls)\b'
+            'match': r'\b(self|cls)\b'
         },
         # 'line_continuation':
         # {
@@ -730,7 +730,7 @@ syntax = {
                 },
                 # {
                 #     'name' : 'meta.format_attribute.format.{SCOPE}',
-                #     'begin': r'(\.format)\s*\(',
+                #     'begin': r'((?<!\.)\.format)\s*\(',
                 #     'beginCaptures':
                 #     {
                 #         1: {'name': 'invalid.illegal.none.{SCOPE}'}
@@ -770,7 +770,7 @@ syntax = {
                 #         {'include': '#string_patterns'},
                 #         {'include': '#format_mini_language'}
                 #     ],
-                #     'end': r'"\.format',  # |(\n)',
+                #     'end': r'"(?<!\.)\.format',  # |(\n)',
                 #     'endCaptures':
                 #     {
                 #         2: {'name': 'invalid.illegal.unclosed_string.{SCOPE}'}
