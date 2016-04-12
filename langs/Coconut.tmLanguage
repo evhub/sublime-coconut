@@ -772,7 +772,7 @@
 		<key>magic_variable_names</key>
 		<dict>
 			<key>match</key>
-			<string>\b__(all|annotations|bases|builtins|class|debug|dict|doc|file|members|metaclass|mro|name|qualname|slots|weakref|coconut_version|coconut_is_lazy)__\b</string>
+			<string>\b__(all|annotations|bases|builtins|class|debug|dict|doc|file|members|metaclass|mro|name|qualname|slots|weakref|coconut_is_lazy)__\b</string>
 			<key>name</key>
 			<string>support.variable.magic.coconut</string>
 		</dict>
@@ -930,7 +930,7 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>([bBuU]?)'''</string>
+					<string>([bBuUfF]?)'''</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -953,7 +953,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>([rR][bB]|[bB][rR]|[rR])'''</string>
+					<string>([rR][bB]|[bB][rR]|[rR]|[rR][fF]|[fF][rR])'''</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -984,7 +984,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>([bBuU]?)'</string>
+					<string>([bBuUfF]?)'</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -1015,7 +1015,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>([rR][bB]|[bB][rR]|[rR])'</string>
+					<string>([rR][bB]|[bB][rR]|[rR]|[rR][fF]|[fF][rR])'</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -1050,7 +1050,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>([bBuU]?)"""</string>
+					<string>([bBuUfF]?)"""</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -1073,7 +1073,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>([rR][bB]|[bB][rR]|[rR])"""</string>
+					<string>([rR][bB]|[bB][rR]|[rR]|[rR][fF]|[fF][rR])"""</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -1104,7 +1104,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>([bBuU]?)"</string>
+					<string>([bBuUfF]?)"</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -1135,7 +1135,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>([rR][bB]|[bB][rR]|[rR])"</string>
+					<string>([rR][bB]|[bB][rR]|[rR]|[rR][fF]|[fF][rR])"</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
