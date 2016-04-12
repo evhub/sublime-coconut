@@ -583,7 +583,7 @@ syntax = {
                 r'\b__('
                 r'all|annotations|bases|builtins|class|debug|dict|doc|file|'
                 r'members|metaclass|mro|name|qualname|slots|weakref|'
-                r'coconut_version|coconut_is_lazy'
+                r'coconut_is_lazy'
                 r')__\b'
             )
         },
@@ -616,7 +616,7 @@ syntax = {
                 # Single BLOCK
                 {
                     'name' : 'string.quoted.single.block.{SCOPE}',
-                    'begin': r"([bBuU]?)'''",
+                    'begin': r"([bBuUfF]?)'''",
                     'beginCaptures':
                     {
                         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
@@ -629,7 +629,7 @@ syntax = {
                 },
                 {
                     'name' : 'string.quoted.single.block.{SCOPE}',
-                    'begin': r"([rR][bB]|[bB][rR]|[rR])'''",
+                    'begin': r"([rR][bB]|[bB][rR]|[rR]|[rR][fF]|[fF][rR])'''",
                     'beginCaptures':
                     {
                         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
@@ -646,7 +646,7 @@ syntax = {
                 # Single LINE
                 {
                     'name' : 'string.quoted.single.line.{SCOPE}',
-                    'begin': r"([bBuU]?)'",
+                    'begin': r"([bBuUfF]?)'",
                     'beginCaptures':
                     {
                         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
@@ -663,7 +663,7 @@ syntax = {
                 },
                 {
                     'name' : 'string.quoted.single.line.{SCOPE}',
-                    'begin': r"([rR][bB]|[bB][rR]|[rR])'",
+                    'begin': r"([rR][bB]|[bB][rR]|[rR]|[rR][fF]|[fF][rR])'",
                     'beginCaptures':
                     {
                         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
@@ -683,7 +683,7 @@ syntax = {
                 # Double BLOCK
                 {
                     'name' : 'string.quoted.double.block.{SCOPE}',
-                    'begin': r'([bBuU]?)"""',
+                    'begin': r'([bBuUfF]?)"""',
                     'beginCaptures':
                     {
                         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
@@ -696,7 +696,7 @@ syntax = {
                 },
                 {
                     'name' : 'string.quoted.double.block.{SCOPE}',
-                    'begin': r'([rR][bB]|[bB][rR]|[rR])"""',
+                    'begin': r'([rR][bB]|[bB][rR]|[rR]|[rR][fF]|[fF][rR])"""',
                     'beginCaptures':
                     {
                         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
@@ -713,7 +713,7 @@ syntax = {
                 # Double LINE
                 {
                     'name' : 'string.quoted.double.line.{SCOPE}',
-                    'begin': r'([bBuU]?)"',
+                    'begin': r'([bBuUfF]?)"',
                     'beginCaptures':
                     {
                         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
@@ -760,7 +760,7 @@ syntax = {
                 # },
                 # {
                 #     'name' : 'string.quoted.double.format.{SCOPE}',
-                #     'begin': r'([uUbB]?)"',
+                #     'begin': r'([uUbBfF]?)"',
                 #     'beginCaptures':
                 #     {
                 #         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
@@ -778,7 +778,7 @@ syntax = {
                 # },
                 {
                     'name' : 'string.quoted.double.line.{SCOPE}',
-                    'begin': r'([rR][bB]|[bB][rR]|[rR])"',
+                    'begin': r'([rR][bB]|[bB][rR]|[rR]|[rR][fF]|[fF][rR])"',
                     'beginCaptures':
                     {
                         1: {'name': 'storage.type.string.prefix.{SCOPE}'}
