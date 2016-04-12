@@ -132,7 +132,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|(?!\.\.\.)\.\.</string>
+			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|\.\.</string>
 			<key>name</key>
 			<string>keyword.operator.arithmetic.coconut</string>
 		</dict>
@@ -387,7 +387,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|(?!\.\.\.)\.\.|\\)\s*\(</string>
+			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|\.\.|\\)\s*\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
@@ -402,7 +402,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||&lt;|&gt;|~|%|\^|\\|\n|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|(?!\.\.\.)\.\.|\\)\s*\$?\(</string>
+			<string>(?&lt;!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||&lt;|&gt;|~|%|\^|\\|\n|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|\.\.|\\)\s*\$?\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
