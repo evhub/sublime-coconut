@@ -4,7 +4,7 @@
 ##                   =====================================                    ##
 ##                                                                            ##
 ##                       Version: 2.0.00.015 (20141006)                       ##
-##                            File: sublime_coconut/specification.coc         ##
+##                            File: sublime_coconut/specification.coco        ##
 ##                                                                            ##
 ##            For more information about the project, please visit            ##
 ##                   <https://github.com/petervaro/python>                    ##
@@ -42,7 +42,7 @@ from .common import syntax as original
 syntax = deepcopy(original)
 
 # Auto-recognition
-syntax['fileTypes'] = ['coc']
+syntax['fileTypes'] = ['coc', 'coco', 'coconut']
 syntax['keyEquivalent'] = '^~O'
 
 # Shebang
