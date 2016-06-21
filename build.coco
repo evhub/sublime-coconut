@@ -47,10 +47,10 @@ except ImportError:
 
 #------------------------------------------------------------------------------#
 # Import user modules
-from sublime_coconut import syntax as coc_syntax
+from sublime_coconut import syntax as coconut_syntax
 
 # I/O Details of languages and themes
-coc_details = {
+coconut_details = {
     'name' : 'Coconut',
     'path' : LANG_PATH,
     'scope': 'coconut',
@@ -62,7 +62,7 @@ coc_details = {
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 # Process language files
 # Setup names and locations
-lang = Language(**coc_details)
+lang = Language(**coconut_details)
 # Convert and save language file
-lang.from_dict(coc_syntax)
+lang.from_dict(coconut_syntax)
 lang.write()
