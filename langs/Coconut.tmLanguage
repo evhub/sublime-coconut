@@ -29,6 +29,8 @@
 	<key>fileTypes</key>
 	<array>
 		<string>coc</string>
+		<string>coco</string>
+		<string>coconut</string>
 	</array>
 	<key>firstLineMatch</key>
 	<string>^#!/.*\bcoconut[\d.-]*\b</string>
