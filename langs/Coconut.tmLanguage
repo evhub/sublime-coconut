@@ -438,7 +438,7 @@
 		<key>builtin_functions</key>
 		<dict>
 			<key>match</key>
-			<string>\b(__import__|abs|all|any|ascii|bin|callable|chr|compile|delattr|dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|help|hex|id|input|isinstance|issubclass|iter|len|locals|vars|max|min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|reduce|takewhile|dropwhile|tee|recursive|datamaker|consume|addpattern|prepattern)\b</string>
+			<string>\b(__import__|abs|all|any|ascii|bin|callable|chr|compile|delattr|dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|help|hex|id|input|isinstance|issubclass|iter|len|locals|vars|max|min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|reduce|takewhile|dropwhile|tee|recursive|datamaker|consume|addpattern|prepattern|recursive_iterator)\b</string>
 			<key>name</key>
 			<string>support.function.builtin.coconut</string>
 		</dict>

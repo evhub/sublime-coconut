@@ -210,7 +210,7 @@ syntax['repository'].update({
                 r'help|hex|id|input|isinstance|issubclass|iter|len|locals|vars|max|'
                 r'min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|'
                 r'reduce|takewhile|dropwhile|tee|recursive|datamaker|consume|'
-                r'addpattern|prepattern'
+                r'addpattern|prepattern|recursive_iterator'
                 r')\b'
             )
         },
