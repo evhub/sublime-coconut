@@ -582,8 +582,7 @@ syntax = {
             (
                 r'\b__('
                 r'all|annotations|bases|builtins|class|debug|dict|doc|file|'
-                r'members|metaclass|mro|name|qualname|slots|weakref|'
-                r'coconut_is_lazy'
+                r'members|metaclass|mro|name|qualname|slots|weakref'
                 r')__\b'
             )
         },
