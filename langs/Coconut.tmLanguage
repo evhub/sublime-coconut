@@ -156,7 +156,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(\)?\s*:|\s+([\w#\s:]+))</string>
+			<string>(\)?[ \t\r\f\v]*\n|\)?\s*:|\s+([\w#\s:]+))</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>3</key>
