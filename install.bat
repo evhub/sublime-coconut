@@ -1,3 +1,3 @@
-coconut . -s --recursionlimit 1500
+coconut . -sf --recursionlimit 1500
 python ./build.py
 PAUSE
