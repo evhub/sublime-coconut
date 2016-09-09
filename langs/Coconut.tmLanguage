@@ -438,14 +438,14 @@
 		<key>builtin_functions</key>
 		<dict>
 			<key>match</key>
-			<string>\b(__import__|abs|all|any|ascii|bin|callable|chr|compile|delattr|dir|divmod|eval|exec|filter|format|getattr|globals|hasattr|hash|help|hex|id|input|isinstance|issubclass|iter|len|locals|vars|max|min|next|oct|ord|pow|print|range|repr|round|setattr|sorted|sum|reduce|takewhile|dropwhile|tee|tail_recursive|datamaker|consume|addpattern|prepattern|recursive_iterator)\b</string>
+			<string>\b(__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|dir|divmod|eval|exec|(py_)?filter|format|getattr|globals|hasattr|hash|help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|reduce|takewhile|dropwhile|tee|tail_recursive|datamaker|consume|addpattern|prepattern|recursive_iterator|py_raw_input|py_xrange)\b</string>
 			<key>name</key>
 			<string>support.function.builtin.coconut</string>
 		</dict>
 		<key>builtin_types</key>
 		<dict>
 			<key>match</key>
-			<string>\b(basestring|bool|bytearray|bytes|classmethod|complex|dict|enumerate|float|frozenset|int|list|memoryview|object|open|property|reversed|set|slice|staticmethod|str|super|tuple|type|map|zip|parallel_map|count|concurrent_map)\b</string>
+			<string>\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|enumerate|float|frozenset|(py_)?int|list|memoryview|object|(py_)?open|property|reversed|set|slice|staticmethod|(py_)?str|super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map)\b</string>
 			<key>name</key>
 			<string>support.type.coconut</string>
 		</dict>
@@ -767,7 +767,7 @@
 		<key>magic_function_names</key>
 		<dict>
 			<key>match</key>
-			<string>\b__(abs|add|and|bool|bytes|call|ceil|complex|contains|copy|deepcopy|del|delattr|delete|delitem|dir|div|divmod|enter|eq|exit|float|floor|floordiv|format|ge|get|getattr|getattribute|getinitargs|getitem|getnewargs|getstate|gt|hash|hex|iadd|iand|idiv|ifloordiv|ilshift|imul|index|init|instancecheck|int|invert|ior|ipow|irshift|isub|iter|itruediv|ixor|le|len|lshift|lt|metaclass|missing|mod|mul|ne|neg|new|next|oct|or|pos|pow|prepare|radd|rand|rdiv|rdivmod|reduce|reduce_ex|repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|trunc|unicode|weakref|xor)__\b</string>
+			<string>\b__(abs|add|and|bool|bytes|call|ceil|complex|contains|copy|deepcopy|del|delattr|delete|delitem|dir|div|divmod|enter|eq|exit|float|floor|floordiv|format|ge|get|getattr|getattribute|getinitargs|getitem|getnewargs|getstate|gt|hash|hex|iadd|iand|idiv|ifloordiv|ilshift|imul|index|init|instancecheck|int|invert|ior|ipow|irshift|isub|iter|itruediv|ixor|le|len|lshift|lt|metaclass|missing|mod|mul|ne|neg|new|next|(py_)?oct|or|pos|pow|prepare|radd|rand|rdiv|rdivmod|reduce|reduce_ex|repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|trunc|unicode|weakref|xor)__\b</string>
 			<key>name</key>
 			<string>support.function.magic.coconut</string>
 		</dict>
