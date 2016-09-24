@@ -8,7 +8,7 @@ build:
 
 .PHONY: setup
 setup:
-  - pip install coconut-develop
-  - git clone https://github.com/evhub/tmtools.git
-  - pip install ./tmtools
-  - rm -rf tmtools
+	pip install coconut-develop
+	git clone https://github.com/evhub/tmtools.git
+	pip install ./tmtools
+	rm -rf tmtools
