@@ -1,7 +1,7 @@
-.PHONY: build run
-
+.PHONY: run
 run: build
 	python ./build.py
 
+.PHONY: build
 build:
 	coconut -psf .
