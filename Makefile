@@ -4,7 +4,7 @@ run: build
 
 .PHONY: build
 build:
-	coconut . -fps -j sys
+	coconut . -sf -j sys
 
 .PHONY: setup
 setup:
