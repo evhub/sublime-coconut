@@ -438,14 +438,14 @@
 		<key>builtin_functions</key>
 		<dict>
 			<key>match</key>
-			<string>\b(__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|dir|divmod|eval|exec|(py_)?filter|format|getattr|globals|hasattr|hash|help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|reduce|takewhile|dropwhile|tee|datamaker|consume|py_raw_input|py_xrange|addpattern|prepattern|recursive_iterator)\b</string>
+			<string>(?&lt;!(?&lt;!\.)\.)\b(__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|dir|divmod|eval|exec|(py_)?filter|format|getattr|globals|hasattr|hash|help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|reduce|takewhile|dropwhile|tee|datamaker|consume|py_raw_input|py_xrange|addpattern|prepattern|recursive_iterator)\b</string>
 			<key>name</key>
 			<string>support.function.builtin.coconut</string>
 		</dict>
 		<key>builtin_types</key>
 		<dict>
 			<key>match</key>
-			<string>\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|enumerate|float|frozenset|(py_)?int|list|memoryview|object|(py_)?open|property|reversed|set|slice|staticmethod|(py_)?str|super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map)\b</string>
+			<string>(?&lt;!(?&lt;!\.)\.)\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|enumerate|float|frozenset|(py_)?int|list|memoryview|object|(py_)?open|property|reversed|set|slice|staticmethod|(py_)?str|super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map)\b</string>
 			<key>name</key>
 			<string>support.type.coconut</string>
 		</dict>
@@ -726,7 +726,7 @@
 		<key>illegal_names</key>
 		<dict>
 			<key>match</key>
-			<string>\b(and|as|assert|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|_coconut.*)\b</string>
+			<string>\b(and|as|assert|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield|_coconut\w*)\b</string>
 			<key>name</key>
 			<string>invalid.illegal_names.name.coconut</string>
 		</dict>

@@ -204,7 +204,7 @@ syntax['repository'].update({
             'name' : 'support.function.builtin.{SCOPE}',
             'match':
             (
-                r'\b('
+                r'(?<!(?<!\.)\.)\b('
                 r'__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|'
                 r'dir|divmod|eval|exec|(py_)?filter|format|getattr|globals|hasattr|hash|'
                 r'help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|'
@@ -219,7 +219,7 @@ syntax['repository'].update({
             'name' : 'support.type.{SCOPE}',
             'match':
             (
-                r'\b('
+                r'(?<!(?<!\.)\.)\b('
                 r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|'
                 r'enumerate|float|frozenset|(py_)?int|list|memoryview|object|(py_)?open|'
                 r'property|reversed|set|slice|staticmethod|(py_)?str|super|type|'
@@ -227,7 +227,6 @@ syntax['repository'].update({
                 r')\b'
             )
         },
-
 
 #-- ENTITY --------------------------------------------------------------------#
         'illegal_names':
@@ -238,7 +237,7 @@ syntax['repository'].update({
                 r'\b('
                 r'and|as|assert|break|class|continue|def|del|elif|else|except|'
                 r'finally|for|from|global|if|import|in|is|lambda|nonlocal|not|'
-                r'or|pass|raise|return|try|while|with|yield|_coconut.*'
+                r'or|pass|raise|return|try|while|with|yield|_coconut\w*'
                 r')\b'
             )
         },
