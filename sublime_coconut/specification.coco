@@ -136,7 +136,7 @@ syntax['patterns'].update({
                 {'include': '#function_annotation'}
             ],
             # TODO: add illegal
-            'end': r'(\s*(:|(?==)))',
+            'end': r'\s*(:|=)',
             'endCaptures':
             {
                 2: {'name': 'invalid.illegal.missing_section_begin.{SCOPE}'}
