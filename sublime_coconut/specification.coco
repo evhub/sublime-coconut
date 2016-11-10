@@ -88,7 +88,7 @@ syntax['patterns'].update({
         0x00C0:
         {
             'name' : 'keyword.other.{SCOPE}',
-            'match': r'\b(as|assert|del)\b'
+            'match': r'\b(as|assert|del|\?)\b'
         },
 
 
