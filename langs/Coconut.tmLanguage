@@ -110,7 +110,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield|(?&lt;!\\)(async|await|match|case))\b</string>
+			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield|(?&lt;!\\)(match|case))\b</string>
 			<key>name</key>
 			<string>keyword.control.flow_block_delimiters.coconut</string>
 		</dict>
@@ -187,15 +187,25 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*(async\s)?\s*(def)\s+(?=[a-zA-Z_]\w*\s*\()</string>
+			<string>^\s*(match\s)?(async\s)?(match\s)?\s*(def)\s+(?=[a-zA-Z_]\w*\s*\()</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>storage.modifier.coroutine.coconut</string>
+					<string>keyword.other.coconut</string>
 				</dict>
 				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.modifier.coroutine.coconut</string>
+				</dict>
+				<key>3</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.other.coconut</string>
+				</dict>
+				<key>4</key>
 				<dict>
 					<key>name</key>
 					<string>storage.type.function.coconut</string>

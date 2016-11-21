@@ -81,7 +81,7 @@ syntax['patterns'].update({
             (
                 r'\b(elif|else|except|finally|for|if|try|while|'
                 r'with|break|continue|pass|raise|return|yield|'
-                r'(?<!\\)(async|await|match|case))\b'
+                r'(?<!\\)(match|case))\b'
             )
         },
 
@@ -121,11 +121,13 @@ syntax['patterns'].update({
         0x0120:
         {
             'name' : 'meta.function.{SCOPE}',
-            'begin': r'^\s*(async\s)?\s*(def)\s+(?=[a-zA-Z_]\w*\s*\()',
+            'begin': r'^\s*(match\s)?(async\s)?(match\s)?\s*(def)\s+(?=[a-zA-Z_]\w*\s*\()',
             'beginCaptures':
             {
-                1: {'name': 'storage.modifier.coroutine.{SCOPE}'},
-                2: {'name': 'storage.type.function.{SCOPE}'}
+                1: {'name': 'keyword.other.{SCOPE}'},
+                2: {'name': 'storage.modifier.coroutine.{SCOPE}'},
+                3: {'name': 'keyword.other.{SCOPE}'},
+                4: {'name': 'storage.type.function.{SCOPE}'}
             },
             'patterns':
             [
