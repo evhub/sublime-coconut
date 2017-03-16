@@ -121,7 +121,7 @@ syntax['patterns'].update({
         0x0120:
         {
             'name' : 'meta.function.{SCOPE}',
-            'begin': r'^\s*(match\s)?(async\s)?(match\s)?\s*(def)\s+(?=[a-zA-Z_]\w*\s*\()',
+            'begin': r'^\s*(match\s)?(async\s)?(match\s)?\s*(def)\s+(?=[a-zA-Z_][\w.]*\s*\()',
             'beginCaptures':
             {
                 1: {'name': 'keyword.other.{SCOPE}'},
@@ -226,7 +226,7 @@ syntax['repository'].update({
                 r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|'
                 r'enumerate|float|frozenset|(py_)?int|list|memoryview|object|(py_)?open|'
                 r'property|reversed|set|slice|staticmethod|(py_)?str|super|type|'
-                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map'
+                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap'
                 r')\b'
             )
         },
