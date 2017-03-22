@@ -480,7 +480,7 @@
 		<key>builtin_types</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!(?&lt;!\.)\.)\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|enumerate|float|frozenset|(py_)?int|list|memoryview|object|(py_)?open|property|reversed|set|slice|staticmethod|(py_)?str|super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap)\b</string>
+			<string>(?&lt;!(?&lt;!\.)\.)\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|property|reversed|set|slice|staticmethod|(py_)?str|super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap)\b</string>
 			<key>name</key>
 			<string>support.type.coconut</string>
 		</dict>

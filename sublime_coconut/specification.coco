@@ -224,7 +224,7 @@ syntax['repository'].update({
             (
                 r'(?<!(?<!\.)\.)\b('
                 r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|'
-                r'enumerate|float|frozenset|(py_)?int|list|memoryview|object|(py_)?open|'
+                r'enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|'
                 r'property|reversed|set|slice|staticmethod|(py_)?str|super|type|'
                 r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap'
                 r')\b'
