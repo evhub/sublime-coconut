@@ -507,7 +507,15 @@
 			<key>contentName</key>
 			<string>meta.class.inheritance.coconut</string>
 			<key>end</key>
-			<string>\)|:</string>
+			<string>:|\)\s*(\bfrom\b)?</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.class.coconut</string>
+				</dict>
+			</dict>
 			<key>patterns</key>
 			<array>
 				<dict>

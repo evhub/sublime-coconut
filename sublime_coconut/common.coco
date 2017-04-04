@@ -525,7 +525,11 @@ syntax = {
                     }
                 }
             ],
-            'end': r'\)|:'
+            'end': r':|\)\s*(\bfrom\b)?',
+            'endCaptures':
+            {
+                1: {'name': 'storage.type.class.{SCOPE}'}
+            }
         },
 
 
