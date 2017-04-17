@@ -491,7 +491,15 @@
 			<key>contentName</key>
 			<string>entity.name.type.class.coconut</string>
 			<key>end</key>
-			<string>(?!\w)</string>
+			<string>(?!\w)\s*(\bfrom\b)?</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.class.coconut</string>
+				</dict>
+			</dict>
 			<key>patterns</key>
 			<array>
 				<dict>

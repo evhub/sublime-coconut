@@ -503,7 +503,11 @@ syntax = {
             [
                 {'include': '#entity_name_class'}
             ],
-            'end': r'(?!\w)'
+            'end': r'(?!\w)\s*(\bfrom\b)?',
+            'endCaptures':
+            {
+                1: {'name': 'storage.type.class.{SCOPE}'}
+            }
         },
         'class_inheritance':
         {
