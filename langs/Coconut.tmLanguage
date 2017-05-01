@@ -2120,7 +2120,7 @@
 						</dict>
 					</dict>
 					<key>end</key>
-					<string>(?=,|[\n)])</string>
+					<string>(?=[,\n()])</string>
 					<key>patterns</key>
 					<array>
 						<dict>
