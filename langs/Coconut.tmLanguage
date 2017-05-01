@@ -162,7 +162,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(\)?[ \t\r\f\v]*\n|\)?\s*:|\s+([\w#\s:]+))</string>
+			<string>(\)?[ \t\r\f\v]*\n|\)?\s*:|\s+([\w#\s:\n]+))</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>3</key>
@@ -515,7 +515,7 @@
 			<key>contentName</key>
 			<string>meta.class.inheritance.coconut</string>
 			<key>end</key>
-			<string>:|\)\s*(\bfrom\b)?</string>
+			<string>\)(\s*\bfrom\b)?|\s*(?=:|\n)</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>1</key>

@@ -109,7 +109,7 @@ syntax['patterns'].update({
                 {'include': '#class_entity_name'},
                 {'include': '#class_inheritance'}
             ],
-            'end'  : r'(\)?[ \t\r\f\v]*\n|\)?\s*:|\s+([\w#\s:]+))',
+            'end'  : r'(\)?[ \t\r\f\v]*\n|\)?\s*:|\s+([\w#\s:\n]+))',
             'endCaptures':
             {
                 3: {'name': 'invalid.illegal.missing_section_begin.{SCOPE}'}
