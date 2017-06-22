@@ -162,9 +162,14 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(\)?[ \t\r\f\v]*\n|\)?\s*:|\s+([\w#\s:\n]+))</string>
+			<string>\)?(\s+\w*)?(?:[ \t\r\f\v]*\n|\s*:|\s*(?=#))</string>
 			<key>endCaptures</key>
 			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>entity.other.inherited-class.coconut</string>
+				</dict>
 				<key>3</key>
 				<dict>
 					<key>name</key>
