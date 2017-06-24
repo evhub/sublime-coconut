@@ -162,7 +162,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>\)?(\s+\w*)?(?:[ \t\r\f\v]*\n|\s*:|\s*(?=#))</string>
+			<string>\)?([ \t\r\f\v]+\w+)?[ \t\r\f\v]*(?:\n|:|(?=#))</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>1</key>

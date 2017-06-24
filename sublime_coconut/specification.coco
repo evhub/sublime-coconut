@@ -109,7 +109,7 @@ syntax['patterns'].update({
                 {'include': '#class_entity_name'},
                 {'include': '#class_inheritance'}
             ],
-            'end'  : r'\)?(\s+\w*)?(?:[ \t\r\f\v]*\n|\s*:|\s*(?=#))',
+            'end'  : r'\)?([ \t\r\f\v]+\w+)?[ \t\r\f\v]*(?:\n|:|(?=#))',
             'endCaptures':
             {
                 1: {'name': 'entity.other.inherited-class.{SCOPE}'},
