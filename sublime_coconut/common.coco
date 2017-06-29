@@ -91,14 +91,14 @@ syntax = {
         {
             # .001  .1e6  .1E6  .1e+6  .1E+6  .1e-6  .1E-6
             'name' : 'constant.numeric.float_and_complex.decimal.floatnumber.{SCOPE}',
-            'match': r'(?<!\.)(?<=\W|^)\.\d[\d_]*([eE][+-]?\d[\d_]*)?[iIjJ]?'
+            'match': r'(?<!\.)(?<=\W|^)\.\d[\d_]*([eE][+-]?\d[\d_]*)?[iIjJ]?(?!\.)'
         },
 
         0x0050:
         {
             # 1.  1.0  1.e10  1.1e6  1.1E6  1.1e+6  1.1E+6  1.1e-6  1.1E-6
             'name' : 'constant.numeric.float_and_complex.decimal.pointfloat.{SCOPE}',
-            'match': r'\d[\d_]*\.([\d_]*([eE][+-]?\d[\d_]*)?)?[iIjJ]?(?=\W)'
+            'match': r'\d[\d_]*\.([\d_]*([eE][+-]?\d[\d_]*)?)?[iIjJ]?(?=\W)(?!\.)'
         },
 
         0x0060:
@@ -147,15 +147,15 @@ syntax = {
         0x00E0:
         {
             'name' : 'keyword.operator.assignment.augmented.{SCOPE}',
-            'match': r'\+=|-=|\*=|/=|//=|%=|&=|\|=|\^=|<<=|>>=|\*\*='
-                    r'|@=|::=|\|>=|<\|=|\|\*>=|<\*\|=|\.\.='
+            'match': r'(?:\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@'
+                    r'|::|\$|\|>|<\||\|\*>|<\*\||`|<?\.\.>?|\|)='
         },
 
         0x00F0:
         {
             'name' : 'keyword.operator.arithmetic.{SCOPE}',
-            'match': r'\+|-|\*|\*\*|/|//|%|<<|>>|&|\||\^|~'
-                    r'|@|::|\$|\|>|<\||\|\*>|<\*\||`|\.\.'
+            'match': r'\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@'
+                    r'|::|\$|\|>|<\||\|\*>|<\*\||`|<?\.\.>?|\|'
         },
 
         0x0100:

@@ -68,13 +68,13 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!\.)(?&lt;=\W|^)\.\d[\d_]*([eE][+-]?\d[\d_]*)?[iIjJ]?</string>
+			<string>(?&lt;!\.)(?&lt;=\W|^)\.\d[\d_]*([eE][+-]?\d[\d_]*)?[iIjJ]?(?!\.)</string>
 			<key>name</key>
 			<string>constant.numeric.float_and_complex.decimal.floatnumber.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\d[\d_]*\.([\d_]*([eE][+-]?\d[\d_]*)?)?[iIjJ]?(?=\W)</string>
+			<string>\d[\d_]*\.([\d_]*([eE][+-]?\d[\d_]*)?)?[iIjJ]?(?=\W)(?!\.)</string>
 			<key>name</key>
 			<string>constant.numeric.float_and_complex.decimal.pointfloat.coconut</string>
 		</dict>
@@ -134,13 +134,13 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+=|-=|\*=|/=|//=|%=|&amp;=|\|=|\^=|&lt;&lt;=|&gt;&gt;=|\*\*=|@=|::=|\|&gt;=|&lt;\|=|\|\*&gt;=|&lt;\*\|=|\.\.=</string>
+			<string>(?:\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\|)=</string>
 			<key>name</key>
 			<string>keyword.operator.assignment.augmented.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\||\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|\.\.</string>
+			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\|</string>
 			<key>name</key>
 			<string>keyword.operator.arithmetic.coconut</string>
 		</dict>
