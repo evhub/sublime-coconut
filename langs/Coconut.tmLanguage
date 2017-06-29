@@ -128,19 +128,19 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>&lt;=|&gt;=|==|&lt;|&gt;|!=</string>
+			<string>&lt;=|&gt;=|==|&lt;|&gt;|!=|≠|≤|≥|¬=</string>
 			<key>name</key>
 			<string>keyword.operator.comparison.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(?:\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\|)=</string>
+			<string>(?:\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\||→|\*?↦|↤\*?|&lt;?∘&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
 			<key>name</key>
 			<string>keyword.operator.assignment.augmented.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\|</string>
+			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\||→|\*?↦|↤\*?|&lt;?∘&gt;?|⋅|↑|÷|−|⁻|¬|∧|∩|∨|∪|⊻|⊕|«|»|×|…</string>
 			<key>name</key>
 			<string>keyword.operator.arithmetic.coconut</string>
 		</dict>
