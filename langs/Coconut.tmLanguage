@@ -134,7 +134,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(?:\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\||→|\*?↦|↤\*?|&lt;?∘&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
+			<string>(\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\||→|\*?↦|↤\*?|&lt;?∘&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
 			<key>name</key>
 			<string>keyword.operator.assignment.augmented.coconut</string>
 		</dict>
@@ -485,7 +485,7 @@
 		<key>builtin_types</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!(?&lt;!\.)\.)\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|property|reversed|set|slice|staticmethod|(py_)?str|super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap)\b</string>
+			<string>(?&lt;!(?&lt;!\.)\.)\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|property|reversed|set|slice|staticmethod|(py_)?str|super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap|starmap)\b</string>
 			<key>name</key>
 			<string>support.type.coconut</string>
 		</dict>
@@ -2210,7 +2210,7 @@
 		<key>magic_function_names</key>
 		<dict>
 			<key>match</key>
-			<string>\b__(abs|add|and|await|bool|bytes|call|ceil|complex|contains|copy|deepcopy|del|delattr|delete|delitem|dir|div|divmod|a?enter|eq|a?exit|float|floor|floordiv|format|ge|get|getattr|getattribute|getinitargs|getitem|getnewargs|getstate|gt|hash|hex|iadd|iand|idiv|ifloordiv|ilshift|imul|index|init|instancecheck|int|invert|ior|ipow|irshift|isub|a?iter|itruediv|ixor|le|len|lshift|lt|metaclass|missing|mod|mul|ne|neg|new|a?next|(py_)?oct|or|pos|pow|prepare|radd|rand|rdiv|rdivmod|reduce|reduce_ex|repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|trunc|unicode|weakref|xor)__\b</string>
+			<string>\b__(abs|add|and|await|bool|bytes|call|ceil|complex|contains|copy|deepcopy|del|delattr|delete|delitem|dir|div|divmod|a?enter|eq|a?exit|float|floor|floordiv|format|ge|get|getattr|getattribute|getinitargs|getitem|getnewargs|getstate|gt|hash|hex|iadd|iand|idiv|ifloordiv|ilshift|imul|index|init|instancecheck|int|invert|ior|ipow|irshift|isub|a?iter|itruediv|ixor|le|len|lshift|lt|metaclass|missing|mod|mul|ne|neg|new|a?next|(py_)?oct|or|pos|pow|prepare|radd|rand|rdiv|rdivmod|reduce|reduce_ex|repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|trunc|unicode|weakref|xor|fmap)__\b</string>
 			<key>name</key>
 			<string>support.function.magic.coconut</string>
 		</dict>

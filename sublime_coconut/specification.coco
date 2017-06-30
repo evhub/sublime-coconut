@@ -227,7 +227,7 @@ syntax['repository'].update({
                 r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|'
                 r'enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|'
                 r'property|reversed|set|slice|staticmethod|(py_)?str|super|type|'
-                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap'
+                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap|starmap'
                 r')\b'
             )
         },
@@ -269,7 +269,7 @@ syntax['repository'].update({
                 r'repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|'
                 r'rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|'
                 r'setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|'
-                r'trunc|unicode|weakref|xor'
+                r'trunc|unicode|weakref|xor|fmap'
                 r')__\b'
             )
         },
