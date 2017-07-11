@@ -214,7 +214,7 @@ syntax['repository'].update({
                 r'help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|'
                 r'min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|'
                 r'reduce|takewhile|dropwhile|tee|datamaker|consume|py_raw_input|py_xrange|'
-                r'addpattern|prepattern|recursive_iterator'
+                r'addpattern|recursive_iterator'
                 r')\b'
             )
         },
