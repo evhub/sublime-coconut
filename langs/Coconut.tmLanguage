@@ -312,7 +312,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(None|True|False|Ellipsis|NotImplemented)\b</string>
+			<string>\b(None|True|False|Ellipsis|NotImplemented)\b|\?</string>
 			<key>name</key>
 			<string>constant.language.word_like.coconut</string>
 		</dict>

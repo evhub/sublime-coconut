@@ -158,7 +158,7 @@ syntax['patterns'].update({
         0x0160:
         {
             'name' : 'constant.language.word_like.{SCOPE}',
-            'match': r'\b(None|True|False|Ellipsis|NotImplemented)\b'
+            'match': r'\b(None|True|False|Ellipsis|NotImplemented)\b|\?'
         },
 
 
