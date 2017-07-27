@@ -134,13 +134,13 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\?\?|\||→|\*?↦|↤\*?|&lt;?∘&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
+			<string>(\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\?\??|\||→|\*?↦|↤\*?|&lt;?∘&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
 			<key>name</key>
 			<string>keyword.operator.assignment.augmented.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\?\?|\||→|\*?↦|↤\*?|&lt;?∘&gt;?|⋅|↑|÷|−|⁻|¬|∧|∩|∨|∪|⊻|⊕|«|»|×|…</string>
+			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\.\.&gt;?|\?\??|\||→|\*?↦|↤\*?|&lt;?∘&gt;?|⋅|↑|÷|−|⁻|¬|∧|∩|∨|∪|⊻|⊕|«|»|×|…</string>
 			<key>name</key>
 			<string>keyword.operator.arithmetic.coconut</string>
 		</dict>
@@ -312,7 +312,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(None|True|False|Ellipsis|NotImplemented)\b|\?</string>
+			<string>\b(None|True|False|Ellipsis|NotImplemented)\b</string>
 			<key>name</key>
 			<string>constant.language.word_like.coconut</string>
 		</dict>
@@ -2092,7 +2092,7 @@
 						</dict>
 						<dict>
 							<key>begin</key>
-							<string>(?&lt;=:)\s*</string>
+							<string>\s*\b(?=:|\+|\(|\w)</string>
 							<key>end</key>
 							<string>(?=,|(=)|[\n)])</string>
 							<key>endCaptures</key>
@@ -2130,7 +2130,7 @@
 					<array>
 						<dict>
 							<key>begin</key>
-							<string>(?&lt;=:)\s*</string>
+							<string>\s*\b(?=:|\+|\(|\w)</string>
 							<key>end</key>
 							<string>(?=,|[\n)])</string>
 							<key>patterns</key>

@@ -148,7 +148,7 @@ syntax = {
         {
             'name' : 'keyword.operator.assignment.augmented.{SCOPE}',
             'match': r'(\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@|::|\$'
-                    r'|\|>|<\||\|\*>|<\*\||`|<?\.\.>?|\?\?|\|'
+                    r'|\|>|<\||\|\*>|<\*\||`|<?\.\.>?|\?\??|\|'
                     '|\u2192|\\*?\u21a6|\u21a4\\*?|<?\u2218>?'
                     '|\u22c5|\u2191|\xf7|\u2212|\u207b'  # no \xac
                     '|\u2227|\u2229|\u2228|\u222a|\u22bb|\u2295'
@@ -159,7 +159,7 @@ syntax = {
         {
             'name' : 'keyword.operator.arithmetic.{SCOPE}',
             'match': r'\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@|::|\$'
-                    r'|\|>|<\||\|\*>|<\*\||`|<?\.\.>?|\?\?|\|'
+                    r'|\|>|<\||\|\*>|<\*\||`|<?\.\.>?|\?\??|\|'
                     '|\u2192|\\*?\u21a6|\u21a4\\*?|<?\u2218>?'
                     '|\u22c5|\u2191|\xf7|\u2212|\u207b|\xac'
                     '|\u2227|\u2229|\u2228|\u222a|\u22bb|\u2295'
@@ -586,9 +586,9 @@ syntax = {
                             ],
                             'end': r'(?=,|[\n)])',
                         },
-                        # Annotation assignment (kwargs)
+                        # Annotation assignment (kwargs) and pattern-matching
                         {
-                            'begin': r'(?<=:)\s*',
+                            'begin': r'\s*\b(?=:|\+|\(|\w)',
                             'patterns':
                             [
                                 {'include': '$self'}
@@ -611,9 +611,9 @@ syntax = {
                     },
                     'patterns':
                     [
-                        # Annotation assignment (args)
+                        # Annotation assignment (args) and pattern-matching
                         {
-                            'begin': r'(?<=:)\s*',
+                            'begin': r'\s*\b(?=:|\+|\(|\w)',
                             'patterns':
                             [
                                 {'include': '$self'}
