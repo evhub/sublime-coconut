@@ -31,6 +31,7 @@
 		<string>coc</string>
 		<string>coco</string>
 		<string>coconut</string>
+		<string>py_template</string>
 	</array>
 	<key>firstLineMatch</key>
 	<string>^#!/.*\bcoconut[\d.-]*\b</string>
@@ -192,7 +193,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*(match\s)?(async\s)?(match\s)?\s*(def)\s+(?=[a-zA-Z_][\w.]*\s*\()</string>
+			<string>^\s*(match\s+)?(async\s+)?(match\s+)?(def)\s+(?=[a-zA-Z_][\w.]*\s*\()</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -421,7 +422,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|\.\.|\\)\s*\(</string>
+			<string>(?&lt;=,|;|=|\+|-|\*|/|\||:|&lt;|&gt;|~|%|\^|\\|@|`|\\)\s*\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
@@ -436,7 +437,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||&lt;|&gt;|~|%|\^|\\|\n|@|::|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|\.\.|\\)\s*\$?\(</string>
+			<string>(?&lt;!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||&lt;|&gt;|~|%|\^|\\|\n|@|`|\\)\s*\$?\(</string>
 			<key>end</key>
 			<string>\)</string>
 			<key>name</key>
@@ -2018,7 +2019,7 @@
 		<key>function_annotation</key>
 		<dict>
 			<key>begin</key>
-			<string>(?&lt;=\))\s*(-&gt;)\s*</string>
+			<string>\s*(-&gt;)\s*</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -2051,7 +2052,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>\b([a-zA-Z_]\w*)\s*(=)</string>
+					<string>\b([a-zA-Z_]\w*)\s*(?:\([^)]*\)\s*)?(=)</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -2066,7 +2067,7 @@
 						</dict>
 					</dict>
 					<key>end</key>
-					<string>(?=,|[\n)])</string>
+					<string>(?=[,\n)])</string>
 					<key>patterns</key>
 					<array>
 						<dict>
@@ -2081,7 +2082,7 @@
 								</dict>
 							</dict>
 							<key>end</key>
-							<string>(?=,|[\n)])</string>
+							<string>(?=[,\n)])</string>
 							<key>patterns</key>
 							<array>
 								<dict>
@@ -2092,9 +2093,9 @@
 						</dict>
 						<dict>
 							<key>begin</key>
-							<string>\s*\b(?=:|\+|\(|\w)</string>
+							<string>\s*\b(?=:|\+|\w)</string>
 							<key>end</key>
-							<string>(?=,|(=)|[\n)])</string>
+							<string>(?=(=)|[,\n)])</string>
 							<key>endCaptures</key>
 							<dict>
 								<key>1</key>
@@ -2115,7 +2116,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>\b([a-zA-Z_]\w*)\s*</string>
+					<string>\b([a-zA-Z_]\w*)\s*(?:\([^)]*\)\s*)?</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -2130,9 +2131,9 @@
 					<array>
 						<dict>
 							<key>begin</key>
-							<string>\s*\b(?=:|\+|\(|\w)</string>
+							<string>\s*\b(?=:|\+|\w)</string>
 							<key>end</key>
-							<string>(?=,|[\n)])</string>
+							<string>(?=[,\n)])</string>
 							<key>patterns</key>
 							<array>
 								<dict>
@@ -2191,7 +2192,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>(?=,|[\n)])</string>
+			<string>(?=[,\n)])</string>
 			<key>patterns</key>
 			<array>
 				<dict>

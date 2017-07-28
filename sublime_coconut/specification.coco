@@ -42,7 +42,7 @@ from .common import syntax as original
 syntax = deepcopy(original)
 
 # Auto-recognition
-syntax['fileTypes'] = ['coc', 'coco', 'coconut']
+syntax['fileTypes'] = ['coc', 'coco', 'coconut', 'py_template']
 syntax['keyEquivalent'] = '^~O'
 
 # Shebang
@@ -122,7 +122,7 @@ syntax['patterns'].update({
         0x0120:
         {
             'name' : 'meta.function.{SCOPE}',
-            'begin': r'^\s*(match\s)?(async\s)?(match\s)?\s*(def)\s+(?=[a-zA-Z_][\w.]*\s*\()',
+            'begin': r'^\s*(match\s+)?(async\s+)?(match\s+)?(def)\s+(?=[a-zA-Z_][\w.]*\s*\()',
             'beginCaptures':
             {
                 1: {'name': 'keyword.other.{SCOPE}'},

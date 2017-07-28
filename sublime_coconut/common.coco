@@ -358,7 +358,7 @@ syntax = {
         # GROUPS, TUPLES
         {
             'name' : 'meta.structure.group.{SCOPE}',
-            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|@|::|\|>|<\||\|\*>|<\*\||`|\.\.|\\)\s*\(',
+            'begin': r'(?<=,|;|=|\+|-|\*|/|\||:|<|>|~|%|\^|\\|@|`|\\)\s*\(',
             'patterns':
             [
                 {'include': '$self'}
@@ -371,7 +371,7 @@ syntax = {
         0x0250:
         {
             'name' : 'meta.function_call.{SCOPE}',
-            'begin': r'(?<!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||<|>|~|%|\^|\\|\n|@|::|\|>|<\||\|\*>|<\*\||`|\.\.|\\)\s*\$?\(',
+            'begin': r'(?<!:|,|;|\[|\{|\}|=|\+|-|\*|/|\||<|>|~|%|\^|\\|\n|@|`|\\)\s*\$?\(',
             'patterns':
             [
                 {'include': '#keyword_arguments'},
@@ -565,7 +565,7 @@ syntax = {
                 {'include': '#comment'},
                 # Keyword arguments
                 {
-                    'begin': r'\b([a-zA-Z_]\w*)\s*(=)',
+                    'begin': r'\b([a-zA-Z_]\w*)\s*(?:\([^)]*\)\s*)?(=)',
                     'beginCaptures':
                     {
                         1: {'name': 'variable.parameter.function.{SCOPE}'},
@@ -584,27 +584,27 @@ syntax = {
                             [
                                 {'include': '$self'}
                             ],
-                            'end': r'(?=,|[\n)])',
+                            'end': r'(?=[,\n)])',
                         },
                         # Annotation assignment (kwargs) and pattern-matching
                         {
-                            'begin': r'\s*\b(?=:|\+|\(|\w)',
+                            'begin': r'\s*\b(?=:|\+|\w)',
                             'patterns':
                             [
                                 {'include': '$self'}
                             ],
-                            'end': r'(?=,|(=)|[\n)])',
+                            'end': r'(?=(=)|[,\n)])',
                             'endCaptures':
                             {
                                 1: {'name': 'keyword.operator.assignment.{SCOPE}'}
                             }
                         }
                     ],
-                    'end': r'(?=,|[\n)])'
+                    'end': r'(?=[,\n)])'
                 },
                 # Positional arguments
                 {
-                    'begin': r'\b([a-zA-Z_]\w*)\s*',
+                    'begin': r'\b([a-zA-Z_]\w*)\s*(?:\([^)]*\)\s*)?',
                     'beginCaptures':
                     {
                         1: {'name': 'variable.parameter.function.{SCOPE}'}
@@ -613,12 +613,12 @@ syntax = {
                     [
                         # Annotation assignment (args) and pattern-matching
                         {
-                            'begin': r'\s*\b(?=:|\+|\(|\w)',
+                            'begin': r'\s*\b(?=:|\+|\w)',
                             'patterns':
                             [
                                 {'include': '$self'}
                             ],
-                            'end': r'(?=,|[\n)])',
+                            'end': r'(?=[,\n)])',
                         }
                     ],
                     'end': r'(?=[,\n()])'
@@ -628,7 +628,7 @@ syntax = {
         },
         'function_annotation':
         {
-            'begin': r'(?<=\))\s*(->)\s*',
+            'begin': r'\s*(->)\s*',
             'beginCaptures':
             {
                 1: {'name': 'keyword.operator.annotation.assignment.{SCOPE}'}
@@ -701,7 +701,7 @@ syntax = {
             [
                 {'include': '$self'}
             ],
-            'end': r'(?=,|[\n)])'
+            'end': r'(?=[,\n)])'
         },
 
 
