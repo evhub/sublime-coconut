@@ -1,9 +1,6 @@
 .PHONY: run
 run: build
 	python ./build.py
-	cp ./langs/* ./Syntaxes
-	apm init --package ./language-coconut --convert .
-	rm -rf ./Syntaxes
 
 .PHONY: build
 build:
@@ -15,3 +12,9 @@ setup:
 	git clone https://github.com/evhub/tmtools.git
 	pip install ./tmtools
 	rm -rf ./tmtools
+
+.PHONY: atom
+atom: run
+	cp ./langs/* ./Syntaxes
+	apm init --package ./language-coconut --convert .
+	rm -rf ./Syntaxes
