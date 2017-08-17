@@ -1,0 +1,9 @@
+name: "Comments"
+scope: "source.coconut"
+settings:
+  shellVariables: [
+    {
+      name: "TM_COMMENT_START"
+      value: "# "
+    }
+  ]
