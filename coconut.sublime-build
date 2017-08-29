@@ -1,0 +1,29 @@
+{
+    "shell_cmd": "coconut \"$file\"",
+    "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+    "selector": "source.coconut",
+
+    "variants":
+    [
+        {
+            "name": "Build Project",
+            "shell_cmd": "coconut \"${folder}\"",
+        },
+        {
+            "name": "Build file for 3.6",
+            "shell_cmd": "coconut \"${file}\" --target 36",
+        },
+        {
+            "name": "Build project for 3.6",
+            "shell_cmd": "coconut \"${folder}\" --target 36",
+        },
+        {
+            "name": "Build and typecheck file",
+            "shell_cmd": "coconut \"${file}\" --force --mypy",
+        },
+        {
+            "name": "Check style",
+            "shell_cmd": "coconut \"${file}\" --nowrite --strict",
+        }
+    ]
+}
