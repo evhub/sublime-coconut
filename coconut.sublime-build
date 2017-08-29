@@ -24,6 +24,10 @@
         {
             "name": "Check style",
             "shell_cmd": "coconut \"${file}\" --nowrite --strict",
-        }
+        },
+        {
+            "name": "Build on changes",
+            "shell_cmd": "coconut \"${folder}\" --watch",
+        },
     ]
 }
