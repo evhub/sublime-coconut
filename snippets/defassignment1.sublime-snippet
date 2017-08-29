@@ -1,0 +1,8 @@
+<snippet>
+    <content><![CDATA[
+def ${1:name}(${2:args}) = ${0:expr}
+]]></content>
+    <tabTrigger>defa1</tabTrigger>
+    <scope>source.coconut</scope>
+    <description>def name() = expr</description>
+</snippet>
