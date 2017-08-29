@@ -1,0 +1,9 @@
+<snippet>
+    <content><![CDATA[
+match ${1:pattern if condition}:
+    $0
+]]></content>
+    <tabTrigger>casematch</tabTrigger>
+    <scope>source.coconut</scope>
+    <description>match ? in ?</description>
+</snippet>

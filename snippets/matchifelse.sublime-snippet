@@ -1,0 +1,11 @@
+<snippet>
+    <content><![CDATA[
+match ${1:pattern} in ${2:value} if ${3:cond}:
+    $4
+else: 
+    $0
+]]></content>
+    <tabTrigger>matchifelse</tabTrigger>
+    <scope>source.coconut</scope>
+    <description>match if/else</description>
+</snippet>

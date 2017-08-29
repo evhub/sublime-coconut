@@ -1,0 +1,8 @@
+<snippet>
+    <content><![CDATA[
+def (${1:args}) -> ${0:expr}
+]]></content>
+    <tabTrigger>deflambda</tabTrigger>
+    <scope>source.coconut</scope>
+    <description>def (args) -> expr</description>
+</snippet>
