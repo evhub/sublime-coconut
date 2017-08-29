@@ -103,9 +103,6 @@ ENV/
 *.sw[nop]
 .ropeproject
 
-# Sublime
-*.sublime-*
-
 # Compiled Python
 build/
 *.py
