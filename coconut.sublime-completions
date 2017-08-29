@@ -1,0 +1,13 @@
+{
+	"scope": "source.coconut",
+
+	"completions": [
+		{ "trigger": "->", "contents": "-> ${1:exp}" },
+        { "trigger": "lambda\t(x) -> exp", "contents": "(${1:x}) -> ${2:exp}" },
+        { "trigger": "()->", "contents": "(${1:x}) -> ${2:exp}" },
+        { "trigger": "data", "contents": "data ${1:name}(${2:args, *rest})" },
+        { "trigger": "datafrom", "contents": "data ${1:name}(${2:args, *rest}) from ${3:parent}" },
+        { "trigger": "set\ts{}", "contents": "s{$0}" },
+        { "trigger": "frozenset\tf{}", "contents": "f{$0}" },
+	]
+}
