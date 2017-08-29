@@ -1,0 +1,10 @@
+<snippet>
+    <content><![CDATA[
+@addpattern($1)
+def ${1:func}(${2:args}):
+    ${0:pass}
+]]></content>
+    <tabTrigger>pattern</tabTrigger>
+    <scope>source.coconut</scope>
+    <description>new pattern</description>
+</snippet>
