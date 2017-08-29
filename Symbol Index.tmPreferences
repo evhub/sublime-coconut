@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Symbol Index</string>
+	<key>scope</key>
+	<string>
+        source.coconut entity.name.function, source.coconut entity.name.type.class
+    </string>
+	<key>settings</key>
+	<dict>
+		<key>showInIndexedSymbolList</key>
+		<integer>1</integer>
+	</dict>
+</dict>
+</plist>
