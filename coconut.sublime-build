@@ -28,6 +28,6 @@
         {
             "name": "Build on changes",
             "shell_cmd": "coconut \"${folder}\" --watch",
-        },
+        }
     ]
 }
