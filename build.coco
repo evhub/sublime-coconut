@@ -34,11 +34,10 @@ from os.path import join
 # Module level constants
 CURRENT_DIR = '.'
 LANG_PATH  = join(CURRENT_DIR, 'langs')
-THEME_PATH = join(CURRENT_DIR, 'themes')
 
 # Import tmtools modules
 try:
-    from tmtools.convert import Language, Theme
+    from tmtools.convert import Language
 except ImportError:
     from sys import exit
     print('[ ERROR ] tmtools modules are missing: '
@@ -49,7 +48,7 @@ except ImportError:
 # Import user modules
 from sublime_coconut import syntax as coconut_syntax
 
-# I/O Details of languages and themes
+# I/O Details of the language
 coconut_details = {
     'name' : 'Coconut',
     'path' : LANG_PATH,

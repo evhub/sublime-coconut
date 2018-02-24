@@ -111,7 +111,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield|(?&lt;!\\)(match|case))\b</string>
+			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield|(?&lt;!\\)(match|case|where))\b</string>
 			<key>name</key>
 			<string>keyword.control.flow_block_delimiters.coconut</string>
 		</dict>
@@ -135,13 +135,13 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\*?\.\.\*?&gt;?|\?\??|\||→|\*?↦|↤\*?|&lt;?\*?∘\*?&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
+			<string>(\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\*?\.\.\*?&gt;?|\?\??|\|→|\*?↦|↤\*?|&lt;?\*?∘\*?&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
 			<key>name</key>
 			<string>keyword.operator.assignment.augmented.coconut</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\*?\.\.\*?&gt;?|\?\??|\||→|\*?↦|↤\*?|&lt;?\*?∘\*?&gt;?|⋅|↑|÷|−|⁻|¬|∧|∩|∨|∪|⊻|⊕|«|»|×|…</string>
+			<string>\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|&gt;|&lt;\||\|\*&gt;|&lt;\*\||`|&lt;?\*?\.\.(?!\.)\*?&gt;?|\?\??|\|→|\*?↦|↤\*?|&lt;?\*?∘\*?&gt;?|⋅|↑|÷|−|⁻|¬|∧|∩|∨|∪|⊻|⊕|«|»|×|…</string>
 			<key>name</key>
 			<string>keyword.operator.arithmetic.coconut</string>
 		</dict>
@@ -170,11 +170,6 @@
 				<dict>
 					<key>name</key>
 					<string>entity.other.inherited-class.coconut</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>invalid.illegal.missing_section_begin.coconut</string>
 				</dict>
 			</dict>
 			<key>name</key>
@@ -220,13 +215,7 @@
 			<key>end</key>
 			<string>\s*(:|=)</string>
 			<key>endCaptures</key>
-			<dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>invalid.illegal.missing_section_begin.coconut</string>
-				</dict>
-			</dict>
+			<dict/>
 			<key>name</key>
 			<string>meta.function.coconut</string>
 			<key>patterns</key>
@@ -313,7 +302,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(None|True|False|Ellipsis|NotImplemented)\b</string>
+			<string>\b(None|True|False|Ellipsis|NotImplemented|TYPE_CHECKING)\b</string>
 			<key>name</key>
 			<string>constant.language.word_like.coconut</string>
 		</dict>
@@ -479,7 +468,7 @@
 		<key>builtin_functions</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!(?&lt;!\.)\.)\b(__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|dir|divmod|eval|exec|(py_)?filter|format|getattr|globals|hasattr|hash|help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|addpattern|recursive_iterator|reiterable|scan|groupsof)\b</string>
+			<string>(?&lt;!(?&lt;!\.)\.)\b(__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|dir|divmod|eval|exec|(py_)?filter|format|getattr|globals|hasattr|hash|help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|addpattern|recursive_iterator|reiterable|scan|groupsof|memoize)\b</string>
 			<key>name</key>
 			<string>support.function.builtin.coconut</string>
 		</dict>
