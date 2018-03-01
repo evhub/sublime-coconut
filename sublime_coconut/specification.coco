@@ -214,7 +214,7 @@ syntax['repository'].update({
                 r'help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|'
                 r'min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|'
                 r'reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|'
-                r'addpattern|recursive_iterator|reiterable|scan|groupsof|memoize'
+                r'addpattern|recursive_iterator|reiterable|scan|groupsof|memoize|fmap'
                 r')\b'
             )
         },
@@ -227,7 +227,7 @@ syntax['repository'].update({
                 r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|'
                 r'enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|'
                 r'property|reversed|set|slice|staticmethod|(py_)?str|super|type|'
-                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|fmap|starmap'
+                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap'
                 r')\b'
             )
         },
