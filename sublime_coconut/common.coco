@@ -384,13 +384,13 @@ syntax = {
 #-- STRING --------------------------------------------------------------------#
         0x0260:
         {
-            'include': '#fstring_quoted'
+            'include': '#f_string_quoted'
         },
 
 
         0x0270:
         {
-            'include': '#rstring_quoted'
+            'include': '#string_quoted_regex'
         },
 
         0x0280:
@@ -813,7 +813,7 @@ syntax = {
                 },
             ]
         },
-        'rstring_quoted':
+        'string_quoted_regex':
         {
             'patterns':
             [
@@ -887,7 +887,7 @@ syntax = {
                 },
             ]
         },
-        'fstring_quoted':
+        'f_string_quoted':
         {
             'patterns':
             [
@@ -1964,7 +1964,7 @@ syntax = {
                     [
                         {'include': '$self'},
                     ],
-                    'end': r'(?=!|:)'
+                    'end': r'(?=!|:|})'
                 }
             ]
         },
