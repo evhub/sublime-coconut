@@ -3,15 +3,14 @@ run: build
 	python ./build.py
 
 .PHONY: build
-build:
-	coconut . -sf -j sys
+build: setup
+	coconut . --strict --jobs sys
 
 .PHONY: setup
 setup:
 	pip install coconut-develop
-	git clone https://github.com/evhub/tmtools.git
+	-git clone https://github.com/evhub/tmtools.git
 	pip install ./tmtools
-	rm -rf ./tmtools
 
 .PHONY: atom
 atom: run
