@@ -17,7 +17,7 @@
         { "trigger": "count\tcount([start=0], [step=1])", "contents": "count(${1:start=0}, ${2:step=1})" },
         { "trigger": "fmap\tfmap(f, obj)", "contents": "fmap(${1:f}, ${2:obj})" },
         { "trigger": "datamaker\tdatamaker(cls)", "contents": "datamaker(${1:cls})" },
-        { "trigger": "addpattern\t@addpattern(f)", "contents": "@addpattern(${1:f})" },
+        { "trigger": "addpattern\taddpattern def f(x)", "contents": "addpattern def${1:f}(${2:x})" },
         { "trigger": "recursive_iterator\t@recursive_iterator", "contents": "@recursive_iterator" },
         { "trigger": "->", "contents": "-> ${1:exp}" },
         { "trigger": "lambda\t(x) -> exp", "contents": "(${1:x}) -> ${2:exp}" },
