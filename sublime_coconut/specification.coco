@@ -225,8 +225,8 @@ syntax['repository'].update({
             (
                 r'(?<!(?<!\.)\.)\b('
                 r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|'
-                r'enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|'
-                r'property|reversed|set|slice|staticmethod|(py_)?str|super|type|'
+                r'(py_)?enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|'
+                r'property|(py_)?reversed|set|slice|staticmethod|(py_)?str|super|type|'
                 r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap'
                 r')\b'
             )
@@ -264,7 +264,7 @@ syntax['repository'].update({
                 r'getinitargs|getitem|getnewargs|getstate|gt|hash|hex|iadd|'
                 r'iand|idiv|ifloordiv|ilshift|imul|index|init|instancecheck|'
                 r'int|invert|ior|ipow|irshift|isub|a?iter|itruediv|ixor|le|len|'
-                r'lshift|lt|metaclass|missing|mod|mul|ne|neg|new|a?next|(py_)?oct|or|'
+                r'lshift|lt|metaclass|missing|mod|mul|ne|neg|new|a?next|oct|or|'
                 r'pos|pow|prepare|radd|rand|rdiv|rdivmod|reduce|reduce_ex|'
                 r'repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|'
                 r'rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|'
