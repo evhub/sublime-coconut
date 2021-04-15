@@ -79,7 +79,7 @@ syntax['patterns'].update({
             'name' : 'keyword.control.flow_block_delimiters.{SCOPE}',
             'match':
             (
-                r'\b(elif|else|except|finally|for|if|try|while|'
+                r'\b(elif|else|except|finally|for|if|try|(do\s+)?while|'
                 r'with|break|continue|pass|raise|return|yield|'
                 r'(?<!\\)(match|case|where))\b'
             )

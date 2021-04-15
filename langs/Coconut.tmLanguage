@@ -111,7 +111,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(elif|else|except|finally|for|if|try|while|with|break|continue|pass|raise|return|yield|(?&lt;!\\)(match|case|where))\b</string>
+			<string>\b(elif|else|except|finally|for|if|try|(do\s+)?while|with|break|continue|pass|raise|return|yield|(?&lt;!\\)(match|case|where))\b</string>
 			<key>name</key>
 			<string>keyword.control.flow_block_delimiters.coconut</string>
 		</dict>
@@ -135,7 +135,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>(\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|::|\$|\|\??\*?\*?&gt;|&lt;\*?\*?\||`|&lt;?\*?\*?\.\.\*?\*?&gt;?|\?\??|\|→|\??\*?\*?↦|↤\*?\*?|&lt;?\*?∘\*?&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
+			<string>(\+|-|\*|\*\*|/|//|%|&lt;&lt;|&gt;&gt;|&amp;|\^|~|@|:|::|\$|\|\??\*?\*?&gt;|&lt;\*?\*?\||`|&lt;?\*?\*?\.\.\*?\*?&gt;?|\?\??|\|→|\??\*?\*?↦|↤\*?\*?|&lt;?\*?∘\*?&gt;?|⋅|↑|÷|−|⁻|∧|∩|∨|∪|⊻|⊕|«|»|×|…)=</string>
 			<key>name</key>
 			<string>keyword.operator.assignment.augmented.coconut</string>
 		</dict>
@@ -147,7 +147,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>=|-&gt;</string>
+			<string>:?=|-&gt;</string>
 			<key>name</key>
 			<string>keyword.operator.value_and_annotation_assignment.coconut</string>
 		</dict>
