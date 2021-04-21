@@ -109,7 +109,7 @@ syntax['patterns'].update({
                 {'include': '#class_entity_name'},
                 {'include': '#class_inheritance'}
             ],
-            'end'  : r'\)?([ \t\r\f\v]+\w+)?[ \t\r\f\v]*(?:\n|:|(?=#))',
+            'end'  : r'\)?([ \t\r\f\v]+\w+)?[ \t\r\f\v]*(?::|(?=#|\n))',
             'endCaptures':
             {
                 1: {'name': 'entity.other.inherited-class.{SCOPE}'},
@@ -269,7 +269,7 @@ syntax['repository'].update({
                 r'repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|'
                 r'rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|'
                 r'setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|'
-                r'trunc|unicode|weakref|xor|fmap'
+                r'trunc|unicode|weakref|xor|fmap|set_name'
                 r')__\b'
             )
         },
