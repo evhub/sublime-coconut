@@ -1,7 +1,6 @@
 <snippet>
     <content><![CDATA[
-@addpattern($1)
-def ${1:func}(${2:args}):
+addpattern def ${1:func}(${2:args}):
     ${0:pass}
 ]]></content>
     <tabTrigger>pattern</tabTrigger>
