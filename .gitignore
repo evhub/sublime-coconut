@@ -113,5 +113,8 @@ tmtools/
 # VSCode
 *.vsix
 
+# Atom
+Syntaxes/
+
 # Node
 node_modules/
