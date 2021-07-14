@@ -1,0 +1,62 @@
+{
+	"case": {
+		"prefix": "case",
+		"body": "\ncase ${1:value}:\n    match ${2:pattern if condition}:\n        $3\n${4:else:\n    $0}\n",
+		"description": "case",
+		"scope": "source.coconut"
+	},
+	"casematch": {
+		"prefix": "casematch",
+		"body": "\nmatch ${1:pattern if condition}:\n    $0\n",
+		"description": "match ? in ?",
+		"scope": "source.coconut"
+	},
+	"defa": {
+		"prefix": "defa",
+		"body": "\ndef ${1:name}(${2:args}) = \n    ${0:expr}\n",
+		"description": "def name() =",
+		"scope": "source.coconut"
+	},
+	"defa1": {
+		"prefix": "defa1",
+		"body": "\ndef ${1:name}(${2:args}) = ${0:expr}\n",
+		"description": "def name() = expr",
+		"scope": "source.coconut"
+	},
+	"deflambda": {
+		"prefix": "deflambda",
+		"body": "\ndef (${1:args}) -> ${0:expr}\n",
+		"description": "def (args) -> expr",
+		"scope": "source.coconut"
+	},
+	"match": {
+		"prefix": "match",
+		"body": "\nmatch ${1:pattern} in ${2:value}:\n    $0\n",
+		"description": "match ? in ?:",
+		"scope": "source.coconut"
+	},
+	"matchelse": {
+		"prefix": "matchelse",
+		"body": "\nmatch ${1:pattern} in ${2:value}:\n    $3\nelse:\n    $0\n",
+		"description": "match/else",
+		"scope": "source.coconut"
+	},
+	"matchif": {
+		"prefix": "matchif",
+		"body": "\nmatch ${1:pattern} in ${2:value} if ${3:cond}:\n    $0\n",
+		"description": "match ? in ? if ?:",
+		"scope": "source.coconut"
+	},
+	"matchifelse": {
+		"prefix": "matchifelse",
+		"body": "\nmatch ${1:pattern} in ${2:value} if ${3:cond}:\n    $4\nelse: \n    $0\n",
+		"description": "match if/else",
+		"scope": "source.coconut"
+	},
+	"pattern": {
+		"prefix": "pattern",
+		"body": "\naddpattern def ${1:func}(${2:args}):\n    ${0:pass}\n",
+		"description": "new pattern",
+		"scope": "source.coconut"
+	}
+}

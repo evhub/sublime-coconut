@@ -109,3 +109,9 @@ build/
 
 # tmtools
 tmtools/
+
+# VSCode
+*.vsix
+
+# Node
+node_modules/
