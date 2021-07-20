@@ -9,13 +9,14 @@ build: setup
 
 .PHONY: setup
 setup:
-	npm install -g vsce
+	npm install -g vsce ovsx
 	-git clone https://github.com/evhub/tmtools.git
 	pip install ./tmtools
 
 .PHONY: publish
 publish: build
 	vsce publish
+	ovsx publish
 
 .PHONY: atom
 atom: build
