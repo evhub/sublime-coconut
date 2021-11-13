@@ -565,7 +565,7 @@ syntax = {
                 {'include': '#comment'},
                 # Keyword arguments
                 {
-                    'begin': r'\b([a-zA-Z_]\w*)\s*(?:\([^)]*\)\s*)?(=)',
+                    'begin': r'\b([a-zA-Z_]\w*)\s*(?:\([^)]*\)\s*)?(=|`)',
                     'beginCaptures':
                     {
                         1: {'name': 'variable.parameter.function.{SCOPE}'},
@@ -575,7 +575,7 @@ syntax = {
                     [
                         # Keyword assignment
                         {
-                            'begin': r'(?<=(=))\s*',
+                            'begin': r'(?<=(=|`))\s*',
                             'beginCaptures':
                             {
                                 1: {'name': 'keyword.operator.assignment.{SCOPE}'}
@@ -593,7 +593,7 @@ syntax = {
                             [
                                 {'include': '$self'}
                             ],
-                            'end': r'(?=(=)|[,\n)])',
+                            'end': r'(?=(=|`)|[,\n)])',
                             'endCaptures':
                             {
                                 1: {'name': 'keyword.operator.assignment.{SCOPE}'}

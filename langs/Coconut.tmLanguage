@@ -2041,7 +2041,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>\b([a-zA-Z_]\w*)\s*(?:\([^)]*\)\s*)?(=)</string>
+					<string>\b([a-zA-Z_]\w*)\s*(?:\([^)]*\)\s*)?(=|`)</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -2061,7 +2061,7 @@
 					<array>
 						<dict>
 							<key>begin</key>
-							<string>(?&lt;=(=))\s*</string>
+							<string>(?&lt;=(=|`))\s*</string>
 							<key>beginCaptures</key>
 							<dict>
 								<key>1</key>
@@ -2084,7 +2084,7 @@
 							<key>begin</key>
 							<string>\s*\b(?=:|\+|\w)</string>
 							<key>end</key>
-							<string>(?=(=)|[,\n)])</string>
+							<string>(?=(=|`)|[,\n)])</string>
 							<key>endCaptures</key>
 							<dict>
 								<key>1</key>

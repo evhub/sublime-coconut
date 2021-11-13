@@ -3,7 +3,7 @@ install: build
 	find . -name '*.vsix' | xargs code --install-extension
 
 .PHONY: build
-build: setup
+build: clean setup
 	python ./build.py
 	vsce package
 
@@ -22,3 +22,7 @@ publish: build
 atom: build
 	cp ./langs/* ./Syntaxes
 	apm init --package ./language-coconut --convert .
+
+.PHONY: clean
+clean:
+	find . -name '*.vsix' -delete
