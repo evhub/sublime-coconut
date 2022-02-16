@@ -528,7 +528,7 @@ syntax = {
                     'begin': r'(?<=\(|,)\s*',
                     'patterns':
                     [
-                        {'include': '$self'}
+                        {'include': '$self'},
                     ],
                     'end': r'\s*(?:,|(?=\)))',
                     'endCaptures':
@@ -537,7 +537,7 @@ syntax = {
                     }
                 }
             ],
-            'end': r'\)(\s*\bfrom\b)?|\s*(?=:|\n|#)',
+            'end': r'\)(\s*\bfrom\b)?|\s*(?=:|=|\n|#)',
             'endCaptures':
             {
                 1: {'name': 'storage.type.class.{SCOPE}'}

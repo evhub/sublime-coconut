@@ -163,7 +163,7 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>\)?([ \t\r\f\v]+\w+)?[ \t\r\f\v]*(?::|(?=#|\n))</string>
+			<string>\)?([ \t\r\f\v]+\w+)?[ \t\r\f\v]*(?::|=|(?=#|\n))</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>1</key>
@@ -179,10 +179,6 @@
 				<dict>
 					<key>include</key>
 					<string>#class_entity_name</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#class_inheritance</string>
 				</dict>
 			</array>
 		</dict>
@@ -510,7 +506,7 @@
 			<key>contentName</key>
 			<string>meta.class.inheritance.coconut</string>
 			<key>end</key>
-			<string>\)(\s*\bfrom\b)?|\s*(?=:|\n|#)</string>
+			<string>\)(\s*\bfrom\b)?|\s*(?=:|=|\n|#)</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>1</key>
