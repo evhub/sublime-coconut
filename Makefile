@@ -1,11 +1,11 @@
-.PHONY: install
-install: build
-	find . -name '*.vsix' | xargs code --install-extension
-
 .PHONY: build
 build: clean setup
 	python ./build.py
 	vsce package
+
+.PHONY: install
+install: build
+	-find . -name '*.vsix' | xargs code --install-extension
 
 .PHONY: setup
 setup:
@@ -25,4 +25,9 @@ atom: build
 
 .PHONY: clean
 clean:
-	find . -name '*.vsix' -delete
+	-find . -name "*.pyc" -delete
+	-C:/GnuWin32/bin/find.exe . -name "*.pyc" -delete
+	-find . -name "__pycache__" -delete
+	-C:/GnuWin32/bin/find.exe . -name "__pycache__" -delete
+	-find . -name "*.vsix" -delete
+	-C:/GnuWin32/bin/find.exe . -name "*.vsix" -delete
