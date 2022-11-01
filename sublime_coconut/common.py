@@ -142,6 +142,7 @@ syntax = {
         {
             'name' : 'keyword.operator.comparison.{SCOPE}',
             'match': '<=|>=|==|<(?!\*|\|)|>|!=|\u2260|\u2264|\u2265|\xac='
+                    '|\u2286|\u2287|\u228a|\u228b'
         },
 
         0x00E0:

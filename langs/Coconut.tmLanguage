@@ -129,7 +129,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>&lt;=|&gt;=|==|&lt;(?!\*|\|)|&gt;|!=|≠|≤|≥|¬=</string>
+			<string>&lt;=|&gt;=|==|&lt;(?!\*|\|)|&gt;|!=|≠|≤|≥|¬=|⊆|⊇|⊊|⊋</string>
 			<key>name</key>
 			<string>keyword.operator.comparison.coconut</string>
 		</dict>
