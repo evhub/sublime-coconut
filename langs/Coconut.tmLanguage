@@ -129,7 +129,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>&lt;=|&gt;=|==|&lt;(?!\*|\|)|&gt;|!=|≠|≤|≥|¬=|⊆|⊇|⊊|⊋</string>
+			<string>&lt;=|&gt;=|==|&lt;(?!\*|\||:)|&gt;|!=|≠|≤|≥|¬=|⊆|⊇|⊊|⊋</string>
 			<key>name</key>
 			<string>keyword.operator.comparison.coconut</string>
 		</dict>
@@ -147,7 +147,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>:?=|-&gt;</string>
+			<string>:?=|-&gt;|&lt;:</string>
 			<key>name</key>
 			<string>keyword.operator.value_and_annotation_assignment.coconut</string>
 		</dict>
@@ -2078,7 +2078,7 @@
 						</dict>
 						<dict>
 							<key>begin</key>
-							<string>\s*\b(?=:|\+|\w)</string>
+							<string>\s*\b(?=&lt;?:|\+|\w)</string>
 							<key>end</key>
 							<string>(?=(=|`)|[,\n)])</string>
 							<key>endCaptures</key>
@@ -2116,7 +2116,7 @@
 					<array>
 						<dict>
 							<key>begin</key>
-							<string>\s*\b(?=:|\+|\w)</string>
+							<string>\s*\b(?=&lt;?:|\+|\w)</string>
 							<key>end</key>
 							<string>(?=[,\n)])</string>
 							<key>patterns</key>

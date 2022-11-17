@@ -141,15 +141,17 @@ syntax = {
         0x00D0:
         {
             'name' : 'keyword.operator.comparison.{SCOPE}',
-            'match': '<=|>=|==|<(?!\*|\|)|>|!=|\u2260|\u2264|\u2265|\xac='
+            # no raw strings here so the unicode literals get encoded properly
+            'match': '<=|>=|==|<(?!\*|\||:)|>|!=|\u2260|\u2264|\u2265|\xac='
                     '|\u2286|\u2287|\u228a|\u228b'
         },
 
         0x00E0:
         {
             'name' : 'keyword.operator.assignment.augmented.{SCOPE}',
-            'match': r'(\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@|:|::|\$'
-                    r'|\|\??\*?\*?>|<\*?\*?\||`|<?\*?\*?\.\.\*?\*?>?'
+            # no raw strings here so the unicode literals get encoded properly
+            'match': '(\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@|:|::|\$'
+                    '|\|\??\*?\*?>|<\*?\*?\||`|<?\*?\*?\.\.\*?\*?>?'
                     '|\?\??|\|\u2192|\\??\\*?\\*?\u21a6|\u21a4\\*?\\*?'
                     '|<?\\*?\u2218\\*?>?|\u22c5|\u2191|\xf7|\u2212|\u207b'  # no \xac
                     '|\u2227|\u2229|\u2228|\u222a|\u22bb|\u2295'
@@ -159,8 +161,9 @@ syntax = {
         0x00F0:
         {
             'name' : 'keyword.operator.arithmetic.{SCOPE}',
-            'match': r'\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@|::|\$'
-                    r'|\|\??\*?\*?>|<\*?\*?\||`|<?\*?\*?\.\.(?!\.)\*?\*?>?'  # don't match ellipses
+            # no raw strings here so the unicode literals get encoded properly
+            'match': '\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@|::|\$'
+                    '|\|\??\*?\*?>|<\*?\*?\||`|<?\*?\*?\.\.(?!\.)\*?\*?>?'  # don't match ellipses
                     '|\?\??|\|\u2192|\\??\\*?\\*?\u21a6|\u21a4\\*?\\*?'
                     '|<?\\*?\u2218\\*?>?|\u22c5|\u2191|\xf7|\u2212|\u207b|\xac'
                     '|\u2227|\u2229|\u2228|\u222a|\u22bb|\u2295'
@@ -170,7 +173,7 @@ syntax = {
         0x0100:
         {
             'name' : 'keyword.operator.value_and_annotation_assignment.{SCOPE}',
-            'match': r':?=|->'
+            'match': r':?=|->|<:'
         },
 
 
@@ -589,7 +592,7 @@ syntax = {
                         },
                         # Annotation assignment (kwargs) and pattern-matching
                         {
-                            'begin': r'\s*\b(?=:|\+|\w)',
+                            'begin': r'\s*\b(?=<?:|\+|\w)',
                             'patterns':
                             [
                                 {'include': '$self'}
@@ -614,7 +617,7 @@ syntax = {
                     [
                         # Annotation assignment (args) and pattern-matching
                         {
-                            'begin': r'\s*\b(?=:|\+|\w)',
+                            'begin': r'\s*\b(?=<?:|\+|\w)',
                             'patterns':
                             [
                                 {'include': '$self'}
