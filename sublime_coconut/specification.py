@@ -229,7 +229,7 @@ syntax['repository'].update({
                 r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|'
                 r'(py_)?enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|'
                 r'property|(py_)?reversed|set|slice|staticmethod|(py_)?str|(py_)?super|type|'
-                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap|zip_longest|multi_enumerate'
+                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap|zip_longest|multi_enumerate|product'
                 r')\b'
             )
         },
