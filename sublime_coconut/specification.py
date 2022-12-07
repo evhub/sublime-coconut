@@ -214,9 +214,8 @@ syntax['repository'].update({
                 r'help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|'
                 r'min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|'
                 r'reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|'
-                r'addpattern|recursive_iterator|reiterable|scan|groupsof|memoize|fmap|'
-                r'(py_)?breakpoint|override|ident|call|flip|const|lift|all_equal|collectby|'
-                r'_namedtuple_of|flatten'
+                r'addpattern|recursive_iterator|memoize|fmap|_namedtuple_of|collectby|'
+                r'(py_)?breakpoint|override|ident|call|safe_call|all_equal'
                 r')\b'
             )
         },
@@ -229,7 +228,9 @@ syntax['repository'].update({
                 r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|'
                 r'(py_)?enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|(py_)?open|'
                 r'property|(py_)?reversed|set|slice|staticmethod|(py_)?str|(py_)?super|type|'
-                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap|zip_longest|multi_enumerate|cartesian_product'
+                r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap|zip_longest|'
+                r'multi_enumerate|cartesian_product|reiterable|scan|groupsof|Expected|'
+                r'flip|const|lift|flatten'
                 r')\b'
             )
         },
