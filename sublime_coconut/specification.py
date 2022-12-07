@@ -210,7 +210,7 @@ syntax['repository'].update({
             (
                 r'(?<!(?<!\.)\.)\b('
                 r'__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|'
-                r'dir|divmod|eval|exec|(py_)?filter|format|getattr|globals|hasattr|hash|'
+                r'dir|divmod|eval|exec|format|getattr|globals|hasattr|hash|'
                 r'help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|vars|'
                 r'min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|'
                 r'reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|'
@@ -230,7 +230,7 @@ syntax['repository'].update({
                 r'property|(py_)?reversed|set|slice|staticmethod|(py_)?str|(py_)?super|type|'
                 r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap|zip_longest|'
                 r'multi_enumerate|cartesian_product|reiterable|scan|groupsof|Expected|'
-                r'flip|const|lift|flatten'
+                r'flip|const|lift|flatten|(py_)?filter'
                 r')\b'
             )
         },
