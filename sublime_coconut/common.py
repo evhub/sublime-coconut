@@ -335,7 +335,11 @@ syntax = {
         0x0230:
         {
             'name': 'meta.structure.dictionary.{SCOPE}',
-            'begin': r'\{',
+            'begin': r'([sSfFmM])?\{',
+            'beginCaptures':
+            {
+                1: {'name': 'storage.type.string.prefix.fmt.{SCOPE}'}
+            },
             'patterns':
             [
                 {
