@@ -338,7 +338,7 @@ syntax = {
             'begin': r'([sSfFmM])?\{',
             'beginCaptures':
             {
-                1: {'name': 'storage.type.string.prefix.fmt.{SCOPE}'}
+                1: {'name': 'storage.type.string.prefix.{SCOPE}'}
             },
             'patterns':
             [
