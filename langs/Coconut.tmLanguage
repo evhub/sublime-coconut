@@ -479,7 +479,7 @@
 		<key>builtin_types</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!(?&lt;!\.)\.)\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|(py_)?open|(py_)?enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|property|(py_)?reversed|set|slice|staticmethod|(py_)?str|(py_)?super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap|zip_longest|multi_enumerate|cartesian_product|reiterable|scan|groupsof|Expected|flip|const|lift|flatten|(py_)?filter|multiset|cycle)\b</string>
+			<string>(?&lt;!(?&lt;!\.)\.)\b(bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|(py_)?open|(py_)?enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|property|(py_)?reversed|set|slice|staticmethod|(py_)?str|(py_)?super|type|(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap|zip_longest|multi_enumerate|cartesian_product|reiterable|scan|groupsof|Expected|flip|const|lift|flatten|(py_)?filter|multiset|cycle|windowed)\b</string>
 			<key>name</key>
 			<string>support.type.coconut</string>
 		</dict>
