@@ -142,7 +142,7 @@ syntax = {
         {
             'name' : 'keyword.operator.comparison.{SCOPE}',
             # no raw strings here so the unicode literals get encoded properly
-            'match': '<=|>=|==|<(?!\*|\||:)|>|!=|\u2260|\u2264|\u2265|\xac='
+            'match': '<=|>=|==|<(?!\\*|\\||:|\\?)|>|!=|\u2260|\u2264|\u2265|\xac='
                     '|\u2286|\u2287|\u228a|\u228b'
         },
 
@@ -151,7 +151,7 @@ syntax = {
             'name' : 'keyword.operator.assignment.augmented.{SCOPE}',
             # no raw strings here so the unicode literals get encoded properly
             'match': '(\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@|:|::|\$'
-                    '|\|\??\*?\*?>|<\*?\*?\||`|<?\*?\*?\.\.\*?\*?>?'
+                    '|\|\??\*?\*?>|<\*?\*?\??\||`|<?\*?\*?\.\.\*?\*?>?'
                     '|\?\??|\|\u2192|\\??\\*?\\*?\u21a6|\u21a4\\*?\\*?'
                     '|<?\\*?\u2218\\*?>?|\u2191|\xf7|\u2212|\u207b'
                     '|\u2227|\u2229|\u2228|\u222a|\u22bb|\u2026'
@@ -163,7 +163,7 @@ syntax = {
             'name' : 'keyword.operator.arithmetic.{SCOPE}',
             # no raw strings here so the unicode literals get encoded properly
             'match': '\+|-|\*|\*\*|/|//|%|<<|>>|&|\^|~|@|::|\$'
-                    '|\|\??\*?\*?>|<\*?\*?\||`|<?\*?\*?\.\.(?!\.)\*?\*?>?'  # don't match ellipses
+                    '|\|\??\*?\*?>|<\*?\*?\??\||`|<?\*?\*?\.\.(?!\.)\*?\*?>?'  # don't match ellipses
                     '|\?\??|\|\u2192|\\??\\*?\\*?\u21a6|\u21a4\\*?\\*?'
                     '|<?\\*?\u2218\\*?>?|\u2191|\xf7|\u2212|\u207b'
                     '|\u2227|\u2229|\u2228|\u222a|\u22bb|\u2026'
