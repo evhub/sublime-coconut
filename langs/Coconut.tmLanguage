@@ -184,7 +184,7 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*((?:async|match|addpattern|yield|copyclosure)\s+)*(def)\s+(?=[a-zA-Z_][\w.]*\s*\()</string>
+			<string>^\s*((?:(?:async|match|addpattern|yield|copyclosure)\s+)*)(def)\s+(?=[a-zA-Z_][\w.]*\s*\()</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
