@@ -36,7 +36,7 @@
 	<key>firstLineMatch</key>
 	<string>^#!/.*\bcoconut[\d.-]*\b</string>
 	<key>foldingStartMarker</key>
-	<string>^\s*(def|class|(?&lt;!\\)data)\s+([.\w&gt;]+)\s*(\((.*)\))?\s*:|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")</string>
+	<string>^\s*((async|match|addpattern|yield|copyclosure)\s+)*(def|class|(?&lt;!\\)data)\s+([.\w&gt;]+)\s*(\((.*)\))?\s*:|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")</string>
 	<key>foldingStopMarker</key>
 	<string>^\s*$|^\s*\}|^\s*\]|^\s*\)|^\s*"""\s*$</string>
 	<key>keyEquivalent</key>
@@ -184,25 +184,15 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^\s*((?:match|addpattern)\s+)?(async\s+)?((?:match|addpattern)\s+)?(def)\s+(?=[a-zA-Z_][\w.]*\s*\()</string>
+			<string>^\s*((?:async|match|addpattern|yield|copyclosure)\s+)*(def)\s+(?=[a-zA-Z_][\w.]*\s*\()</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>keyword.other.coconut</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
 					<string>storage.modifier.coroutine.coconut</string>
 				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.other.coconut</string>
-				</dict>
-				<key>4</key>
+				<key>2</key>
 				<dict>
 					<key>name</key>
 					<string>storage.type.function.coconut</string>
@@ -310,7 +300,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(def|lambda)\b</string>
+			<string>\b((async|match|addpattern|yield|copyclosure)\s+)*(def|lambda)\b</string>
 			<key>name</key>
 			<string>storage.type.function.coconut</string>
 		</dict>
