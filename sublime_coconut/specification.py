@@ -270,7 +270,7 @@ syntax['repository'].update({
                 r'repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|'
                 r'rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|'
                 r'setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|'
-                r'trunc|unicode|weakref|xor|fmap|set_name|iter_getitem'
+                r'trunc|unicode|weakref|xor|matmul|fmap|set_name|iter_getitem'
                 r')__\b'
             )
         },

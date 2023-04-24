@@ -2194,7 +2194,7 @@
 		<key>magic_function_names</key>
 		<dict>
 			<key>match</key>
-			<string>\b__(abs|add|and|await|bool|bytes|call|ceil|complex|contains|copy|deepcopy|del|delattr|delete|delitem|dir|div|divmod|a?enter|eq|a?exit|float|floor|floordiv|format|ge|get|getattr|getattribute|getinitargs|getitem|getnewargs|getstate|gt|hash|hex|iadd|iand|idiv|ifloordiv|ilshift|imul|index|init|instancecheck|int|invert|ior|ipow|irshift|isub|a?iter|itruediv|ixor|le|len|lshift|lt|metaclass|missing|mod|mul|ne|neg|new|a?next|oct|or|pos|pow|prepare|radd|rand|rdiv|rdivmod|reduce|reduce_ex|repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|trunc|unicode|weakref|xor|fmap|set_name|iter_getitem)__\b</string>
+			<string>\b__(abs|add|and|await|bool|bytes|call|ceil|complex|contains|copy|deepcopy|del|delattr|delete|delitem|dir|div|divmod|a?enter|eq|a?exit|float|floor|floordiv|format|ge|get|getattr|getattribute|getinitargs|getitem|getnewargs|getstate|gt|hash|hex|iadd|iand|idiv|ifloordiv|ilshift|imul|index|init|instancecheck|int|invert|ior|ipow|irshift|isub|a?iter|itruediv|ixor|le|len|lshift|lt|metaclass|missing|mod|mul|ne|neg|new|a?next|oct|or|pos|pow|prepare|radd|rand|rdiv|rdivmod|reduce|reduce_ex|repr|reversed|rfloordiv|rlshift|rmod|rmul|ror|round|rpow|rrshift|rshift|rsub|rtruediv|rxor|set|setattr|setitem|setstate|sizeof|str|sub|subclasscheck|subclasshook|truediv|trunc|unicode|weakref|xor|matmul|fmap|set_name|iter_getitem)__\b</string>
 			<key>name</key>
 			<string>support.function.magic.coconut</string>
 		</dict>
