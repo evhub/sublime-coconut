@@ -228,7 +228,7 @@ syntax['repository'].update({
                 r'property|(py_)?reversed|set|slice|staticmethod|(py_)?str|(py_)?super|type|'
                 r'(py_)?map|(py_)?zip|parallel_map|count|concurrent_map|starmap|zip_longest|'
                 r'multi_enumerate|cartesian_product|reiterable|scan|groupsof|Expected|'
-                r'flip|const|lift|flatten|(py_)?filter|multiset|cycle|windowsof'
+                r'flip|const|lift|flatten|(py_)?filter|multiset|cycle|windowsof|and_then(_await)?'
                 r')\b'
             )
         },
