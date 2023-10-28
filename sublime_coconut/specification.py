@@ -212,7 +212,7 @@ syntax['repository'].update({
                 r'help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|'
                 r'min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|'
                 r'reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|'
-                r'addpattern|recursive_iterator|memoize|fmap|_namedtuple_of|collectby|'
+                r'addpattern|recursive_generator|memoize|fmap|_namedtuple_of|collectby|'
                 r'(py_)?breakpoint|override|ident|call|safe_call|all_equal|mapreduce'
                 r')\b'
             )
