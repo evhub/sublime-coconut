@@ -223,7 +223,7 @@ syntax['repository'].update({
             'match':
             (
                 r'(?<!(?<!\.)\.)\b('
-                r'bool|bytearray|bytes|classmethod|complex|dict|(py_)?range|tuple|(py_)?open|'
+                r'bool|bytearray|(py_)?bytes|classmethod|complex|dict|(py_)?range|tuple|(py_)?open|'
                 r'(py_)?enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|'
                 r'property|(py_)?reversed|set|slice|staticmethod|(py_)?str|(py_)?super|type|'
                 r'(py_)?map|(py_)?zip|(process|thread|async)_map|count|starmap|zip_longest|'
