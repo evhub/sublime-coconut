@@ -462,7 +462,7 @@
 		<key>builtin_functions</key>
 		<dict>
 			<key>match</key>
-			<string>(?&lt;!(?&lt;!\.)\.)\b(__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|dir|divmod|eval|exec|format|getattr|globals|hasattr|hash|vars|help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|max|reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|addpattern|recursive_generator|memoize|fmap|_namedtuple_of|collectby|(py_)?breakpoint|override|ident|call|safe_call|all_equal|mapreduce)\b</string>
+			<string>(?&lt;!(?&lt;!\.)\.)\b(__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|dir|divmod|eval|exec|format|getattr|globals|hasattr|hash|vars|help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|(py_)?min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|(py_)?max|reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|addpattern|recursive_generator|memoize|fmap|_namedtuple_of|collectby|(py_)?breakpoint|override|ident|call|safe_call|all_equal|mapreduce)\b</string>
 			<key>name</key>
 			<string>support.function.builtin.coconut</string>
 		</dict>
