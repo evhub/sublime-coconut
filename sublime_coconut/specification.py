@@ -49,7 +49,7 @@ syntax['keyEquivalent'] = '^~O'
 syntax['firstLineMatch'] = r'^#!/.*\bcoconut[\d.-]*\b'
 
 # Folding marks for the TextEditor
-syntax['foldingStartMarker'] = (r'^\s*((async|match|addpattern|yield|copyclosure)\s+)*(def|class|(?<!\\)data)\s+([.\w>]+)\s*(\((.*)\))?\s*:'
+syntax['foldingStartMarker'] = (r'^\s*((async|match|addpattern|yield|copyclosure|case)\s+)*(def|class|(?<!\\)data)\s+([.\w>]+)\s*(\((.*)\))?\s*:'
                                 r'|\{\s*$|\(\s*$|\[\s*$|^\s*"""(?=.)(?!.*""")')
 syntax['foldingStopMarker'] = r'^\s*$|^\s*\}|^\s*\]|^\s*\)|^\s*"""\s*$'
 
@@ -122,11 +122,13 @@ syntax['patterns'].update({
         0x0120:
         {
             'name' : 'meta.function.{SCOPE}',
-            'begin': r'^\s*((?:(?:async|match|addpattern|yield|copyclosure)\s+)*)(def)\s+(?=[a-zA-Z_][\w.]*\s*\()',
+            'begin': r'^\s*((?:(?:async|match|addpattern|yield|copyclosure|case)\s+)*)(def)\s+(?=[a-zA-Z_][\w.]*\s*\()|^\s*(match)\s*(?=\()|^\s*(type)\s*(?=\()',
             'beginCaptures':
             {
                 1: {'name': 'storage.modifier.coroutine.{SCOPE}'},
-                2: {'name': 'storage.type.function.{SCOPE}'}
+                2: {'name': 'storage.type.function.{SCOPE}'},
+                3: {'name': 'storage.type.function.{SCOPE}'},
+                4: {'name': 'storage.modifier.coroutine.{SCOPE}'},
             },
             'patterns':
             [
@@ -164,7 +166,7 @@ syntax['patterns'].update({
         0x0180:
         {
             'name' : 'storage.type.function.{SCOPE}',
-            'match': r'\b((async|match|addpattern|yield|copyclosure)\s+)*(def|lambda)\b'
+            'match': r'\b((async|match|addpattern|yield|copyclosure|case)\s+)*(def|lambda)\b'
         },
 
 

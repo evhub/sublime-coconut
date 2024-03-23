@@ -31,5 +31,3 @@
 """
 Coconut syntax highlighter for Sublime.
 """
-
-from .specification import syntax  # NOQA

@@ -35,17 +35,6 @@ import sys
 # Module level constants
 LANGS_PATH = os.path.join(os.path.dirname(__file__), "langs")
 
-# Import tmtools modules
-try:
-    from tmtools.convert import Language
-except ImportError:
-    print("[ERROR] tmtools is missing: install it from http://github.com/evhub/tmtools")
-    sys.exit(1)
-
-#------------------------------------------------------------------------------#
-# Import user modules
-from sublime_coconut import syntax as coconut_syntax
-
 # I/O Details of the language
 coconut_details = {
     "name" : "Coconut",
@@ -59,6 +48,18 @@ coconut_details = {
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 # Process language files
 if __name__ == "__main__":
+
+    # Import tmtools modules
+    try:
+        from tmtools.convert import Language
+    except ImportError:
+        print("[ERROR] tmtools is missing: install it from http://github.com/evhub/tmtools")
+        sys.exit(1)
+
+    #------------------------------------------------------------------------------#
+    # Import user modules
+    from sublime_coconut.specification import syntax as coconut_syntax
+
     # Setup names and locations
     lang = Language(**coconut_details)
     # Convert and save language file
