@@ -668,7 +668,7 @@ syntax = {
                 r'Permission|ProcessLookup|Timeout)Error|(User|Deprecation|'
                 r'PendingDeprecation|Syntax|Runtime|Future|Import|Bytes|'
                 r'Resource)Warning|(Base)?Exception|(Generator|System)Exit|'
-                r'KeyboardInterrupt|Stop(Async)?Iteration|Warning|MatchError'
+                r'KeyboardInterrupt|Stop(Async)?Iteration|(Coconut)?Warning|MatchError'
                 r')\b'
             )
         },
