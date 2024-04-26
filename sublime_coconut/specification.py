@@ -122,7 +122,7 @@ syntax['patterns'].update({
         0x0120:
         {
             'name' : 'meta.function.{SCOPE}',
-            'begin': r'^\s*((?:(?:async|match|addpattern|yield|copyclosure|case)\s+)*)(def)\s+(?=[a-zA-Z_][\w.]*\s*(?:\(|:|\[))|^\s*(match)\s*(?=\()|^\s*(type)\s*(?=\()',
+            'begin': r'^\s*((?:(?:async|match|addpattern|yield|copyclosure|case)\s+)*)(def)\s+(?=[a-zA-Z_][\w.]*\s*(?:\(|:|\[))|^\s*(case)\s*(?=\()|^\s*(type)\s*(?=\()',
             'beginCaptures':
             {
                 1: {'name': 'storage.modifier.coroutine.{SCOPE}'},
