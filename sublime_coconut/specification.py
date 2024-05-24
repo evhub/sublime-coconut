@@ -81,7 +81,7 @@ syntax['patterns'].update({
             (
                 r'\b(elif|else|except|finally|for|if|try|while|'
                 r'with|break|continue|pass|raise|return|yield|'
-                r'(?<!\\)(match|cases?|where|then|operator))\b'
+                r'(?<!\\|\.)(match|cases?|where|then|operator))\b'
             )
         },
 
