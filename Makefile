@@ -11,7 +11,7 @@ install: build
 setup:
 	npm install -g vsce ovsx semver
 	-git clone https://github.com/evhub/tmtools.git
-	pip install ./tmtools
+	pip install -e ./tmtools
 
 .PHONY: publish
 publish: build

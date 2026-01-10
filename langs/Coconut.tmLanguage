@@ -123,7 +123,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(as|assert|del|\?)\b</string>
+			<string>\b(as|assert|del|final|\?)\b</string>
 			<key>name</key>
 			<string>keyword.other.coconut</string>
 		</dict>
