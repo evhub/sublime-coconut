@@ -71,7 +71,7 @@ syntax['patterns'].update({
         0x0090:
         {
             'name' : 'keyword.control.import_and_import_from.{SCOPE}',
-            'match': r'\b(import|from)\b'
+            'match': r'\b(lazy|import|from)\b'
         },
 
         0x00A0:

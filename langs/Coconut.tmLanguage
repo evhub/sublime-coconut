@@ -105,7 +105,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>\b(import|from)\b</string>
+			<string>\b(lazy|import|from)\b</string>
 			<key>name</key>
 			<string>keyword.control.import_and_import_from.coconut</string>
 		</dict>
