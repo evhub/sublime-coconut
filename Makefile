@@ -1,6 +1,7 @@
 .PHONY: build
 build: clean setup
 	python ./build.py
+	npm install
 	vsce package
 
 .PHONY: install
