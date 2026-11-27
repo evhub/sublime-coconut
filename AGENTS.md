@@ -25,7 +25,7 @@ Coconut's development version has its own language server, `coconut --lsp` (`coc
 - `compiler.py`: runs Coconut (`coconut.api.parse(code, "sys")` with `line_numbers=True`), converts `CoconutSyntaxError`s and captured warnings into diagnostics, lints compiled code with pyflakes. The worker enables Coconut's incremental parsing for inputs under 20KB (much faster recompiles).
 - `sourcemap.py`: maps positions between Coconut source and compiled Python using the `#N (line in Coconut source)` comments plus identifier occurrence matching; `LineDiff` maps lines between the current text and the last successfully compiled text.
 - `intel.py`: jedi on the compiled code (`Analyzer`): hover, completion, signatures, definitions, references, rename. If the cursor's line changed since the last good compile, the expression under the cursor is spliced into the compiled code (`Analyzer.splice`).
-- `overlay.py`: a mirror of the workspace (in the temp dir) where the Coconut modules a document imports are compiled to `.py` next to copies of the real `.py` files, so jedi and mypy can follow imports of uncompiled `.coco` modules; results in the mirror are mapped back to the real files.
+- `overlay.py`: a mirror of the workspace (in a private per-user cache directory) where the Coconut modules a document imports are compiled to `.py` next to copies of the real `.py` files, so jedi and mypy can follow imports of uncompiled `.coco` modules; results in the mirror are mapped back to the real files.
 - `typecheck.py`: optional mypy run over the compiled document in the mirror (setting `mypy`), on open/save in its own thread.
 - `symbols.py`: document symbols from the compiled AST; regex index for workspace symbols and cross-file fallbacks.
 - `docs.py`: lookup/formatting of the generated Coconut docs; `cli.py` and `mcp.py` reuse everything above in-process via `cli.Engine`.
@@ -39,8 +39,8 @@ cd server && python -m pytest tests            # needs: pip install -r server/re
 COCONUT_TEST_PYTHON=$(which python) xvfb-run -a npm run test:vscode   # after npm install && python scripts/vendor.py
 ```
 
-Add an end-to-end test in `server/tests/test_server.py` for every LSP feature change. `snippets.json` is compiled by `test_units.py`, so they must compile without warnings/deprecations. Check UX changes in a real VS Code too: the integration tests run headless under `xvfb-run`, and ImageMagick's `import -window root` can screenshot the Xvfb display.
+Add an end-to-end test in `server/tests/test_server.py` for every LSP feature change. `snippets.json` is compiled by `test_units.py`, so every snippet must compile without warnings or deprecations. Check UX changes in a real VS Code too: the integration tests run headless under `xvfb-run`, and ImageMagick's `import -window root` can screenshot the Xvfb display.
 
 ## Releasing
 
-Bump `version` in `package.json`, add a `CHANGELOG.md` entry, merge to `master`, then push a tag `vX.Y.Z`. The Release workflow (`.github/workflows/release.yml`) builds the `.vsix`, creates a GitHub release, and publishes to the VS Code Marketplace and Open VSX using the `VSCE_PAT` and `OVSX_PAT` repository secrets (each step is skipped with a warning if its secret is missing; re-run the workflow after adding it). Package Control picks up the tag for Sublime Text. `make publish` does the same publishing locally.
+Bump `version` in `package.json` and add a `CHANGELOG.md` entry. When that reaches `master`, the Release workflow (`.github/workflows/release.yml`) creates the `vX.Y.Z` tag (pushing the tag yourself works too), builds the `.vsix`, creates a GitHub release, and publishes to the VS Code Marketplace and Open VSX using the `VSCE_PAT` and `OVSX_PAT` repository secrets. Each publishing step is skipped with a warning if its secret is missing; re-run the workflow after adding it, and already-published steps are skipped. Package Control picks up the tag for Sublime Text. `make publish` does the same publishing locally.
