@@ -1,4 +1,4 @@
-"""Unit tests for source mapping, diagnostics, docs, and the agent skill's examples."""
+"""Unit tests for source mapping, diagnostics, docs, snippets, and running without jedi."""
 
 import os
 import re
@@ -95,3 +95,17 @@ def test_snippets_compile():
         result = compile_coconut(body)
         problems = [d["message"] for d in result["diagnostics"] if d["severity"] == 1 or "deprecated" in d["message"]]
         assert result["compiled"] is not None and not problems, (name, body, problems)
+
+
+def test_works_without_jedi(monkeypatch):
+    from coconut_ls import intel
+    monkeypatch.setattr(intel, "jedi", None)
+    src = "x = [1] |> fmap$(y => y)\n"
+    doc = CompiledDocument(src, compile_coconut(src)["compiled"])
+    analyzer = intel.Analyzer("/tmp/nojedi.coco", src + "fm", doc)
+    hover = analyzer.hover(0, src.index("fmap") + 1)
+    assert hover and "fmap" in hover[0]
+    labels = [i["label"] for i in analyzer.completions(1, 2)]
+    assert "fmap" in labels
+    assert analyzer.definitions(0, 0) == [] or analyzer.definitions(0, 0)
+    assert analyzer.signature_help(0, 5) is None
