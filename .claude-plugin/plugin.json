@@ -1,0 +1,13 @@
+{
+    "name": "coconut",
+    "description": "Coconut language support: a language server for .coco files (diagnostics, definitions, references, hover, symbols), MCP tools to check/compile Coconut and look up its documentation, and a skill for writing idiomatic Coconut. Requires Python 3 with Coconut installed (pip install coconut jedi pyflakes).",
+    "version": "2.3.0",
+    "author": {
+        "name": "evhub",
+        "url": "https://github.com/evhub"
+    },
+    "homepage": "https://github.com/evhub/sublime-coconut",
+    "repository": "https://github.com/evhub/sublime-coconut",
+    "license": "GPL-3.0",
+    "keywords": ["coconut", "python", "functional", "lsp"]
+}

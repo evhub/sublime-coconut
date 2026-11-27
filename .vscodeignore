@@ -18,3 +18,7 @@ build.py
 Makefile
 node_modules/@vscode/test-electron/**
 **/.pytest_cache/**
+.claude-plugin/**
+.lsp.json
+.mcp.json
+skills/**
