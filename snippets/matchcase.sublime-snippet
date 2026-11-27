@@ -1,0 +1,12 @@
+<snippet>
+    <content><![CDATA[
+match ${1:value}:
+    case ${2:pattern}:
+        ${3:pass}
+    case _:
+        ${0:pass}
+]]></content>
+    <tabTrigger>matchcase</tabTrigger>
+    <scope>source.coconut</scope>
+    <description>match value: case pattern:</description>
+</snippet>

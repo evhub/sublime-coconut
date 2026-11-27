@@ -1,0 +1,9 @@
+<snippet>
+    <content><![CDATA[
+data ${1:Name}(${2:fields}):
+    ${0:pass}
+]]></content>
+    <tabTrigger>data</tabTrigger>
+    <scope>source.coconut</scope>
+    <description>data Name(fields):</description>
+</snippet>

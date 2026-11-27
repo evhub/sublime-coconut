@@ -1,0 +1,10 @@
+<snippet>
+    <content><![CDATA[
+case def ${1:name}:
+    case(${2:pattern}) = ${3:expr}
+    case(${4:pattern}) = ${0:expr}
+]]></content>
+    <tabTrigger>casedef</tabTrigger>
+    <scope>source.coconut</scope>
+    <description>case def name: case(...) = ...</description>
+</snippet>

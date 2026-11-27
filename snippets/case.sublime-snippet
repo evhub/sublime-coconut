@@ -1,12 +1,9 @@
 <snippet>
     <content><![CDATA[
-case ${1:value}:
-    match ${2:pattern if condition}:
-        $3
-${4:else:
-    $0}
+case ${1:pattern}:
+    ${0:pass}
 ]]></content>
     <tabTrigger>case</tabTrigger>
     <scope>source.coconut</scope>
-    <description>case</description>
+    <description>case pattern: (inside match value:)</description>
 </snippet>
