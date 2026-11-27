@@ -248,6 +248,24 @@ function compiledUriFor(sourceUri) {
     });
 }
 
+// compiled view URI -> array mapping each displayed line to its 0-based Coconut source line (or -1)
+const compiledLineMaps = new Map();
+const LINE_COMMENT_RE = /\s*#(\d+) \(line in Coconut source\)\s*$/;
+let compiledHighlight = null;
+
+function stripLineComments(uri, prefixLines, compiled) {
+    const lines = compiled.split("\n");
+    const map = prefixLines.map(() => -1);
+    const out = prefixLines.slice();
+    for (const line of lines) {
+        const m = LINE_COMMENT_RE.exec(line);
+        map.push(m ? parseInt(m[1], 10) - 1 : -1);
+        out.push(m ? line.slice(0, m.index) : line);
+    }
+    compiledLineMaps.set(uri.toString(), map);
+    return out.join("\n");
+}
+
 class CompiledContentProvider {
     constructor() {
         this.onDidChange = compiledViews.event;
@@ -268,10 +286,8 @@ class CompiledContentProvider {
             const errors = (result && result.errors || []).map((e) => "#   line " + (e.range.start.line + 1) + ": " + e.message);
             return "# This file doesn't compile yet:\n" + errors.join("\n") + "\n";
         }
-        if (!result.upToDate) {
-            return "# NOTE: showing the last successfully compiled version (the current version has errors).\n" + result.compiled;
-        }
-        return result.compiled;
+        const prefix = result.upToDate ? [] : ["# NOTE: showing the last successfully compiled version (the current version has errors)."];
+        return stripLineComments(uri, prefix, result.compiled);
     }
 }
 
@@ -288,16 +304,45 @@ async function showCompiledPython() {
     revealCompiledLine(shown, sourceLine);
 }
 
-// scroll the compiled view to the code generated from the given (0-based) source line
-function revealCompiledLine(compiledEditor, sourceLine) {
-    const marker = "#" + (sourceLine + 1) + " (line in Coconut source)";
-    const doc = compiledEditor.document;
-    for (let i = 0; i < doc.lineCount; i++) {
-        if (doc.lineAt(i).text.endsWith(marker)) {
-            const range = new vscode.Range(i, 0, i, 0);
-            compiledEditor.revealRange(range, vscode.TextEditorRevealType.InCenter);
-            compiledEditor.selection = new vscode.Selection(range.start, range.start);
+// scroll the compiled view to (and highlight) the code generated from the given (0-based) source line
+function revealCompiledLine(compiledEditor, sourceLine, revealType = vscode.TextEditorRevealType.InCenter) {
+    const map = compiledLineMaps.get(compiledEditor.document.uri.toString());
+    if (!map) {
+        return;
+    }
+    let lines = [];
+    for (let i = 0; i < map.length; i++) {
+        if (map[i] === sourceLine) {
+            lines.push(i);
+        }
+    }
+    if (lines.length === 0) {
+        // e.g. a blank line or comment: go to the code from the next source line that has some
+        let best = -1;
+        for (let i = 0; i < map.length; i++) {
+            if (map[i] > sourceLine && (best === -1 || map[i] < map[best])) {
+                best = i;
+            }
+        }
+        if (best === -1) {
+            compiledEditor.setDecorations(compiledHighlight, []);
             return;
+        }
+        lines = [best];
+    }
+    compiledEditor.setDecorations(compiledHighlight, lines.map((i) => new vscode.Range(i, 0, i, 0)));
+    compiledEditor.revealRange(new vscode.Range(lines[0], 0, lines[lines.length - 1], 0), revealType);
+}
+
+// keep visible compiled views in sync with the cursor in their Coconut source
+function syncCompiledViews(sourceEditor) {
+    if (!sourceEditor || sourceEditor.document.languageId !== "coconut") {
+        return;
+    }
+    const target = compiledUriFor(sourceEditor.document.uri).toString();
+    for (const editor of vscode.window.visibleTextEditors) {
+        if (editor.document.uri.toString() === target) {
+            revealCompiledLine(editor, sourceEditor.selection.active.line, vscode.TextEditorRevealType.InCenterIfOutsideViewport);
         }
     }
 }
@@ -403,11 +448,22 @@ async function activate(context) {
     outputChannel = vscode.window.createOutputChannel("Coconut");
     statusItem = vscode.window.createStatusBarItem("coconut.status", vscode.StatusBarAlignment.Right, 100);
     statusItem.name = "Coconut";
+    compiledHighlight = vscode.window.createTextEditorDecorationType({
+        backgroundColor: new vscode.ThemeColor("editor.rangeHighlightBackground"),
+        isWholeLine: true,
+    });
+    context.subscriptions.push(compiledHighlight);
     context.subscriptions.push(
         outputChannel,
         statusItem,
         vscode.workspace.registerTextDocumentContentProvider(COMPILED_SCHEME, new CompiledContentProvider()),
         vscode.window.onDidChangeActiveTextEditor(() => updateStatusItem()),
+        vscode.window.onDidChangeTextEditorSelection((event) => syncCompiledViews(event.textEditor)),
+        vscode.workspace.onDidChangeTextDocument((event) => {
+            if (event.document.uri.scheme === COMPILED_SCHEME) {
+                setTimeout(() => syncCompiledViews(vscode.window.activeTextEditor), 50);
+            }
+        }),
         vscode.workspace.onDidChangeConfiguration((event) => {
             if (event.affectsConfiguration("coconut.languageServer.enabled")
                 || event.affectsConfiguration("coconut.languageServer.pythonPath")

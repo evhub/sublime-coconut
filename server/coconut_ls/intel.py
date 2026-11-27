@@ -36,6 +36,67 @@ KIND_KEYWORD = 14
 
 # a dotted expression immediately before the cursor, e.g. "os.path.jo" or "self."
 DOTTED_EXPR_RE = re.compile(r"((?:[A-Za-z_]\w*\s*\.\s*)*[A-Za-z_]?\w*)$")
+def _matching_open(text, close_idx):
+    """Index of the bracket opening the one at close_idx (scanning backwards), or None."""
+    pairs = {")": "(", "]": "[", "}": "{"}
+    stack = []
+    i = close_idx
+    while i >= 0:
+        c = text[i]
+        if c in pairs:
+            stack.append(pairs[c])
+        elif c in "([{":
+            if not stack or stack.pop() != c:
+                return None
+            if not stack:
+                return i
+        elif c in "'\"":
+            start = _string_start(text, i)
+            if start is None:
+                return None
+            i = start
+        i -= 1
+    return None
+
+
+def _string_start(text, end_quote_idx):
+    """Index of the start (including any prefix) of the string literal ending at end_quote_idx."""
+    q = text[end_quote_idx]
+    i = end_quote_idx - 1
+    while i >= 0:
+        if text[i] == q and (i == 0 or text[i - 1] != "\\"):
+            while i > 0 and text[i - 1] in "rRbBfFuU":
+                i -= 1
+            return i
+        i -= 1
+    return None
+
+
+def trailing_expression(text):
+    """The primary expression ending at the end of text, e.g. 'shapes[0].center.' or 'f(x).y'."""
+    i = len(text)
+    while i > 0:
+        c = text[i - 1]
+        if c.isalnum() or c == "_" or c == ".":
+            i -= 1
+        elif c in ")]}":
+            j = _matching_open(text, i - 1)
+            if j is None:
+                break
+            i = j
+            # a call/subscript needs something before it, unless it's a parenthesized/literal expression
+        elif c in "'\"":
+            j = _string_start(text, i - 1)
+            if j is None:
+                break
+            i = j
+        else:
+            break
+    expr = text[i:]
+    # Coconut's implicit partials ('.attr') and operators like '..>' can't be completed as expressions
+    return expr.lstrip(".")
+
+
 IMPORT_LINE_RE = re.compile(r"^\s*(from\s+[\w.]+\s+import\b.*|from\s+[\w.]*|import\s+.*)$")
 
 
@@ -139,8 +200,7 @@ class Analyzer(object):
         found = word_at(text, col)
         if found is None:
             return None
-        expr_m = DOTTED_EXPR_RE.search(text[:found[2]])
-        expr = re.sub(r"\s+", "", expr_m.group(1)) if expr_m else found[0]
+        expr = trailing_expression(text[:found[2]]) or found[0]
         spliced = self.splice(line, expr)
         if spliced is None:
             return None
@@ -363,9 +423,24 @@ class Analyzer(object):
             except Exception:
                 names = []
             for n in names[:1]:
-                parts.append(format_jedi_name(n, script, jl, jc))
                 mp = str(n.module_path or "")
                 coconut_builtin = "__coconut__" in mp or n.module_name in ("__coconut__", "coconut.__coconut__")
+                entry = docs.lookup(word) if coconut_builtin else None
+                signature = docs.signature(entry) if entry is not None else None
+                if signature is not None:
+                    # Coconut's documented signature reads better than the typed stub's overloads
+                    parts.append("```python\n" + signature + "\n```")
+                    try:
+                        doc = escape_docstring(n.docstring(raw=True).strip())
+                    except Exception:
+                        doc = ""
+                    parts[-1] += "\n\n" + (doc or docs.format_entry(entry, include_example=False, max_chars=800))
+                    parts[-1] += "\n\n[Coconut documentation](" + entry["url"] + ")"
+                    return parts[0], (line, start, end)
+                formatted = format_jedi_name(n, script, jl, jc)
+                if "_coconut_match_" in formatted or "_coconut_sentinel" in formatted:
+                    formatted = self.pattern_function_hover(n, line, col) or formatted
+                parts.append(formatted)
         entry = docs.lookup(word)
         if entry is not None and (coconut_builtin or not parts):
             parts.append(docs.format_entry(entry, include_example=not parts, max_chars=1500))
@@ -373,6 +448,49 @@ class Analyzer(object):
         if not parts:
             return None
         return "\n\n---\n\n".join(parts), (line, start, end)
+
+    def pattern_function_hover(self, n, line, col):
+        """Hover text for a pattern-matching function: its Coconut definitions instead of the
+        compiled (*args, **kwargs) signature."""
+        locs = [loc for loc in self.definitions(line, col) if loc[0].endswith(COCONUT_EXTENSIONS)]
+        if not locs:
+            return None
+        path, def_line = locs[0][0], locs[0][1]
+        if path == self.path:
+            lines = self.lines
+        else:
+            try:
+                with open(path, encoding="utf-8") as f:
+                    lines = f.read().splitlines()
+            except (OSError, UnicodeDecodeError):
+                return None
+        name = n.name
+        shown = []
+        first = lines[def_line] if def_line < len(lines) else ""
+        if re.match(r"^\s*(?:\w+\s+)*case\s+def\b", first) or re.match(r"^\s*case\s+def\b", first):
+            indent = len(first) - len(first.lstrip())
+            shown.append(first.rstrip())
+            for following in lines[def_line + 1:]:
+                if following.strip() and len(following) - len(following.lstrip()) <= indent:
+                    break
+                if re.match(r"^\s*(case|type)\s*\(", following):
+                    shown.append(following.rstrip())
+        else:
+            pattern = re.compile(r"^\s*(?:(?:async|match|addpattern|case|copyclosure|yield)\s+)*def\s+" + re.escape(name) + r"\b")
+            shown = [l.rstrip() for l in lines if pattern.match(l)]
+        if not shown:
+            return None
+        if len(shown) > 12:
+            shown = shown[:12] + ["..."]
+        text = "\n".join(shown)
+        dedent = min(len(l) - len(l.lstrip()) for l in shown if l.strip())
+        text = "\n".join(l[dedent:] for l in shown)
+        doc = ""
+        try:
+            doc = escape_docstring(n.docstring(raw=True).strip())
+        except Exception:
+            pass
+        return "```coconut\n" + text + "\n```\n\npattern-matching function" + ("\n\n" + doc if doc else "")
 
     def completions(self, line, col):
         """Returns a list of LSP CompletionItems."""
@@ -383,10 +501,9 @@ class Analyzer(object):
         if import_m:
             expr = text.strip()
         else:
-            m = DOTTED_EXPR_RE.search(text)
-            expr = re.sub(r"\s+", "", m.group(1)) if m else ""
-            # don't complete right after a number (e.g. "1.") or inside an operator like "..>"
-            if expr == "" and text.rstrip().endswith(".") and not text.rstrip().endswith(".."):
+            expr = trailing_expression(text)
+            # don't complete right after a number (e.g. "1.")
+            if re.match(r"^[\d.]+$", expr) or (expr == "" and re.search(r"(?<!\.)\.$", text)):
                 return []
         prefix_m = re.search(r"\w*$", text)
         prefix = prefix_m.group(0) if prefix_m else ""
@@ -415,8 +532,9 @@ class Analyzer(object):
                 }
                 if c.type == "keyword":
                     item["kind"] = KIND_KEYWORD
-                entry = docs.lookup(name)
-                if entry is not None:
+                # only global names can be Coconut built-ins (not e.g. a tuple's .count method)
+                entry = docs.lookup(name) if "." not in expr and not import_m else None
+                if entry is not None and "__coconut__" in (c.module_name or "") + str(c.module_path or ""):
                     item["detail"] = "Coconut built-in"
                     item["documentation"] = {"kind": "markdown", "value": docs.format_entry(entry, include_example=False, max_chars=600)}
                 items.append(item)
@@ -457,8 +575,7 @@ class Analyzer(object):
                 depth -= 1
         if open_idx is None:
             return None
-        callee_m = DOTTED_EXPR_RE.search(text[:open_idx].rstrip("$"))
-        callee = re.sub(r"\s+", "", callee_m.group(1)) if callee_m else ""
+        callee = trailing_expression(text[:open_idx].rstrip("$"))
         if not callee or not re.match(r"[A-Za-z_]", callee):
             return None
         args = text[open_idx + 1:]
@@ -529,6 +646,26 @@ def jedi_friendly(code):
     return _TYPED_DATA_RE.sub(typed, code)
 
 
+def escape_docstring(doc):
+    """Escape a Python docstring for display as Markdown (e.g. so __x__ isn't rendered as bold),
+    leaving `code spans` and indented/fenced code alone."""
+    out = []
+    in_fence = False
+    for line in doc.split("\n"):
+        if line.lstrip().startswith("```"):
+            in_fence = not in_fence
+            out.append(line)
+            continue
+        if in_fence or line.startswith("    ") or line.lstrip().startswith(">>>"):
+            out.append(line)
+            continue
+        parts = re.split(r"(`[^`]*`)", line)
+        for i in range(0, len(parts), 2):
+            parts[i] = re.sub(r"([_<>\\])", r"\\\1", parts[i])
+        out.append("".join(parts))
+    return "\n".join(out)
+
+
 def format_jedi_name(n, script=None, line=None, col=None):
     """Markdown hover text for a jedi Name."""
     header = None
@@ -564,7 +701,7 @@ def format_jedi_name(n, script=None, line=None, col=None):
         pass
     parts = ["```python\n" + header + "\n```"]
     if docstring and docstring.strip() != header.strip():
-        parts.append(docstring.strip())
+        parts.append(escape_docstring(docstring.strip()))
     return "\n\n".join(parts)
 
 

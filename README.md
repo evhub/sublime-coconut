@@ -14,6 +14,12 @@ This repository contains [Coconut](https://github.com/evhub/coconut) language su
   - quick fixes to remove unused imports or suppress a warning with `# NOQA`.
 - **Commands** (VS Code) to show the compiled Python side by side, run or compile the current file, and open the Coconut interpreter.
 
+| Hover docs for Coconut built-ins, live errors and lint | Completions, even while the line doesn't compile |
+| --- | --- |
+| ![Hovering over fmap shows its documentation](images/hover.png) | ![Completing attributes of shapes[0].center](images/completion.png) |
+| **Pattern-matching functions and the Problems panel** | **Compiled Python, side by side and in sync** |
+| ![Hovering over a case def function shows its cases](images/problems.png) | ![The compiled Python for the current line](images/compiled.png) |
+
 For installation instructions for Coconut itself, see [Coconut's documentation](https://coconut.readthedocs.io/en/master/DOCS.html#installation).
 
 ## VS Code

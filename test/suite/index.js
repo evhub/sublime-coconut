@@ -83,7 +83,7 @@ const tests = {
         await vscode.window.showTextDocument(doc);
         await vscode.commands.executeCommand("coconut.showCompiledPython");
         const compiled = await waitFor("compiled view", () => vscode.workspace.textDocuments.find(
-            (d) => d.uri.scheme === "coconut-compiled" && d.getText().includes("class Point"),
+            (d) => d.uri.scheme === "coconut-compiled" && d.getText().includes("class Point") && !d.getText().includes("(line in Coconut source)"),
         ), 20000);
         assert.strictEqual(compiled.languageId, "python");
     },
