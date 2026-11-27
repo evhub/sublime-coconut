@@ -284,3 +284,38 @@ def test_mypy_type_checking(project):
         assert mypy == [(1, 23, "return-value"), (2, 9, "assignment")], diags
     finally:
         client.close()
+
+
+def test_utf16_positions(client, project):
+    # columns are UTF-16 code units in LSP; the emoji takes two of them
+    text = 'foo = 1\nprint("\U0001F600", foo)\n'
+    uri = client.open(os.path.join(project, "emoji.coco"), text)
+    client.diagnostics(uri)
+    refs = client.request("textDocument/references", {
+        "textDocument": td(uri), "position": {"line": 1, "character": 12}, "context": {"includeDeclaration": True},
+    })
+    starts = sorted((r["range"]["start"]["line"], r["range"]["start"]["character"], r["range"]["end"]["character"]) for r in refs)
+    assert starts == [(0, 0, 3), (1, 12, 15)]
+    edit = client.request("textDocument/rename", {"textDocument": td(uri), "position": {"line": 1, "character": 13}, "newName": "bar"})
+    assert sorted(e["range"]["start"]["character"] for e in edit["changes"][uri]) == [0, 12]
+
+
+def test_rename_refused_when_file_has_errors(client, project):
+    text = "foo = 1\nprint(foo +)\nprint(foo)\n"
+    uri = client.open(os.path.join(project, "broken_rename.coco"), text)
+    client.diagnostics(uri)
+    with pytest.raises(LspError):
+        client.request("textDocument/rename", {"textDocument": td(uri), "position": {"line": 0, "character": 0}, "newName": "bar"})
+
+
+def test_no_diagnostics_after_close(client, project):
+    uri = client.open(os.path.join(project, "closed.coco"), "x = (\n")
+    client.notify("textDocument/didClose", {"textDocument": {"uri": uri}})
+    cleared = client.wait_notification("textDocument/publishDiagnostics", lambda p: p["uri"] == uri)
+    assert cleared["diagnostics"] == []
+    # nothing may be published for the closed document afterwards
+    import time
+    time.sleep(2)
+    while not client.notifications.empty():
+        msg = client.notifications.get()
+        assert not (msg["method"] == "textDocument/publishDiagnostics" and msg["params"]["uri"] == uri), msg
