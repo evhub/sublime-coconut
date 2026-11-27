@@ -23,7 +23,7 @@ from .symbols import COCONUT_EXTENSIONS, find_definition_in_text
 
 try:
     import jedi
-except ImportError:  # pragma: no cover - depends on environment
+except Exception:  # pragma: no cover - not installed, or incompatible with this Python
     jedi = None
 
 # LSP CompletionItemKind

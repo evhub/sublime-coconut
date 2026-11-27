@@ -11,7 +11,11 @@ import sys
 
 __version__ = "0.1.0"
 
-_VENDOR_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "vendor")
+_VENDOR_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "vendor",
+    "modern" if sys.version_info >= (3, 11) else "compat",
+)
 if os.path.isdir(_VENDOR_DIR) and _VENDOR_DIR not in sys.path:
     # appended, so packages installed in the user's environment take precedence
     sys.path.append(_VENDOR_DIR)

@@ -22,3 +22,10 @@ node_modules/@vscode/test-electron/**
 .lsp.json
 .mcp.json
 skills/**
+coconut_lsp.py
+LSP-coconut.sublime-settings
+Main.sublime-menu
+.no-sublime-package
+.python-version
+AGENTS.md
+CLAUDE.md

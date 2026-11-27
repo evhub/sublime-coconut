@@ -1,0 +1,21 @@
+{
+    // Settings for the Coconut language server (requires the LSP package).
+    // Override them in Preferences > Package Settings > Coconut > LSP Settings.
+    "enabled": true,
+
+    // The Python interpreter used to run the server must have Coconut installed
+    // (pip install coconut). Replace "${python}" with e.g. "/path/to/venv/bin/python".
+    "command": ["${python}", "${server_path}"],
+
+    "selector": "source.coconut",
+
+    // Sent to the server; see the README for details.
+    "initializationOptions": {
+        // Python version to target: "sys" (the interpreter running Coconut), "3", "3.8", "2.7", ...
+        "target": "sys",
+        // Coconut's --strict style checks
+        "strict": false,
+        // lint the compiled code with pyflakes (undefined names, unused variables, ...)
+        "lint": true
+    }
+}

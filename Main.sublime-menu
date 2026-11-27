@@ -1,0 +1,27 @@
+[
+    {
+        "id": "preferences",
+        "children": [
+            {
+                "caption": "Package Settings",
+                "mnemonic": "P",
+                "id": "package-settings",
+                "children": [
+                    {
+                        "caption": "Coconut",
+                        "children": [
+                            {
+                                "caption": "LSP Settings",
+                                "command": "edit_settings",
+                                "args": {
+                                    "base_file": "${packages}/Coconut/LSP-coconut.sublime-settings",
+                                    "default": "// Settings in here override those in \"Coconut/LSP-coconut.sublime-settings\"\n{\n\t$0\n}\n"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

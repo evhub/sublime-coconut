@@ -212,10 +212,10 @@ syntax['repository'].update({
                 r'__import__|abs|all|any|ascii|bin|callable|(py_)?chr|compile|delattr|'
                 r'dir|divmod|eval|exec|format|getattr|globals|hasattr|hash|vars|'
                 r'help|(py_)?hex|id|(py_)?input|isinstance|issubclass|iter|len|locals|'
-                r'(py_)?min|next|oct|ord|pow|(py_)?print|repr|round|setattr|sorted|sum|(py_)?max|'
+                r'(py_)?min|next|(py_)?oct|ord|pow|(py_)?print|(py_)?repr|round|setattr|sorted|sum|(py_)?max|'
                 r'reduce|takewhile|dropwhile|tee|makedata|consume|py_raw_input|py_xrange|'
                 r'addpattern|recursive_generator|memoize|fmap|_namedtuple_of|collectby|'
-                r'(py_)?breakpoint|override|ident|call|safe_call|all_equal|mapreduce'
+                r'(py_)?breakpoint|override|ident|call|safe_call|all_equal|mapreduce|prepattern|datamaker|reveal_type|reveal_locals'
                 r')\b'
             )
         },
@@ -225,12 +225,12 @@ syntax['repository'].update({
             'match':
             (
                 r'(?<!(?<!\.)\.)\b('
-                r'bool|bytearray|(py_)?bytes|classmethod|complex|dict|(py_)?range|tuple|(py_)?open|'
+                r'bool|bytearray|(py_)?bytes|classmethod|complex|(py_)?dict|(py_)?range|tuple|(py_)?open|'
                 r'(py_)?enumerate|float|frozenset|(py_)?int|list|memoryview|(py_)?object|'
                 r'property|(py_)?reversed|set|slice|staticmethod|(py_)?str|(py_)?super|type|'
                 r'(py_)?map|(py_)?zip|(process|thread|async)_map|count|starmap|zip_longest|'
                 r'multi_enumerate|cartesian_product|reiterable|scan|groupsof|Expected|'
-                r'flip|const|lift(_apart)?|flatten|(py_)?filter|multiset|cycle|windowsof|and_then(_await)?'
+                r'flip|const|lift(_apart)?|flatten|(py_)?filter|multiset|cycle|windowsof|and_then(_await)?|TYPE_CHECKING'
                 r')\b'
             )
         },
