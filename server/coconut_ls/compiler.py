@@ -26,6 +26,12 @@ DEFAULT_SETTINGS = {
     "lint": True,
 }
 
+# Incremental parsing reuses parse results across compiles (much faster recompiles after small
+# edits), so the long-lived compile worker turns it on; Coconut itself only uses it for inputs
+# below this length, since it's slower for large inputs.
+USE_INCREMENTAL = False
+INCREMENTAL_MAX_LEN = 20480
+
 _coconut_lock = threading.Lock()
 _current_setup = None
 _collected_warnings = None
@@ -65,6 +71,20 @@ def _install_warning_hook():
 
     logger.warn_err = warn_err
     logger._coconut_ls_hooked = True
+
+
+def _set_incremental(code):
+    try:
+        from coconut.compiler.util import disable_incremental_parsing, enable_incremental_parsing
+    except ImportError:
+        return
+    try:
+        if USE_INCREMENTAL and len(code) < INCREMENTAL_MAX_LEN:
+            enable_incremental_parsing()
+        else:
+            disable_incremental_parsing()
+    except Exception:
+        pass
 
 
 def _setup(settings):
@@ -206,6 +226,7 @@ def compile_coconut(code, settings=None):
         try:
             try:
                 _setup(settings)
+                _set_incremental(code)
                 compiled = parse(code, "sys")
             except CoconutStyleError as err:
                 # in strict mode, report the style error as a warning and still compile normally
@@ -298,6 +319,12 @@ PYFLAKES_SEVERITY = {
 }
 
 
+def _map_line_ref(doc, compiled_lineno):
+    idx = compiled_lineno - 1
+    src = doc.line_map[idx] if 0 <= idx < len(doc.line_map) else None
+    return "line " + str(src + 1) if src is not None else "line " + str(compiled_lineno) + " of the compiled code"
+
+
 def lint_compiled(source, compiled):
     """Run pyflakes (if available) over the compiled Python and map its messages back to source."""
     try:
@@ -310,8 +337,11 @@ def lint_compiled(source, compiled):
     names = _coconut_star_names()
     explicit = "from coconut.__coconut__ import " + ", ".join(names) if names else "pass"
     checked = STAR_IMPORT_RE.sub(lambda m: explicit, compiled, count=1)
+    import warnings
     try:
-        tree = ast.parse(checked)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")  # e.g. SyntaxWarnings for escapes in the compiled code
+            tree = ast.parse(checked)
     except SyntaxError:
         return []
     w = checker.Checker(tree, filename="<coconut>")
@@ -338,8 +368,19 @@ def lint_compiled(source, compiled):
         if name and not word_occurrences(src_line, name):
             # name doesn't appear in the source line: compiler-generated, so don't report it
             continue
-        if kind == "RedefinedWhileUnused" and re.search(r"\b(addpattern|match|case)\b", src_line):
+        if kind == "RedefinedWhileUnused" and (
+            re.search(r"\b(addpattern|match|case)\b", src_line)
+            or (name and name.startswith("__") and name.endswith("__"))  # e.g. data types' generated methods
+        ):
             continue
+        if re.search(r"#.*\bnoqa\b", src_line, re.IGNORECASE):
+            continue
+        # pyflakes refers to other lines of the compiled code; translate them to source lines
+        text = re.sub(
+            r"\bline (\d+)\b",
+            lambda m: _map_line_ref(doc, int(m.group(1))),
+            text,
+        )
         mapped = doc.compiled_to_source(line, getattr(message, "col", None), word=name)
         if mapped is None:
             continue

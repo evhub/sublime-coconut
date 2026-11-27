@@ -50,6 +50,8 @@ class Engine(object):
         self.compiler = InProcessCompiler()
         self.roots = roots or [os.getcwd()]
         self.cache = {}
+        from .overlay import Overlay
+        self.overlay = Overlay(lambda text: self.compiler.call("compile", {"code": text, "settings": dict(self.settings, lint=False)}).get("compiled"))
 
     def compile(self, path, text=None):
         from .sourcemap import CompiledDocument
@@ -82,7 +84,13 @@ class Engine(object):
         if text is None:
             text = read_file(path)
         result, good = self.compile(path, text)
-        return Analyzer(path, text, good, self.roots)
+        from .intel import jedi_available
+        if jedi_available():
+            try:
+                self.overlay.prepare(path, text, self.roots)
+            except Exception:
+                pass
+        return Analyzer(path, text, good, self.roots, self.overlay)
 
     def check(self, path, text=None):
         result, good = self.compile(path, text)

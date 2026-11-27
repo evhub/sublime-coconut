@@ -18,7 +18,9 @@ import traceback
 def worker_main():
     out = sys.stdout
     sys.stdout = sys.stderr  # anything Coconut prints must not corrupt the protocol
+    from . import compiler
     from .compiler import compile_coconut, coconut_info
+    compiler.USE_INCREMENTAL = True
     for line in sys.stdin:
         line = line.strip()
         if not line:

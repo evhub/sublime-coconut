@@ -250,3 +250,20 @@ def test_settings_change_recompiles(client, project):
     assert any(d["severity"] == 1 for d in diags), diags
     client.notify("workspace/didChangeConfiguration", {"settings": {"coconut": {"target": "sys"}}})
     assert [d for d in client.diagnostics(uri) if d["severity"] == 1] == []
+
+
+def test_cross_module_intelligence(client, project):
+    # helpers.coco has no compiled helpers.py, so jedi only sees it through the overlay
+    assert not os.path.exists(os.path.join(project, "helpers.py"))
+    text = "import helpers\nfrom helpers import double\nhelpers.tr\ndouble(\n"
+    uri = client.open(os.path.join(project, "importer.coco"), text)
+    client.diagnostics(uri)
+    result = client.request("textDocument/completion", {"textDocument": td(uri), "position": {"line": 2, "character": 10}})
+    assert "triple" in [i["label"] for i in result["items"]]
+    sig = client.request("textDocument/signatureHelp", {"textDocument": td(uri), "position": {"line": 3, "character": 7}})
+    assert sig["signatures"][0]["label"] == "double(x)"
+    hover = client.request("textDocument/hover", {"textDocument": td(uri), "position": {"line": 1, "character": 22}})
+    assert "double(x)" in hover["contents"]["value"]
+    result = client.request("textDocument/definition", {"textDocument": td(uri), "position": {"line": 3, "character": 2}})
+    assert result and result[0]["uri"].endswith("helpers.coco")
+    assert result[0]["range"]["start"] == {"line": 0, "character": 4}
