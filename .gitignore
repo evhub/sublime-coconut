@@ -114,3 +114,6 @@ Syntaxes/
 
 # Node
 node_modules/
+
+# Bundled Python dependencies for the language server (populated at package time)
+server/vendor/
