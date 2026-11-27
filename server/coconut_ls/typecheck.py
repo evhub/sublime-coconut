@@ -74,8 +74,9 @@ def run_mypy(doc_path, source, compiled, overlay, roots, timeout=300, extra_args
     args += list(extra_args) + [target]
     env = dict(os.environ)
     env["MYPYPATH"] = mirror_root + (os.pathsep + root)
+    # stdin must not be inherited: in the language server it's the LSP pipe from the editor
     proc = subprocess.Popen(
-        args, cwd=mirror_root, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        args, cwd=mirror_root, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         universal_newlines=True,
     )
     _running.add(proc)
