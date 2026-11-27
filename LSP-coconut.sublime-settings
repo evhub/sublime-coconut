@@ -16,6 +16,8 @@
         // Coconut's --strict style checks
         "strict": false,
         // lint the compiled code with pyflakes (undefined names, unused variables, ...)
-        "lint": true
+        "lint": true,
+        // type-check with mypy on open/save (pip install mypy)
+        "mypy": false
     }
 }

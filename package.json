@@ -138,6 +138,11 @@
                     "default": true,
                     "markdownDescription": "Lint the compiled code with pyflakes (undefined names, unused variables, redefinitions), mapped back to the Coconut source."
                 },
+                "coconut.languageServer.mypy": {
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "Type-check Coconut files with [mypy](https://mypy-lang.org) when they're opened or saved, with errors mapped back to the Coconut source. Requires mypy in the language server's interpreter (`pip install mypy`); uses your project's mypy configuration if it has one."
+                },
                 "coconut.languageServer.compileTimeout": {
                     "type": "number",
                     "default": 60,
@@ -246,6 +251,27 @@
                 "key": "ctrl+k v",
                 "mac": "cmd+k v",
                 "when": "editorLangId == coconut"
+            }
+        ],
+        "problemMatchers": [
+            {
+                "name": "coconut",
+                "label": "Coconut language server 'check' output",
+                "owner": "coconut",
+                "source": "coconut",
+                "fileLocation": [
+                    "autoDetect",
+                    "${workspaceFolder}"
+                ],
+                "pattern": {
+                    "regexp": "^(.+?):(\\d+):(\\d+): (error|warning|info|hint): (.*?)(?: \\[(\\w+)\\])?$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5,
+                    "code": 6
+                }
             }
         ]
     },

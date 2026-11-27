@@ -35,7 +35,7 @@ jobs:
             python -m pip install coconut pytest
             python scripts/vendor.py
           else
-            python -m pip install -r server/requirements.txt pytest
+            python -m pip install -r server/requirements.txt pytest mypy
           fi
       - name: Server info
         run: python server/coconut_language_server.py info

@@ -24,6 +24,7 @@ DEFAULT_SETTINGS = {
     "target": "sys",
     "strict": False,
     "lint": True,
+    "mypy": False,
 }
 
 # Incremental parsing reuses parse results across compiles (much faster recompiles after small

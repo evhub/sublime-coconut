@@ -94,6 +94,7 @@ function serverSettings() {
         target: cfg.get("target"),
         strict: cfg.get("strict"),
         lint: cfg.get("languageServer.lint"),
+        mypy: cfg.get("languageServer.mypy"),
         compileTimeout: cfg.get("languageServer.compileTimeout"),
     };
 }

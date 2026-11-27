@@ -4,6 +4,7 @@
 
 - **New: Coconut language server**, bundled with both the VS Code extension and the Sublime Text package:
   - compiler errors and warnings as you type, plus pyflakes linting of the compiled code, mapped back to the Coconut source;
+  - optional mypy type checking (`coconut.languageServer.mypy`), mapped back to the Coconut source;
   - hover with types, signatures, and docstrings, and Coconut's own documentation for built-ins, keywords, and operators;
   - completions (even while the file doesn't compile) and signature help;
   - go to definition (including across `.coco` files), type definition, references, document highlights, and rename;
