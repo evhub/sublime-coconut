@@ -44,7 +44,8 @@ def coconut_info():
         info["coconut_version"] = None
         info["coconut_error"] = "{t}: {e}".format(t=type(err).__name__, e=err)
     try:
-        import pyflakes  # noqa
+        import pyflakes.checker  # noqa
+        import pyflakes
         info["pyflakes_version"] = getattr(pyflakes, "__version__", "unknown")
     except Exception:
         info["pyflakes_version"] = None
@@ -301,7 +302,7 @@ def lint_compiled(source, compiled):
     """Run pyflakes (if available) over the compiled Python and map its messages back to source."""
     try:
         from pyflakes import checker
-    except ImportError:
+    except Exception:
         return []
     import ast
 

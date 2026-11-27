@@ -28,6 +28,22 @@
         {
             "name": "Build on changes",
             "shell_cmd": "coconut \"${folder}\" --watch",
+        },
+        {
+            "name": "Run file",
+            "shell_cmd": "coconut --run --no-write \"${file}\"",
+        },
+        {
+            "name": "Check file for errors",
+            "shell_cmd": "python3 \"${packages}/Coconut/server/coconut_language_server.py\" check \"${file}\"",
+            "file_regex": "^(.+?):([0-9]+):([0-9]+): (.*)$",
+            "windows": {"shell_cmd": "python \"${packages}/Coconut/server/coconut_language_server.py\" check \"${file}\""},
+        },
+        {
+            "name": "Check project for errors",
+            "shell_cmd": "python3 \"${packages}/Coconut/server/coconut_language_server.py\" check \"${folder}\"",
+            "file_regex": "^(.+?):([0-9]+):([0-9]+): (.*)$",
+            "windows": {"shell_cmd": "python \"${packages}/Coconut/server/coconut_language_server.py\" check \"${folder}\""},
         }
     ]
 }

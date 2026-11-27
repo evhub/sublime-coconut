@@ -1,7 +1,15 @@
 .PHONY: build
 build: clean setup
 	python ./build.py
-	vsce package
+	npm install
+	python ./scripts/vendor.py
+	npx --yes @vscode/vsce@3 package
+
+.PHONY: package
+package:
+	npm install
+	python ./scripts/vendor.py
+	npx --yes @vscode/vsce@3 package
 
 .PHONY: install
 install: build
@@ -9,9 +17,24 @@ install: build
 
 .PHONY: setup
 setup:
-	npm install -g vsce ovsx semver
+	npm install -g @vscode/vsce ovsx semver
 	-git clone https://github.com/evhub/tmtools.git
 	pip install -e ./tmtools
+	pip install -r ./server/requirements.txt pytest
+
+.PHONY: test
+test:
+	cd server && python -m pytest tests
+
+.PHONY: test-vscode
+test-vscode:
+	npm install
+	python ./scripts/vendor.py
+	xvfb-run -a npm run test:vscode
+
+.PHONY: docs-data
+docs-data:
+	python ./scripts/generate_docs.py
 
 .PHONY: publish
 publish: build
