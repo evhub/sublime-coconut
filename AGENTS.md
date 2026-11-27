@@ -43,4 +43,4 @@ Add an end-to-end test in `server/tests/test_server.py` for every LSP feature ch
 
 ## Releasing
 
-Bump `version` in `package.json` (and `.claude-plugin/plugin.json`), add a `CHANGELOG.md` entry, then `make publish` (VS Code Marketplace + Open VSX). Sublime Text users get updates from Package Control via git tags.
+Bump `version` in `package.json` and `.claude-plugin/plugin.json`, add a `CHANGELOG.md` entry, merge to `master`, then push a tag `vX.Y.Z`. The Release workflow (`.github/workflows/release.yml`) builds the `.vsix`, creates a GitHub release, and publishes to the VS Code Marketplace and Open VSX using the `VSCE_PAT` and `OVSX_PAT` repository secrets (each step is skipped with a warning if its secret is missing; re-run the workflow after adding it). Package Control picks up the tag for Sublime Text; the Claude Code plugin is served straight from `master`. `make publish` does the same publishing locally.
