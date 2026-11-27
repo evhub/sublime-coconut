@@ -1,0 +1,63 @@
+name: Release
+
+# Push a version tag (e.g. v2.3.0) to publish:
+#   - a GitHub release with the .vsix attached;
+#   - the VS Code Marketplace, if the VSCE_PAT secret is set;
+#   - Open VSX, if the OVSX_PAT secret is set.
+# Sublime Text users get the release from Package Control via the tag, and Claude Code users via
+# the plugin marketplace in this repository.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Check the tag matches package.json
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          version=$(node -p "require('./package.json').version")
+          test "v$version" = "${GITHUB_REF_NAME}" || { echo "tag ${GITHUB_REF_NAME} doesn't match package.json version $version"; exit 1; }
+      - name: Build
+        run: |
+          npm ci
+          npx --yes @vscode/vsce@3 package
+      - name: GitHub release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          notes=$(python3 - <<'PY'
+          import re
+          text = open("CHANGELOG.md").read()
+          m = re.search(r"^## .*?\n(.*?)(?=^## |\Z)", text, re.S | re.M)
+          print(m.group(1).strip() if m else "")
+          PY
+          )
+          gh release create "${GITHUB_REF_NAME}" *.vsix --title "${GITHUB_REF_NAME}" --notes "$notes"
+      - name: Publish to the VS Code Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -z "$VSCE_PAT" ]; then echo "::warning::VSCE_PAT secret not set; skipping the VS Code Marketplace"; exit 0; fi
+          npx --yes @vscode/vsce@3 publish --packagePath *.vsix
+      - name: Publish to Open VSX
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if [ -z "$OVSX_PAT" ]; then echo "::warning::OVSX_PAT secret not set; skipping Open VSX"; exit 0; fi
+          npx --yes ovsx@0 publish *.vsix
