@@ -14,17 +14,17 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        python: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         deps: [installed]
         include:
           - {os: windows-latest, python: "3.12", deps: installed}
           - {os: macos-latest, python: "3.12", deps: installed}
           # only Coconut installed: jedi/pyflakes come from the bundle shipped in the VS Code extension
-          - {os: ubuntu-latest, python: "3.9", deps: bundled}
-          - {os: ubuntu-latest, python: "3.13", deps: bundled}
+          - {os: ubuntu-latest, python: "3.10", deps: bundled}
+          - {os: ubuntu-latest, python: "3.14", deps: bundled}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
@@ -47,13 +47,13 @@ jobs:
     name: VS Code extension
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
       - name: Install dependencies
         run: |
           python -m pip install coconut
@@ -74,7 +74,7 @@ jobs:
     name: Claude Code plugin manifests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Check plugin files are valid JSON with the expected fields
         run: |
           python - <<'PY'
