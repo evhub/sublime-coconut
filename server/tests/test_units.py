@@ -105,3 +105,20 @@ def test_works_without_jedi(monkeypatch):
     assert "fmap" in labels
     assert analyzer.definitions(0, 0) == [] or analyzer.definitions(0, 0)
     assert analyzer.signature_help(0, 5) is None
+
+
+def test_snippets_compile():
+    import json
+    with open(os.path.join(ROOT, "snippets.json")) as f:
+        snippets = json.load(f)
+    for name, snippet in snippets.items():
+        body = snippet["body"]
+        body = re.sub(r"\$\{\d+:([^}]*)\}", r"\1", body)
+        body = re.sub(r"\$\d+", "pass", body)
+        if name in ("case", "casematch"):
+            body = "match x:" + body.replace("\n", "\n    ")
+        if name.startswith("pattern"):
+            body = "def func(args) = None\n" + body
+        result = compile_coconut(body)
+        problems = [d["message"] for d in result["diagnostics"] if d["severity"] == 1 or "deprecated" in d["message"]]
+        assert result["compiled"] is not None and not problems, (name, body, problems)

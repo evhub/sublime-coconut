@@ -1,14 +1,20 @@
 {
+	"matchcase": {
+		"prefix": "matchcase",
+		"body": "\nmatch ${1:value}:\n    case ${2:pattern}:\n        ${3:pass}\n    case _:\n        ${0:pass}\n",
+		"description": "match value: case pattern:",
+		"scope": "source.coconut"
+	},
 	"case": {
 		"prefix": "case",
-		"body": "\ncase ${1:value}:\n    match ${2:pattern if condition}:\n        $3\n${4:else:\n    $0}\n",
-		"description": "case",
+		"body": "\ncase ${1:pattern}:\n    ${0:pass}\n",
+		"description": "case pattern: (inside match value:)",
 		"scope": "source.coconut"
 	},
 	"casematch": {
 		"prefix": "casematch",
-		"body": "\nmatch ${1:pattern if condition}:\n    $0\n",
-		"description": "match ? in ?",
+		"body": "\ncase ${1:pattern} if ${2:condition}:\n    ${0:pass}\n",
+		"description": "case pattern if condition: (inside match value:)",
 		"scope": "source.coconut"
 	},
 	"defa": {
@@ -25,8 +31,8 @@
 	},
 	"deflambda": {
 		"prefix": "deflambda",
-		"body": "\ndef (${1:args}) -> ${0:expr}\n",
-		"description": "def (args) -> expr",
+		"body": "\ndef (${1:args}) => ${0:expr}\n",
+		"description": "def (args) => expr",
 		"scope": "source.coconut"
 	},
 	"match": {
@@ -57,6 +63,24 @@
 		"prefix": "pattern",
 		"body": "\naddpattern def ${1:func}(${2:args}):\n    ${0:pass}\n",
 		"description": "new pattern",
+		"scope": "source.coconut"
+	},
+	"casedef": {
+		"prefix": "casedef",
+		"body": "\ncase def ${1:name}:\n    case(${2:pattern}) = ${3:expr}\n    case(${4:pattern}) = ${0:expr}\n",
+		"description": "case def name: case(...) = ...",
+		"scope": "source.coconut"
+	},
+	"data": {
+		"prefix": "data",
+		"body": "\ndata ${1:Name}(${2:fields}):\n    ${0:pass}\n",
+		"description": "data Name(fields):",
+		"scope": "source.coconut"
+	},
+	"where": {
+		"prefix": "where",
+		"body": "\n${1:result} = ${2:expr} where:\n    ${0:pass}\n",
+		"description": "expr where:",
 		"scope": "source.coconut"
 	}
 }

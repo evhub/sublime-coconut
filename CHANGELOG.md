@@ -14,6 +14,7 @@
 - Sublime Text: the language server starts automatically when the [LSP package](https://packagecontrol.io/packages/LSP) is installed; new "Run file" and "Check file/project for errors" build variants.
 - AI agents: a Claude Code plugin (language server, MCP tools, and a Coconut skill), an MCP server for any agent, and a command-line interface (`check`, `compile`, `hover`, `definition`, `references`, `symbols`, `docs`).
 - Highlight `final`, lazy imports, `prepattern`, `datamaker`, `reveal_type`, `reveal_locals`, `TYPE_CHECKING`, `py_oct`, `py_repr`, and `py_dict`.
+- Snippets use modern syntax (`match`/`case`, `=>` statement lambdas); new `matchcase`, `casedef`, `data`, and `where` snippets.
 - VS Code: requires VS Code 1.82 or newer.
 
 ## 2.2.4
