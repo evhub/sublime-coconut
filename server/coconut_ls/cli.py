@@ -185,6 +185,8 @@ def settings_from(args):
 
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
+    # flags that LSP clients commonly pass when launching a server over stdio
+    argv = [a for a in argv if a not in ("--stdio", "--lsp") and not a.startswith("--clientProcessId")]
     parser = make_parser()
     args = parser.parse_args(argv)
     command = args.command or "serve"

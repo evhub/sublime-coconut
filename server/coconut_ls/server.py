@@ -15,6 +15,7 @@ from .protocol import (
     METHOD_NOT_FOUND,
     REQUEST_FAILED,
     SERVER_NOT_INITIALIZED,
+    LOG_FILE,
     ResponseError,
     log,
     stdio_connection,
@@ -130,6 +131,8 @@ class CoconutLanguageServer(object):
         return self.exit_code if self.exit_code is not None else (0 if self.shutting_down else 1)
 
     def dispatch(self, message):
+        if LOG_FILE:
+            log("<-", message.get("method", "response"), message.get("id", ""))
         if "method" not in message:
             self.conn.handle_response(message)
             return

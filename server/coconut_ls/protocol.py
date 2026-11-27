@@ -1,6 +1,7 @@
 """Minimal, dependency-free JSON-RPC 2.0 transport for the Language Server Protocol over stdio."""
 
 import json
+import os
 import sys
 import threading
 import traceback
@@ -27,13 +28,23 @@ class ResponseError(Exception):
         self.data = data
 
 
+LOG_FILE = os.environ.get("COCONUT_LS_LOG")
+
+
 def log(*args):
-    """Log to stderr (stdout is reserved for protocol messages)."""
+    """Log to stderr (stdout is reserved for protocol messages), and to $COCONUT_LS_LOG if set."""
+    text = " ".join(str(a) for a in args) + "\n"
     try:
-        sys.stderr.write(" ".join(str(a) for a in args) + "\n")
+        sys.stderr.write(text)
         sys.stderr.flush()
     except Exception:
         pass
+    if LOG_FILE:
+        try:
+            with open(LOG_FILE, "a") as f:
+                f.write(text)
+        except Exception:
+            pass
 
 
 class JsonRpcConnection(object):
