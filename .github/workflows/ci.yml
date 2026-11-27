@@ -88,7 +88,7 @@ jobs:
           market = json.load(open(".claude-plugin/marketplace.json"))
           plugin = json.load(open(".claude-plugin/plugin.json"))
           lsp = json.load(open(".lsp.json"))
-          mcp = json.load(open(".mcp.json"))
+          mcp = plugin
           assert market["plugins"][0]["name"] == plugin["name"]
           assert lsp["coconut"]["extensionToLanguage"][".coco"] == "coconut"
           assert "coconut" in mcp["mcpServers"]

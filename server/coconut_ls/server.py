@@ -460,6 +460,7 @@ class CoconutLanguageServer(object):
             doc.compiled_event.wait(self.compiler.timeout)
             with self.cond:
                 if self.docs.get(uri) is not doc or doc.good is None or doc.good_version != doc.version:
+                    log("skipping mypy for", uri, "(closed, changed, or doesn't compile)")
                     continue
                 source, compiled = doc.good.source, doc.good.compiled
             try:

@@ -82,19 +82,31 @@ def run_mypy(doc_path, source, compiled, overlay, roots, timeout=120, extra_args
     except subprocess.TimeoutExpired:
         proc.kill()
         proc.communicate()
+        sys.stderr.write("mypy timed out after {t} seconds\n".format(t=timeout))
         return []
     finally:
         _running.discard(proc)
     diagnostics = parse_mypy_output(out, target, source, compiled, cwd=mirror_root)
+    if not diagnostics and proc.returncode == 1:
+        sys.stderr.write("mypy reported errors, but none could be mapped to {t}:\n{o}\n".format(t=target, o=out[-2000:]))
     if proc.returncode not in (0, 1):
         # mypy itself failed (bad config, crash, ...): say why rather than silently reporting nothing
         sys.stderr.write("mypy exited with code {c}:\n{o}\n{e}\n".format(c=proc.returncode, o=out[-2000:], e=err[-2000:]))
     return diagnostics
 
 
+def _canonical(path):
+    """Comparable form of a path (resolves symlinks and, on Windows, 8.3 short names and case)."""
+    try:
+        path = os.path.realpath(path)
+    except (OSError, ValueError):
+        path = os.path.abspath(path)
+    return os.path.normcase(path)
+
+
 def parse_mypy_output(output, target, source, compiled, cwd=None):
     doc = CompiledDocument(source, compiled)
-    target_norm = os.path.normcase(os.path.abspath(target))
+    target_norm = _canonical(target)
     diagnostics = []
     seen = set()
     for line in output.splitlines():
@@ -104,7 +116,7 @@ def parse_mypy_output(output, target, source, compiled, cwd=None):
         path = m.group("path")
         if cwd is not None and not os.path.isabs(path):
             path = os.path.join(cwd, path)
-        if os.path.normcase(os.path.abspath(path)) != target_norm:
+        if _canonical(path) != target_norm:
             continue
         message = m.group("msg")
         if "_coconut" in message or "__coconut__" in message:

@@ -13,7 +13,7 @@ Editor support for the [Coconut](https://github.com/evhub/coconut) language: a V
 | `server/coconut_ls/` | The server package (stdlib only; jedi and pyflakes optional). |
 | `server/tests/` | pytest suite: end-to-end LSP tests over stdio, MCP/CLI tests, unit tests. |
 | `test/` | VS Code integration tests (drive a real VS Code via `@vscode/test-electron`). |
-| `.claude-plugin/`, `.lsp.json`, `.mcp.json`, `skills/` | Claude Code plugin marketplace + plugin. The repo root is the plugin root. |
+| `.claude-plugin/` (incl. the MCP server config), `.lsp.json`, `skills/` | Claude Code plugin marketplace + plugin. The repo root is the plugin root. |
 | `scripts/vendor.py` | Bundles jedi/parso/pyflakes into `server/vendor/` (not committed) for the `.vsix`. |
 | `scripts/generate_docs.py` | Regenerates `server/coconut_ls/data/docs.json` (hover docs) from Coconut's `DOCS.md`. |
 
