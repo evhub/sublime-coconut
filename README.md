@@ -16,7 +16,7 @@ This repository contains [Coconut](https://github.com/evhub/coconut) language su
 
 | Hover docs for Coconut built-ins, live errors and lint | Completions, even while the line doesn't compile |
 | --- | --- |
-| ![Hovering over fmap shows its documentation](images/hover.png) | ![Completing attributes of shapes[0].center](images/completion.png) |
+| ![Hovering over fmap shows its documentation](images/hover.png) | ![Completing the attributes of a data type](images/completion.png) |
 | **Pattern-matching functions and the Problems panel** | **Compiled Python, side by side and in sync** |
 | ![Hovering over a case def function shows its cases](images/problems.png) | ![The compiled Python for the current line](images/compiled.png) |
 

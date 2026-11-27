@@ -9,5 +9,19 @@
     "homepage": "https://github.com/evhub/sublime-coconut",
     "repository": "https://github.com/evhub/sublime-coconut",
     "license": "GPL-3.0",
-    "keywords": ["coconut", "python", "functional", "lsp"]
+    "keywords": [
+        "coconut",
+        "python",
+        "functional",
+        "lsp"
+    ],
+    "mcpServers": {
+        "coconut": {
+            "command": "python3",
+            "args": [
+                "${CLAUDE_PLUGIN_ROOT}/server/coconut_language_server.py",
+                "mcp"
+            ]
+        }
+    }
 }

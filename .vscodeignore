@@ -20,7 +20,6 @@ node_modules/@vscode/test-electron/**
 **/.pytest_cache/**
 .claude-plugin/**
 .lsp.json
-.mcp.json
 skills/**
 coconut_lsp.py
 LSP-coconut.sublime-settings
@@ -29,4 +28,3 @@ Main.sublime-menu
 .python-version
 AGENTS.md
 CLAUDE.md
-images/**
