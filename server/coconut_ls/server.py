@@ -22,6 +22,7 @@ from .protocol import (
 )
 from .sourcemap import CompiledDocument, word_at
 from .symbols import WorkspaceIndex, document_symbols, flatten_symbols, KIND_FUNCTION
+from .overlay import Overlay
 from .uris import path_to_uri, uri_to_path
 from .worker import CompileTimeout, WorkerClient
 
@@ -79,6 +80,7 @@ class CoconutLanguageServer(object):
         self.shutting_down = False
         self.exit_code = None
         self.index = WorkspaceIndex()
+        self.overlay = Overlay(self.compile_for_overlay)
         self.info = None
         self.reported_fatal = False
         self.compile_thread = threading.Thread(target=self.compile_loop, name="coconut-compile")
@@ -326,6 +328,7 @@ class CoconutLanguageServer(object):
             self.compile_document(doc, text, version, settings)
 
     def compile_document(self, doc, text, version, settings):
+        started = time.time()
         try:
             result = self.compiler.call("compile", {"code": text, "settings": settings})
         except CompileTimeout as err:
@@ -337,7 +340,8 @@ class CoconutLanguageServer(object):
             log("compile failed:", err)
             result = {"compiled": None, "diagnostics": []}
         good_text, good_compiled = text, result.get("compiled")
-        if good_compiled is None and not result.get("fatal"):
+        slow = time.time() - started > REPAIR_TIME_BUDGET / 2
+        if good_compiled is None and not result.get("fatal") and not (slow and doc.good is not None):
             good_text, good_compiled = self.repaired_compile(text, result.get("diagnostics", []), settings)
         if result.get("fatal"):
             if not self.reported_fatal:
@@ -358,11 +362,20 @@ class CoconutLanguageServer(object):
             if current:
                 doc.diagnostics = result.get("diagnostics", [])
                 doc.compiled_event.set()
+        if jedi_available() and good_compiled is not None:
+            try:
+                self.overlay.prepare(doc.path, text, self.roots)
+            except Exception:
+                log("failed to prepare imports:", traceback.format_exc())
         if current:
             self.conn.notify("textDocument/publishDiagnostics", {
                 "uri": doc.uri, "version": version, "diagnostics": doc.diagnostics,
             })
             self.conn.notify("coconut/compiled", {"uri": doc.uri, "version": version, "success": result.get("compiled") is not None})
+
+    def compile_for_overlay(self, text):
+        result = self.compiler.call("compile", {"code": text, "settings": dict(self.settings, lint=False)})
+        return result.get("compiled")
 
     def repaired_compile(self, text, diagnostics, settings):
         """After a failed compile, compile a version with the broken line(s) neutralized, so
@@ -406,7 +419,7 @@ class CoconutLanguageServer(object):
             doc.compiled_event.wait(FIRST_COMPILE_WAIT)
         with self.cond:
             text, good = doc.text, doc.good
-        return Analyzer(doc.path, text, good, self.roots)
+        return Analyzer(doc.path, text, good, self.roots, self.overlay)
 
     @staticmethod
     def position(params):

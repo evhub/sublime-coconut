@@ -79,7 +79,7 @@ class Analyzer(object):
 
     text: the current document text; good: the last successfully compiled CompiledDocument (or None)."""
 
-    def __init__(self, path, text, good=None, workspace_roots=(), docs_lookup=None):
+    def __init__(self, path, text, good=None, workspace_roots=(), overlay=None):
         self.path = path
         self.text = text
         self.lines = text.splitlines()
@@ -88,7 +88,11 @@ class Analyzer(object):
         self.good = good
         self.diff = LineDiff(good.source_lines, self.lines) if good is not None else None
         self.workspace_roots = [r for r in workspace_roots if r]
-        self.compiled_path = compiled_path_for(path)
+        self.overlay = overlay
+        if overlay is not None:
+            self.compiled_path = overlay.script_path(path, self.workspace_roots)
+        else:
+            self.compiled_path = compiled_path_for(path)
         self._project = None
 
     # ------------------------------------------------------------------ jedi plumbing
@@ -102,8 +106,11 @@ class Analyzer(object):
                     break
             if root is None:
                 root = os.path.dirname(os.path.abspath(self.path))
+            added = []
+            if self.overlay is not None:
+                added.append(self.overlay.mirror_root(self.overlay.root_for(self.path, self.workspace_roots)))
             try:
-                self._project = jedi.Project(root, smart_sys_path=True, load_unsafe_extensions=False)
+                self._project = jedi.Project(root, added_sys_path=added, smart_sys_path=True, load_unsafe_extensions=False)
             except Exception:
                 self._project = None
         return self._project
@@ -231,6 +238,14 @@ class Analyzer(object):
             if mapped is None:
                 return None
             return (self.path,) + mapped
+        if self.overlay is not None and self.overlay.is_mirror_path(module_path):
+            real, from_coconut = self.overlay.to_real(module_path)
+            if from_coconut:
+                loc = map_into_coconut_file(module_path, real, name.line - 1, name.name)
+                if loc is not None:
+                    return loc
+                return real, 0, 0, 0
+            module_path = real
         if module_path.endswith(".py"):
             coco = coconut_source_for(module_path)
             if coco is not None:
