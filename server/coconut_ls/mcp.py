@@ -91,6 +91,15 @@ TOOLS = [
 ]
 
 
+def _display_path(path):
+    """A path relative to the current directory when that's shorter (relpath fails across Windows drives)."""
+    try:
+        rel = os.path.relpath(path)
+    except ValueError:
+        return path
+    return rel if len(rel) < len(path) else path
+
+
 class ToolError(Exception):
     pass
 
@@ -219,7 +228,7 @@ class McpServer(object):
                     warnings += 1
                 elif d["severity"] == "hint" and "unused" not in d["message"]:
                     continue
-                shown = os.path.basename(f) if code is not None else os.path.relpath(f)
+                shown = os.path.basename(f) if code is not None else _display_path(f)
                 lines.append("{f}:{l}:{c}: {s}: {m}".format(f=shown, l=d["line"], c=d["column"], s=d["severity"], m=d["message"]))
         summary = "Checked {n} file{s}: {e} error{es}, {w} warning{ws}.".format(
             n=len(files), s="" if len(files) == 1 else "s", e=errors, es="" if errors == 1 else "s",

@@ -78,14 +78,18 @@ def run_mypy(doc_path, source, compiled, overlay, roots, timeout=120, extra_args
     )
     _running.add(proc)
     try:
-        out, _ = proc.communicate(timeout=timeout)
+        out, err = proc.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
         proc.kill()
         proc.communicate()
         return []
     finally:
         _running.discard(proc)
-    return parse_mypy_output(out, target, source, compiled, cwd=mirror_root)
+    diagnostics = parse_mypy_output(out, target, source, compiled, cwd=mirror_root)
+    if proc.returncode not in (0, 1):
+        # mypy itself failed (bad config, crash, ...): say why rather than silently reporting nothing
+        sys.stderr.write("mypy exited with code {c}:\n{o}\n{e}\n".format(c=proc.returncode, o=out[-2000:], e=err[-2000:]))
+    return diagnostics
 
 
 def parse_mypy_output(output, target, source, compiled, cwd=None):

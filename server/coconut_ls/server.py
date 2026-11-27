@@ -663,15 +663,26 @@ class CoconutLanguageServer(object):
 
     def on_document_symbol(self, params):
         doc = self.get_doc(params)
+        if doc.good is None and doc.compiled_version is None:
+            doc.compiled_event.wait(FIRST_COMPILE_WAIT)
         symbols = self.current_symbols(doc)
         if not symbols:
-            # fall back to a quick regex scan (e.g. the file has never compiled)
+            # fall back to a quick regex scan (e.g. the file has never compiled), nested by indentation
             from .symbols import scan_symbols
             lines = doc.text.splitlines()
+            stack = []  # (indent, symbol)
             for name, kind, line, col, indent in scan_symbols(doc.text):
                 rng = make_range(line, col, line, len(lines[line]) if line < len(lines) else col)
-                symbols.append({"name": name, "kind": kind, "range": rng,
-                                "selectionRange": make_range(line, col, line, col + len(name))})
+                sym = {"name": name, "kind": kind, "range": rng,
+                       "selectionRange": make_range(line, col, line, col + len(name)), "children": []}
+                while stack and stack[-1][0] >= indent:
+                    stack.pop()
+                if stack:
+                    stack[-1][1]["children"].append(sym)
+                else:
+                    symbols.append(sym)
+                if kind != 13 and kind != 14:  # variables can't contain anything
+                    stack.append((indent, sym))
         return symbols
 
     def on_workspace_symbol(self, params):
