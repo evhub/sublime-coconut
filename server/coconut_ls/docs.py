@@ -59,6 +59,16 @@ def search(query, limit=10):
     return results[:limit]
 
 
+def signature(entry):
+    """A plain signature like 'fmap(func, obj)' from an entry's '**fmap**(_func_, _obj_)' line."""
+    m = re.match(r"^\*\*([\w.]+)\*\*\((.*)\)\s*$", entry["description"].split("\n", 1)[0])
+    if not m:
+        return None
+    args = m.group(2).replace("\\", "").replace("`", "")
+    args = re.sub(r"(?<!\w)_|_(?!\w)", "", args)
+    return m.group(1) + "(" + args + ")"
+
+
 def format_entry(entry, include_example=True, max_chars=None):
     """Render a documentation entry as Markdown."""
     description = entry["description"]
