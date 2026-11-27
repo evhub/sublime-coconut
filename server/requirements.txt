@@ -1,0 +1,4 @@
+coconut
+jedi>=0.19.1
+parso>=0.8.4
+pyflakes>=3.1

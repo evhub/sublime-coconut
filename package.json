@@ -1,8 +1,8 @@
 {
     "name": "coconut",
     "displayName": "Coconut (Official)",
-    "description": "Coconut language support for Visual Studio Code.",
-    "version": "2.2.4",
+    "description": "Coconut language support: syntax highlighting, snippets, and a language server with errors, linting, hover docs, completions, go to definition, references, rename, and more.",
+    "version": "2.3.0",
     "publisher": "evhub",
     "author": {
         "name": "evhub"
@@ -15,8 +15,9 @@
     "bugs": {
         "url": "https://github.com/evhub/sublime-coconut/issues"
     },
+    "homepage": "https://github.com/evhub/sublime-coconut#readme",
     "engines": {
-        "vscode": "^1.56.0"
+        "vscode": "^1.82.0"
     },
     "keywords": [
         "coconut",
@@ -26,40 +27,232 @@
         "highlighting",
         "highlighter",
         "functional",
-        "python"
+        "python",
+        "lsp",
+        "language server"
     ],
     "categories": [
         "Programming Languages",
-        "Snippets"
+        "Snippets",
+        "Linters"
     ],
+    "main": "./extension.js",
+    "activationEvents": [
+        "onLanguage:coconut"
+    ],
+    "scripts": {
+        "vendor": "python3 scripts/vendor.py",
+        "vscode:prepublish": "python3 scripts/vendor.py",
+        "test": "cd server && python3 -m pytest tests",
+        "package": "vsce package",
+        "test:vscode": "node test/runTest.js"
+    },
     "contributes": {
-        "languages": [{
-            "id": "coconut",
-            "aliases": ["Coconut", "coconut"],
-            "extensions": [".coco", ".coc", ".coconut", ".py_template"],
-            "firstLine": "^#!\\s*/?.*\\bcoconut[0-9.-]*\\b",
-            "configuration": "./language-configuration.json"
-        },
-        {
-            "id": "coconut-injection"
-        }],
-        "grammars": [{
-            "language": "coconut",
-            "scopeName": "source.coconut",
-            "path": "./langs/Coconut.tmLanguage"
-        },
-        {
-            "language": "coconut-injection",
-            "scopeName": "markdown.coconut.codeblock",
-            "path": "./langs/codeblock.json",
-            "injectTo": ["text.html.markdown"],
-            "embeddedLanguages": {
-                "meta.embedded.block.coconut": "coconut"
+        "languages": [
+            {
+                "id": "coconut",
+                "aliases": [
+                    "Coconut",
+                    "coconut"
+                ],
+                "extensions": [
+                    ".coco",
+                    ".coc",
+                    ".coconut",
+                    ".py_template"
+                ],
+                "firstLine": "^#!\\s*/?.*\\bcoconut[0-9.-]*\\b",
+                "configuration": "./language-configuration.json"
+            },
+            {
+                "id": "coconut-injection"
             }
-        }],
-        "snippets": [{
-            "language": "coconut",
-            "path": "./snippets.json"
-        }]
+        ],
+        "grammars": [
+            {
+                "language": "coconut",
+                "scopeName": "source.coconut",
+                "path": "./langs/Coconut.tmLanguage"
+            },
+            {
+                "language": "coconut-injection",
+                "scopeName": "markdown.coconut.codeblock",
+                "path": "./langs/codeblock.json",
+                "injectTo": [
+                    "text.html.markdown"
+                ],
+                "embeddedLanguages": {
+                    "meta.embedded.block.coconut": "coconut"
+                }
+            }
+        ],
+        "snippets": [
+            {
+                "language": "coconut",
+                "path": "./snippets.json"
+            }
+        ],
+        "configuration": {
+            "title": "Coconut",
+            "properties": {
+                "coconut.target": {
+                    "type": "string",
+                    "default": "sys",
+                    "markdownDescription": "The Python version to target when compiling (Coconut's `--target`), e.g. `sys` (the Python running Coconut), `3`, `3.8`, `2.7`. Used for errors in the editor and by the Run/Compile commands.",
+                    "examples": [
+                        "sys",
+                        "3",
+                        "3.8",
+                        "3.10",
+                        "3.12",
+                        "2.7",
+                        "psf"
+                    ]
+                },
+                "coconut.strict": {
+                    "type": "boolean",
+                    "default": false,
+                    "markdownDescription": "Enable Coconut's `--strict` mode: report style issues (e.g. trailing semicolons, unused imports) as warnings."
+                },
+                "coconut.languageServer.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Whether to start the Coconut language server (errors, linting, hover, completions, go to definition, references, rename, outline)."
+                },
+                "coconut.languageServer.pythonPath": {
+                    "type": "string",
+                    "default": "",
+                    "scope": "resource",
+                    "markdownDescription": "The Python interpreter used to run the language server and the Run/Compile commands; it must have Coconut installed (`pip install coconut`). Defaults to the interpreter selected in the Python extension, else `python3`/`python`."
+                },
+                "coconut.languageServer.command": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [],
+                    "markdownDescription": "Advanced: a custom command used to start a Coconut language server, overriding the bundled one (e.g. `[\"/path/to/python\", \"/path/to/coconut_language_server.py\"]`)."
+                },
+                "coconut.languageServer.lint": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "Lint the compiled code with pyflakes (undefined names, unused variables, redefinitions), mapped back to the Coconut source."
+                },
+                "coconut.languageServer.compileTimeout": {
+                    "type": "number",
+                    "default": 60,
+                    "minimum": 1,
+                    "description": "Maximum number of seconds to spend compiling a file before giving up."
+                },
+                "coconut.trace.server": {
+                    "type": "string",
+                    "enum": [
+                        "off",
+                        "messages",
+                        "verbose"
+                    ],
+                    "default": "off",
+                    "description": "Trace the communication between VS Code and the Coconut language server (for debugging)."
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "coconut.showCompiledPython",
+                "title": "Show Compiled Python",
+                "category": "Coconut",
+                "icon": "$(open-preview)"
+            },
+            {
+                "command": "coconut.runFile",
+                "title": "Run Coconut File",
+                "category": "Coconut",
+                "icon": "$(play)"
+            },
+            {
+                "command": "coconut.compileFile",
+                "title": "Compile Coconut File",
+                "category": "Coconut"
+            },
+            {
+                "command": "coconut.openInterpreter",
+                "title": "Open Coconut Interpreter",
+                "category": "Coconut"
+            },
+            {
+                "command": "coconut.installCoconut",
+                "title": "Install/Upgrade Coconut in the Selected Interpreter",
+                "category": "Coconut"
+            },
+            {
+                "command": "coconut.restartLanguageServer",
+                "title": "Restart Language Server",
+                "category": "Coconut"
+            },
+            {
+                "command": "coconut.showOutput",
+                "title": "Show Language Server Output",
+                "category": "Coconut"
+            },
+            {
+                "command": "coconut.openDocumentation",
+                "title": "Open Documentation",
+                "category": "Coconut"
+            }
+        ],
+        "menus": {
+            "editor/title": [
+                {
+                    "command": "coconut.showCompiledPython",
+                    "when": "editorLangId == coconut",
+                    "group": "navigation"
+                },
+                {
+                    "command": "coconut.runFile",
+                    "when": "editorLangId == coconut && resourceScheme == file",
+                    "group": "navigation"
+                }
+            ],
+            "editor/context": [
+                {
+                    "command": "coconut.showCompiledPython",
+                    "when": "editorLangId == coconut",
+                    "group": "coconut"
+                },
+                {
+                    "command": "coconut.runFile",
+                    "when": "editorLangId == coconut && resourceScheme == file",
+                    "group": "coconut"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "coconut.showCompiledPython",
+                    "when": "editorLangId == coconut"
+                },
+                {
+                    "command": "coconut.runFile",
+                    "when": "editorLangId == coconut"
+                },
+                {
+                    "command": "coconut.compileFile",
+                    "when": "editorLangId == coconut"
+                }
+            ]
+        },
+        "keybindings": [
+            {
+                "command": "coconut.showCompiledPython",
+                "key": "ctrl+k v",
+                "mac": "cmd+k v",
+                "when": "editorLangId == coconut"
+            }
+        ]
+    },
+    "dependencies": {
+        "vscode-languageclient": "^9.0.1"
+    },
+    "devDependencies": {
+        "@vscode/test-electron": "^2.4.1"
     }
 }
