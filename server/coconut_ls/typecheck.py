@@ -51,7 +51,7 @@ def find_config(root):
     return None
 
 
-def run_mypy(doc_path, source, compiled, overlay, roots, timeout=120, extra_args=()):
+def run_mypy(doc_path, source, compiled, overlay, roots, timeout=300, extra_args=()):
     """Type-check compiled code; returns a list of LSP diagnostics for the Coconut source."""
     root = overlay.root_for(doc_path, roots)
     mirror_root = overlay.mirror_root(root)
@@ -64,7 +64,9 @@ def run_mypy(doc_path, source, compiled, overlay, roots, timeout=120, extra_args
         sys.executable, "-m", "mypy",
         "--show-column-numbers", "--show-error-codes", "--no-error-summary", "--no-pretty",
         "--hide-error-context", "--no-color-output", "--follow-imports=silent",
-        "--cache-dir", os.path.join(mirror_root, ".mypy_cache"),
+        # one cache shared by all projects: the expensive part (the standard library) is reused,
+        # and mypy still validates each cached module against its source
+        "--cache-dir", os.path.join(overlay.base_dir, ".mypy_cache"),
     ]
     config = find_config(root)
     if config:
