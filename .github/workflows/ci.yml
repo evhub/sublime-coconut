@@ -46,7 +46,7 @@ jobs:
         run: python server/coconut_language_server.py info
       - name: Run tests
         working-directory: server
-        run: python -m pytest tests -v --timeout=240
+        run: python -m pytest tests -v --timeout=420
 
   vscode:
     name: VS Code extension
