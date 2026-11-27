@@ -6,10 +6,15 @@ on:
     branches: [master]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   server:
     name: Language server (Python ${{ matrix.python }}, ${{ matrix.os }}, ${{ matrix.deps }})
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -32,20 +37,21 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ "${{ matrix.deps }}" = "bundled" ]; then
-            python -m pip install coconut pytest
+            python -m pip install coconut pytest pytest-timeout
             python scripts/vendor.py
           else
-            python -m pip install -r server/requirements.txt pytest mypy
+            python -m pip install -r server/requirements.txt pytest pytest-timeout mypy
           fi
       - name: Server info
         run: python server/coconut_language_server.py info
       - name: Run tests
         working-directory: server
-        run: python -m pytest tests -v
+        run: python -m pytest tests -v --timeout=240
 
   vscode:
     name: VS Code extension
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
