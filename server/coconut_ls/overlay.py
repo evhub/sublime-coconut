@@ -11,6 +11,7 @@ import hashlib
 import os
 import re
 import shutil
+import sys
 import tempfile
 import threading
 
@@ -21,6 +22,39 @@ MAX_DEPTH = 2
 
 IMPORT_RE = re.compile(r"^[ \t]*import[ \t]+([^\n#;]+)", re.MULTILINE)
 FROM_IMPORT_RE = re.compile(r"^[ \t]*from[ \t]+(\.*[\w.]*)[ \t]+import[ \t]+\(?([^\n#;)]+)", re.MULTILINE)
+
+
+def _private_dir_ok(path):
+    """Whether path is a real (non-symlink) directory owned by us and not writable by others."""
+    try:
+        if os.path.islink(path) or not os.path.isdir(path):
+            return False
+        if hasattr(os, "getuid"):
+            st = os.stat(path)
+            if st.st_uid != os.getuid() or st.st_mode & 0o022:
+                return False
+        return True
+    except OSError:
+        return False
+
+
+def default_base_dir():
+    """A private per-user cache directory for the mirror (never a predictable shared /tmp path)."""
+    home = os.path.expanduser("~")
+    if os.name == "nt":
+        cache = os.environ.get("LOCALAPPDATA") or os.path.join(home, "AppData", "Local")
+    elif sys.platform == "darwin":
+        cache = os.path.join(home, "Library", "Caches")
+    else:
+        cache = os.environ.get("XDG_CACHE_HOME") or os.path.join(home, ".cache")
+    path = os.path.join(cache, "coconut-language-server", "mirror")
+    try:
+        os.makedirs(path, mode=0o700, exist_ok=True)
+        if _private_dir_ok(path) and _private_dir_ok(os.path.dirname(path)):
+            return path
+    except OSError:
+        pass
+    return tempfile.mkdtemp(prefix="coconut-ls-")
 
 
 def imported_modules(text):
@@ -66,8 +100,7 @@ class Overlay(object):
     def __init__(self, compile_func, base_dir=None):
         """compile_func(text) -> compiled Python (with line-number comments) or None."""
         self.compile_func = compile_func
-        user = re.sub(r"\W", "", os.environ.get("USER") or os.environ.get("USERNAME") or "user")
-        self.base_dir = base_dir or os.path.join(tempfile.gettempdir(), "coconut-ls-" + user)
+        self.base_dir = base_dir or default_base_dir()
         self.lock = threading.RLock()
         self.compiled = {}  # mirror .py path -> (real .coco path, source mtime)
         self.copied = {}  # mirror .py path -> (real .py path, mtime)
@@ -102,13 +135,16 @@ class Overlay(object):
         return self.mirror_path(doc_path, roots)
 
     def to_real(self, path):
-        """Map a path in the mirror back to (real_path, from_coconut); (path, False) if not mirrored."""
+        """Map a path in the mirror back to (real_path, from_coconut); (path, False) if not mirrored.
+
+        Deliberately lock-free (single dict lookups are atomic), so requests never wait on prepare()."""
         apath = os.path.abspath(path)
-        with self.lock:
-            if apath in self.compiled:
-                return self.compiled[apath][0], True
-            if apath in self.copied:
-                return self.copied[apath][0], False
+        compiled = self.compiled.get(apath)
+        if compiled is not None:
+            return compiled[0], True
+        copied = self.copied.get(apath)
+        if copied is not None:
+            return copied[0], False
         return path, False
 
     def is_mirror_path(self, path):

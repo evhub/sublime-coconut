@@ -127,6 +127,11 @@ async function startClient() {
             updateStatusItem();
         }
     });
+    // register handlers before starting, so that notifications sent during startup aren't dropped
+    newClient.onNotification("coconut/status", (status) => onStatus(status));
+    newClient.onNotification("coconut/compiled", (params) => {
+        compiledViews.fire(compiledUriFor(vscode.Uri.parse(params.uri)));
+    });
     client = newClient;
     try {
         await newClient.start();
@@ -134,23 +139,20 @@ async function startClient() {
         client = null;
         log("Failed to start the language server: " + err);
         updateStatusItem({ failed: true, python: command });
-        const choice = await vscode.window.showWarningMessage(
+        // don't await the notification: that would block activation and queued restarts until it's dismissed
+        vscode.window.showWarningMessage(
             "Couldn't start the Coconut language server with '" + command + "'. "
             + "Syntax highlighting still works; for errors, hover, completions, and go to definition, "
             + "select a Python interpreter that has Coconut installed (or set coconut.languageServer.pythonPath).",
             "Select Interpreter", "Open Settings",
-        );
-        if (choice === "Select Interpreter") {
-            vscode.commands.executeCommand("python.setInterpreter");
-        } else if (choice === "Open Settings") {
-            vscode.commands.executeCommand("workbench.action.openSettings", "coconut.languageServer");
-        }
-        return;
+        ).then((choice) => {
+            if (choice === "Select Interpreter") {
+                vscode.commands.executeCommand("python.setInterpreter");
+            } else if (choice === "Open Settings") {
+                vscode.commands.executeCommand("workbench.action.openSettings", "coconut.languageServer");
+            }
+        });
     }
-    newClient.onNotification("coconut/status", (status) => onStatus(status));
-    newClient.onNotification("coconut/compiled", (params) => {
-        compiledViews.fire(compiledUriFor(vscode.Uri.parse(params.uri)));
-    });
 }
 
 async function stopClient() {
@@ -487,7 +489,8 @@ async function activate(context) {
         Promise.resolve(pythonExt.isActive ? pythonExt.exports : pythonExt.activate()).then((api) => {
             if (api && api.environments && api.environments.onDidChangeActiveEnvironmentPath) {
                 context.subscriptions.push(api.environments.onDidChangeActiveEnvironmentPath(() => {
-                    if (!config().get("languageServer.pythonPath") && client !== null) {
+                    // also after a failed start: picking an interpreter is how users fix that
+                    if (!config().get("languageServer.pythonPath") && config().get("languageServer.enabled", true)) {
                         restartClient();
                     }
                 }));

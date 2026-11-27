@@ -27,6 +27,7 @@ from .uris import path_to_uri, uri_to_path
 from .worker import CompileTimeout, WorkerClient
 
 TEXT_SYNC_FULL = 1
+ASTRAL_RE = re.compile(u"[\U00010000-\U0010FFFF]")
 CHANGE_DEBOUNCE = 0.35
 MAX_REPAIRS = 3
 FIRST_COMPILE_WAIT = 5.0
@@ -92,6 +93,8 @@ class CoconutLanguageServer(object):
         self.mypy_thread = threading.Thread(target=self.mypy_loop, name="coconut-mypy")
         self.mypy_thread.daemon = True
         self.reported_no_mypy = False
+        self.utf32 = False  # whether the client accepted UTF-32 (code point) positions
+        self.initialized_event = threading.Event()
         self.handlers = {
             "initialize": self.on_initialize,
             "initialized": self.on_initialized,
@@ -137,6 +140,8 @@ class CoconutLanguageServer(object):
             if message is None:
                 break
             self.dispatch(message)
+        from .typecheck import kill_running
+        kill_running()
         self.compiler.close()
         return self.exit_code if self.exit_code is not None else (0 if self.shutting_down else 1)
 
@@ -161,6 +166,9 @@ class CoconutLanguageServer(object):
         try:
             result = handler(params)
             if is_request:
+                if result is not None and not method.startswith(("initialize", "coconut/")):
+                    uri = (params.get("textDocument") or {}).get("uri")
+                    result = self.encode_positions(result, uri)
                 self.conn.respond(msg_id, result)
         except ResponseError as err:
             if is_request:
@@ -186,9 +194,11 @@ class CoconutLanguageServer(object):
                 roots.append(params["rootPath"])
         self.roots = [r for r in roots if r]
         self.update_settings(params.get("initializationOptions"))
+        encodings = ((params.get("capabilities") or {}).get("general") or {}).get("positionEncodings") or []
+        self.utf32 = "utf-32" in encodings
         return {
             "capabilities": {
-                "positionEncoding": "utf-16",
+                "positionEncoding": "utf-32" if self.utf32 else "utf-16",
                 "textDocumentSync": {"openClose": True, "change": TEXT_SYNC_FULL, "save": {"includeText": False}},
                 "hoverProvider": True,
                 "completionProvider": {"triggerCharacters": ["."], "resolveProvider": False},
@@ -208,6 +218,7 @@ class CoconutLanguageServer(object):
         }
 
     def on_initialized(self, params):
+        self.initialized_event.set()
         with self.cond:
             self.cond.notify_all()
 
@@ -306,8 +317,10 @@ class CoconutLanguageServer(object):
     def on_did_close(self, params):
         uri = params["textDocument"]["uri"]
         with self.cond:
-            self.docs.pop(uri, None)
-        self.conn.notify("textDocument/publishDiagnostics", {"uri": uri, "diagnostics": []})
+            doc = self.docs.pop(uri, None)
+            if doc is not None:
+                doc.compiled_event.set()  # unblock anything waiting on this document
+            self.conn.notify("textDocument/publishDiagnostics", {"uri": uri, "diagnostics": []})
 
     # ------------------------------------------------------------------ compilation
 
@@ -316,6 +329,8 @@ class CoconutLanguageServer(object):
             self.info = self.compiler.call("info", timeout=60)
         except Exception as err:
             self.info = {"coconut_version": None, "coconut_error": str(err), "python_executable": sys.executable}
+        # clients may only listen for notifications once initialization is complete
+        self.initialized_event.wait(30)
         self.send_status()
         if self.info.get("coconut_version"):
             try:
@@ -380,14 +395,14 @@ class CoconutLanguageServer(object):
             if current:
                 doc.diagnostics = result.get("diagnostics", [])
                 doc.compiled_event.set()
+        if current:
+            self.publish(doc)
+            self.conn.notify("coconut/compiled", {"uri": doc.uri, "version": version, "success": result.get("compiled") is not None})
         if jedi_available() and good_compiled is not None:
             try:
                 self.overlay.prepare(doc.path, text, self.roots)
             except Exception:
                 log("failed to prepare imports:", traceback.format_exc())
-        if current:
-            self.publish(doc)
-            self.conn.notify("coconut/compiled", {"uri": doc.uri, "version": version, "success": result.get("compiled") is not None})
 
     def publish(self, doc):
         """Publish the compiler/lint diagnostics plus any (line-adjusted) mypy diagnostics."""
@@ -404,7 +419,12 @@ class CoconutLanguageServer(object):
                     moved = dict(diag)
                     moved["range"] = make_range(line, diag["range"]["start"]["character"], line, diag["range"]["end"]["character"])
                     diagnostics.append(moved)
-        self.conn.notify("textDocument/publishDiagnostics", {"uri": doc.uri, "version": version, "diagnostics": diagnostics})
+            # send while holding the lock, so that diagnostics can't arrive out of order or after didClose
+            if self.docs.get(doc.uri) is not doc:
+                return
+            import copy
+            diagnostics = self.encode_positions(copy.deepcopy(diagnostics), doc.uri)
+            self.conn.notify("textDocument/publishDiagnostics", {"uri": doc.uri, "version": version, "diagnostics": diagnostics})
 
     # ------------------------------------------------------------------ mypy
 
@@ -439,7 +459,7 @@ class CoconutLanguageServer(object):
             # type-check the version that was just saved/opened, once it has compiled
             doc.compiled_event.wait(self.compiler.timeout)
             with self.cond:
-                if doc.good is None or doc.good_version != doc.version:
+                if self.docs.get(uri) is not doc or doc.good is None or doc.good_version != doc.version:
                     continue
                 source, compiled = doc.good.source, doc.good.compiled
             try:
@@ -502,10 +522,63 @@ class CoconutLanguageServer(object):
             text, good = doc.text, doc.good
         return Analyzer(doc.path, text, good, self.roots, self.overlay)
 
-    @staticmethod
-    def position(params):
+    def position(self, params):
+        """The request's position as (line, code point index)."""
         pos = params["position"]
-        return pos["line"], pos["character"]
+        line, char = pos["line"], pos["character"]
+        if not self.utf32:
+            doc = self.docs.get((params.get("textDocument") or {}).get("uri"))
+            if doc is not None:
+                lines = doc.text.split("\n")
+                if 0 <= line < len(lines) and ASTRAL_RE.search(lines[line]):
+                    char = utf16_to_index(lines[line], char)
+        return line, char
+
+    def _lines_for(self, uri, cache):
+        if uri not in cache:
+            doc = self.docs.get(uri)
+            if doc is not None:
+                text = doc.text
+            else:
+                path = uri_to_path(uri) if uri else None
+                try:
+                    with open(path, encoding="utf-8") as f:
+                        text = f.read()
+                except (OSError, TypeError, UnicodeDecodeError, ValueError):
+                    text = ""
+            cache[uri] = text.split("\n") if ASTRAL_RE.search(text) else None
+        return cache[uri]
+
+    def encode_positions(self, obj, uri, cache=None):
+        """Convert the code point columns in a result to UTF-16 (LSP's default), in place.
+
+        Positions are converted relative to the document named by the nearest enclosing 'uri'
+        (or the request's document). 'diagnostics' echoed back from the client are skipped."""
+        if self.utf32:
+            return obj
+        cache = {} if cache is None else cache
+        if isinstance(obj, list):
+            for item in obj:
+                self.encode_positions(item, uri, cache)
+        elif isinstance(obj, dict):
+            if set(obj) == {"line", "character"}:
+                lines = self._lines_for(uri, cache)
+                if lines is not None and 0 <= obj["line"] < len(lines):
+                    text = lines[obj["line"]]
+                    obj["character"] += len(ASTRAL_RE.findall(text[:obj["character"]]))
+                return obj
+            own_uri = obj.get("uri", obj.get("targetUri"))
+            if isinstance(own_uri, str):
+                uri = own_uri
+            for key, value in obj.items():
+                if key == "diagnostics":
+                    continue
+                if key == "changes" and isinstance(value, dict):
+                    for edit_uri, edits in value.items():
+                        self.encode_positions(edits, edit_uri, cache)
+                elif isinstance(value, (dict, list)):
+                    self.encode_positions(value, uri, cache)
+        return obj
 
     def location(self, loc):
         path, line, start, end = loc
@@ -623,8 +696,15 @@ class CoconutLanguageServer(object):
             results.append(info)
         return results
 
+    def check_rename_safe(self, doc):
+        with self.cond:
+            safe = doc.good is not None and doc.good_version == doc.version and doc.good.source == doc.text
+        if not safe:
+            raise ResponseError(REQUEST_FAILED, "Coconut: can't rename until the file compiles without errors (fix them and try again in a moment)")
+
     def on_prepare_rename(self, params):
         doc = self.get_doc(params)
+        self.check_rename_safe(doc)
         line, col = self.position(params)
         analyzer = self.analyzer(doc)
         found = word_at(analyzer.line(line), col)
@@ -639,6 +719,7 @@ class CoconutLanguageServer(object):
     def on_rename(self, params):
         doc = self.get_doc(params)
         line, col = self.position(params)
+        self.check_rename_safe(doc)
         new_name = params.get("newName", "")
         if not re.match(r"^[A-Za-z_]\w*$", new_name):
             raise ResponseError(REQUEST_FAILED, "invalid identifier: " + repr(new_name))
@@ -678,7 +759,7 @@ class CoconutLanguageServer(object):
     def on_compiled(self, params):
         """Return the compiled Python for a document (waiting briefly for an in-progress compile)."""
         doc = self.get_doc(params)
-        timeout = float(params.get("timeout", 10))
+        timeout = min(float(params.get("timeout", 2)), 10)
         with self.cond:
             if doc.compiled_version != doc.version:
                 doc.compile_after = min(doc.compile_after, time.time())

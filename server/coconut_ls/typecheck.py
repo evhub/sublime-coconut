@@ -13,6 +13,18 @@ from .compiler import SEVERITY_ERROR, SEVERITY_INFORMATION, make_range
 from .sourcemap import CompiledDocument
 
 MYPY_LINE_RE = re.compile(r"^(?P<path>.+?):(?P<line>\d+):(?:(?P<col>\d+):)? (?P<sev>error|note|warning): (?P<msg>.*?)(?:  \[(?P<code>[\w-]+)\])?$")
+_running = set()
+
+
+def kill_running():
+    """Kill any mypy processes still running (e.g. when the server exits)."""
+    for proc in list(_running):
+        try:
+            proc.kill()
+        except Exception:
+            pass
+
+
 CONFIG_FILES = ("mypy.ini", ".mypy.ini", "pyproject.toml", "setup.cfg")
 
 
@@ -60,14 +72,20 @@ def run_mypy(doc_path, source, compiled, overlay, roots, timeout=120, extra_args
     args += list(extra_args) + [target]
     env = dict(os.environ)
     env["MYPYPATH"] = mirror_root + (os.pathsep + root)
+    proc = subprocess.Popen(
+        args, cwd=mirror_root, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+    _running.add(proc)
     try:
-        proc = subprocess.run(
-            args, cwd=mirror_root, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-            universal_newlines=True, timeout=timeout,
-        )
+        out, _ = proc.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
+        proc.kill()
+        proc.communicate()
         return []
-    return parse_mypy_output(proc.stdout, target, source, compiled, cwd=mirror_root)
+    finally:
+        _running.discard(proc)
+    return parse_mypy_output(out, target, source, compiled, cwd=mirror_root)
 
 
 def parse_mypy_output(output, target, source, compiled, cwd=None):

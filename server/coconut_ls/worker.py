@@ -130,14 +130,18 @@ class WorkerClient(object):
             return response["result"]
 
     def close(self):
-        with self.lock:
-            if self.proc is not None:
-                try:
-                    self.proc.stdin.close()
-                    self.proc.wait(timeout=2)
-                except Exception:
-                    pass
-                self._kill()
+        # don't wait for the lock: a compile may be running, and we want to exit promptly
+        proc = self.proc
+        if proc is not None:
+            try:
+                proc.stdin.close()
+                proc.wait(timeout=2)
+            except Exception:
+                pass
+            try:
+                proc.kill()
+            except Exception:
+                pass
 
 
 class InProcessCompiler(object):
