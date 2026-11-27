@@ -1,0 +1,12 @@
+{
+    "coconut": {
+        "command": "python3",
+        "args": ["${CLAUDE_PLUGIN_ROOT}/server/coconut_language_server.py"],
+        "extensionToLanguage": {
+            ".coco": "coconut",
+            ".coc": "coconut",
+            ".coconut": "coconut"
+        },
+        "startupTimeout": 30000
+    }
+}

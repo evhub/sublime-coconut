@@ -1,0 +1,23 @@
+{
+    "name": "sublime-coconut",
+    "owner": {
+        "name": "evhub",
+        "url": "https://github.com/evhub"
+    },
+    "description": "Coconut language support for Claude Code: a language server for live diagnostics and code navigation in .coco files, Coconut tools over MCP, and a skill for writing idiomatic Coconut.",
+    "plugins": [
+        {
+            "name": "coconut",
+            "source": "./",
+            "description": "Coconut language server (errors after every edit, go to definition, references, hover, symbols), MCP tools (check, compile, docs), and a Coconut writing skill.",
+            "category": "development",
+            "tags": [
+                "coconut",
+                "python",
+                "functional",
+                "lsp",
+                "language-server"
+            ]
+        }
+    ]
+}

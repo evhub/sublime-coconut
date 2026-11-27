@@ -1,0 +1,8 @@
+{
+    "mcpServers": {
+        "coconut": {
+            "command": "python3",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/server/coconut_language_server.py", "mcp"]
+        }
+    }
+}
