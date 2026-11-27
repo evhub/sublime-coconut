@@ -146,6 +146,11 @@ def make_parser():
         epilog=__doc__.split("\n\n", 1)[1],
     )
     parser.add_argument("--version", action="version", version="coconut-language-server " + __version__)
+    parser.add_argument(
+        "--server", choices=("auto", "coconut", "bundled"), default=os.environ.get("COCONUT_LS_SERVER") or "auto",
+        help="which language server to run: Coconut's own ('coconut --lsp', from coconut[lsp]), this bundled one, "
+        "or auto (the default): Coconut's own when the installed Coconut has it, else the bundled one",
+    )
     sub = parser.add_subparsers(dest="command")
 
     def common(p, json_flag=True):
@@ -212,8 +217,7 @@ def main(argv=None):
     command = args.command or "serve"
 
     if command == "serve":
-        from .server import serve_stdio
-        return serve_stdio()
+        return serve(args.server)
     if command == "mcp":
         from .mcp import serve_mcp
         return serve_mcp()
@@ -251,6 +255,36 @@ def main(argv=None):
     except RuntimeError as err:
         print(str(err), file=sys.stderr)
         return 2
+
+
+def coconut_lsp_main():
+    """Coconut's own language server entry point ('coconut --lsp'), or None if unavailable."""
+    try:
+        from coconut.lsp.server import main as coconut_lsp
+    except Exception:  # not installed, too old a Coconut, or missing pygls/jedi
+        return None
+    return coconut_lsp
+
+
+def serve(which="auto"):
+    """Run a language server over stdio, preferring Coconut's own 'coconut --lsp' in auto mode.
+
+    The bundled server remains as a fallback for Coconut versions that don't include one."""
+    if which in ("auto", "coconut"):
+        coconut_lsp = coconut_lsp_main()
+        if coconut_lsp is not None:
+            sys.stderr.write("using Coconut's language server (coconut --lsp)\n")
+            coconut_lsp()
+            return 0
+        if which == "coconut":
+            sys.stderr.write(
+                "coconut --lsp isn't available for {exe} (it needs a Coconut version with a language server, "
+                "plus pygls and jedi: {exe} -m pip install -U \"coconut[lsp]\")\n".format(exe=sys.executable)
+            )
+            return 2
+        sys.stderr.write("using the bundled Coconut language server (the installed Coconut has no coconut --lsp)\n")
+    from .server import serve_stdio
+    return serve_stdio()
 
 
 def format_diag(path, diag):

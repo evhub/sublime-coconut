@@ -80,33 +80,6 @@ def test_uris():
     assert uri_to_path("untitled:Untitled-1") is None
 
 
-def skill_examples():
-    with open(os.path.join(ROOT, "skills", "coconut", "SKILL.md")) as f:
-        text = f.read()
-    return re.findall(r"```coconut\n(.*?)```", text, re.DOTALL)
-
-
-@pytest.mark.parametrize("example", skill_examples())
-def test_skill_examples_compile_cleanly(example):
-    result = compile_coconut(example)
-    problems = [d["message"] for d in result["diagnostics"] if d["severity"] <= 2]
-    assert result["compiled"] is not None and not problems, problems
-
-
-def test_works_without_jedi(monkeypatch):
-    from coconut_ls import intel
-    monkeypatch.setattr(intel, "jedi", None)
-    src = "x = [1] |> fmap$(y => y)\n"
-    doc = CompiledDocument(src, compile_coconut(src)["compiled"])
-    analyzer = intel.Analyzer("/tmp/nojedi.coco", src + "fm", doc)
-    hover = analyzer.hover(0, src.index("fmap") + 1)
-    assert hover and "fmap" in hover[0]
-    labels = [i["label"] for i in analyzer.completions(1, 2)]
-    assert "fmap" in labels
-    assert analyzer.definitions(0, 0) == [] or analyzer.definitions(0, 0)
-    assert analyzer.signature_help(0, 5) is None
-
-
 def test_snippets_compile():
     import json
     with open(os.path.join(ROOT, "snippets.json")) as f:

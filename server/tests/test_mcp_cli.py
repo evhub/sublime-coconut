@@ -169,3 +169,45 @@ def test_cli_check_mypy(tmp_path):
     path.write_text("def f(x: int) -> str = x\n")
     code, out, err = run_cli("check", str(path), "--mypy")
     assert code == 1 and ":1:24: error: Incompatible return value type" in out, out + err
+
+
+def _initialize_server_info(*args):
+    """Start the entry script with args, send initialize, and return (serverInfo, stderr)."""
+    proc = subprocess.Popen([sys.executable, SERVER] + list(args), stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"processId": None, "rootUri": None, "capabilities": {}}}).encode()
+    proc.stdin.write(b"Content-Length: " + str(len(body)).encode() + b"\r\n\r\n" + body)
+    proc.stdin.flush()
+    headers = {}
+    while True:
+        line = proc.stdout.readline().strip()
+        if not line:
+            break
+        key, value = line.decode().split(":", 1)
+        headers[key.lower()] = value.strip()
+    response = json.loads(proc.stdout.read(int(headers["content-length"])))
+    proc.kill()
+    _, err = proc.communicate(timeout=30)
+    return response["result"].get("serverInfo") or {}, err.decode("utf-8", "replace")
+
+
+def test_prefers_coconut_lsp_when_available():
+    try:
+        import coconut.lsp.server  # noqa
+    except Exception:
+        pytest.skip("the installed Coconut has no coconut --lsp")
+    info, err = _initialize_server_info()
+    assert info.get("name") == "coconut-lsp", err
+    info, err = _initialize_server_info("--server", "bundled")
+    assert info.get("name") == "coconut-language-server", err
+
+
+def test_falls_back_to_bundled_server():
+    try:
+        import coconut.lsp.server  # noqa
+        pytest.skip("the installed Coconut has coconut --lsp")
+    except Exception:
+        pass
+    info, err = _initialize_server_info()
+    assert info.get("name") == "coconut-language-server", err
+    code, out, err = run_cli("--server", "coconut")
+    assert code == 2 and "coconut[lsp]" in err

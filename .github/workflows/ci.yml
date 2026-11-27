@@ -27,6 +27,9 @@ jobs:
           # only Coconut installed: jedi/pyflakes come from the bundle shipped in the VS Code extension
           - {os: ubuntu-latest, python: "3.10", deps: bundled}
           - {os: ubuntu-latest, python: "3.14", deps: bundled}
+          # Coconut's develop branch: catches compiler changes that break the bundled server early,
+          # and tests handing off to Coconut's own 'coconut --lsp'
+          - {os: ubuntu-latest, python: "3.12", deps: develop}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -36,7 +39,9 @@ jobs:
         shell: bash
         run: |
           python -m pip install --upgrade pip
-          if [ "${{ matrix.deps }}" = "bundled" ]; then
+          if [ "${{ matrix.deps }}" = "develop" ]; then
+            python -m pip install "coconut-develop[lsp]" jedi pyflakes pytest pytest-timeout mypy
+          elif [ "${{ matrix.deps }}" = "bundled" ]; then
             python -m pip install coconut pytest pytest-timeout
             python scripts/vendor.py
           else
@@ -49,9 +54,15 @@ jobs:
         run: python -m pytest tests -v --timeout=420
 
   vscode:
-    name: VS Code extension
+    name: VS Code extension (${{ matrix.server }} server)
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {server: bundled, coconut: coconut}
+          - {server: coconut, coconut: "coconut-develop[lsp]"}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
@@ -62,35 +73,19 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: |
-          python -m pip install coconut
+          python -m pip install "${{ matrix.coconut }}"
           npm ci
           python scripts/vendor.py
       - name: Integration tests in VS Code
         run: xvfb-run -a npm run test:vscode
         env:
           COCONUT_TEST_PYTHON: python
+          COCONUT_TEST_SERVER: ${{ matrix.server }}
       - name: Package
+        if: matrix.server == 'bundled'
         run: npx --yes @vscode/vsce@3 package
       - uses: actions/upload-artifact@v4
+        if: matrix.server == 'bundled'
         with:
           name: coconut-vsix
           path: "*.vsix"
-
-  claude-plugin:
-    name: Claude Code plugin manifests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - name: Check plugin files are valid JSON with the expected fields
-        run: |
-          python - <<'PY'
-          import json
-          market = json.load(open(".claude-plugin/marketplace.json"))
-          plugin = json.load(open(".claude-plugin/plugin.json"))
-          lsp = json.load(open(".lsp.json"))
-          mcp = plugin
-          assert market["plugins"][0]["name"] == plugin["name"]
-          assert lsp["coconut"]["extensionToLanguage"][".coco"] == "coconut"
-          assert "coconut" in mcp["mcpServers"]
-          print("ok")
-          PY

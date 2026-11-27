@@ -5,6 +5,8 @@
 
     // The Python interpreter used to run the server must have Coconut installed
     // (pip install coconut). Replace "${python}" with e.g. "/path/to/venv/bin/python".
+    // This runs Coconut's own server (coconut --lsp) when the installed Coconut has it, else the
+    // bundled one; add "--server", "bundled" (or "coconut") to the command to choose explicitly.
     "command": ["${python}", "${server_path}"],
 
     "selector": "source.coconut",

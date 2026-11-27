@@ -1,6 +1,6 @@
 # Coconut Editor Support: VS Code, Sublime Text, and AI Agents
 
-This repository contains [Coconut](https://github.com/evhub/coconut) language support for [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=evhub.coconut) (and compatible editors like VSCodium and Cursor, via [Open VSX](https://open-vsx.org/extension/evhub/coconut)), [Sublime Text](https://packagecontrol.io/packages/Coconut), and AI coding agents like [Claude Code](#ai-agents):
+This repository contains [Coconut](https://github.com/evhub/coconut) language support for [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=evhub.coconut) (and compatible editors like VSCodium and Cursor, via [Open VSX](https://open-vsx.org/extension/evhub/coconut)), [Sublime Text](https://packagecontrol.io/packages/Coconut), and AI coding agents (via [MCP](#ai-agents)):
 
 - **Syntax highlighting** and snippets for `.coco` files (and Coconut code blocks in Markdown).
 - **A Coconut language server**, providing:
@@ -50,6 +50,7 @@ The language server runs with the interpreter selected in the [Python extension]
 | `coconut.target` | `"sys"` | Python version to target (Coconut's `--target`), e.g. `"3.8"`, `"2.7"` |
 | `coconut.strict` | `false` | Coconut's `--strict` style checks |
 | `coconut.languageServer.enabled` | `true` | Start the language server |
+| `coconut.languageServer.server` | `"auto"` | `"auto"`: Coconut's own `coconut --lsp` if the installed Coconut has it, else the bundled server; or `"coconut"` / `"bundled"` (see [below](#which-language-server-runs)) |
 | `coconut.languageServer.pythonPath` | `""` | Interpreter with Coconut installed (default: the Python extension's selection) |
 | `coconut.languageServer.lint` | `true` | Lint compiled code with pyflakes |
 | `coconut.languageServer.mypy` | `false` | Type-check with mypy on open/save (needs `pip install mypy`) |
@@ -78,17 +79,7 @@ The language server, a [Model Context Protocol](https://modelcontextprotocol.io)
 
 ### Claude Code
 
-This repository is a Claude Code plugin marketplace. Install the Coconut plugin with:
-
-```
-/plugin install coconut --marketplace evhub/sublime-coconut
-```
-
-(or `claude plugin marketplace add evhub/sublime-coconut`, then `claude plugin install coconut@sublime-coconut`). The plugin gives Claude:
-
-- the **Coconut language server**, so Claude sees Coconut errors right after each edit and can jump to definitions, find references, and inspect types in `.coco` files;
-- **MCP tools** to check and compile Coconut code and look up Coconut's documentation;
-- a **Coconut skill** with a syntax cheat sheet, common pitfalls, and how to verify Coconut code.
+A Claude Code plugin for Coconut is moving into the [Coconut repository](https://github.com/evhub/coconut), alongside Coconut's own language server (`coconut --lsp`) and AI documentation (`coconut --ai-docs`), so that it's versioned with the compiler. Until then, use the MCP server below.
 
 ### Other agents (MCP)
 
@@ -126,7 +117,11 @@ python3 server/coconut_language_server.py docs "|>"
 
 Any editor with LSP support (Neovim, Helix, Emacs, Zed, ...) can use the language server: run `python3 /path/to/sublime-coconut/server/coconut_language_server.py` (LSP over stdio) for files with the `coconut` language ID. Initialization options (also accepted through `workspace/didChangeConfiguration`): `target`, `strict`, `lint`, `mypy`, `compileTimeout`. The server also answers `coconut/compiled` (`{textDocument: {uri}}` → the compiled Python) and `coconut/info` requests.
 
-## How the language server works
+## Which language server runs
+
+Coconut's development version includes its own language server, `coconut --lsp` (installed with `pip install "coconut[lsp]"`, Python 3.9+), which will become the canonical one. The editor packages and the launcher (`server/coconut_language_server.py`) use it automatically whenever the installed Coconut has it, and otherwise fall back to the language server bundled here, so released versions of Coconut get full support too. The bundled server's extra features (lint, mypy, rename, Coconut documentation on hover, following imports of uncompiled modules, ...) are being merged into `coconut --lsp`. To choose explicitly, set `coconut.languageServer.server` in VS Code to `"coconut"` or `"bundled"`, or pass `--server coconut|bundled` to the launcher.
+
+## How the bundled language server works
 
 The server (in [`server/`](server), pure Python with no dependencies besides Coconut) compiles each open file with the Coconut compiler in a background worker process, reporting the compiler's errors and warnings. For code intelligence, it runs jedi on the compiled Python and maps positions back to the Coconut source using the line-number comments the compiler emits. When the file doesn't compile (as while typing), it analyzes the most recent version that did, with the code being typed spliced in at the matching scope, and neutralizes broken lines so the rest of the file stays analyzable.
 

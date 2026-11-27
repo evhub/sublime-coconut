@@ -14,7 +14,8 @@ class LspClient(object):
 
     def __init__(self, root, init_options=None):
         self.proc = subprocess.Popen(
-            [sys.executable, SERVER],
+            # these tests are for the bundled server, even where 'coconut --lsp' is installed
+            [sys.executable, SERVER, "--server", "bundled"],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

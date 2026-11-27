@@ -1,6 +1,8 @@
 # Working on sublime-coconut
 
-Editor support for the [Coconut](https://github.com/evhub/coconut) language: a VS Code extension, a Sublime Text package, a language server, and a Claude Code plugin, all in one repository.
+Editor support for the [Coconut](https://github.com/evhub/coconut) language: a VS Code extension, a Sublime Text package, and a language server (plus MCP server and CLI), all in one repository.
+
+Coconut's development version has its own language server, `coconut --lsp` (`coconut/lsp/` in the Coconut repo), which is meant to become canonical: the launcher (`server/coconut_language_server.py`, `--server auto` by default) runs it whenever `import coconut.lsp.server` works and otherwise falls back to the bundled server in `server/coconut_ls/`, whose extra features are being merged into Coconut. The Claude Code plugin lives in the Coconut repo.
 
 ## Layout
 
@@ -13,7 +15,6 @@ Editor support for the [Coconut](https://github.com/evhub/coconut) language: a V
 | `server/coconut_ls/` | The server package (stdlib only; jedi and pyflakes optional). |
 | `server/tests/` | pytest suite: end-to-end LSP tests over stdio, MCP/CLI tests, unit tests. |
 | `test/` | VS Code integration tests (drive a real VS Code via `@vscode/test-electron`). |
-| `.claude-plugin/` (incl. the MCP server config), `.lsp.json`, `skills/` | Claude Code plugin marketplace + plugin. The repo root is the plugin root. |
 | `scripts/vendor.py` | Bundles jedi/parso/pyflakes into `server/vendor/` (not committed) for the `.vsix`. |
 | `scripts/generate_docs.py` | Regenerates `server/coconut_ls/data/docs.json` (hover docs) from Coconut's `DOCS.md`. |
 
@@ -36,11 +37,10 @@ Keep the server compatible with Python 3.8+ (no newer syntax) and free of requir
 ```bash
 cd server && python -m pytest tests            # needs: pip install -r server/requirements.txt pytest
 COCONUT_TEST_PYTHON=$(which python) xvfb-run -a npm run test:vscode   # after npm install && python scripts/vendor.py
-claude plugin validate .                       # plugin manifests
 ```
 
-Add an end-to-end test in `server/tests/test_server.py` for every LSP feature change. The skill's ```` ```coconut ```` examples and `snippets.json` are compiled by `test_units.py`, so they must compile without warnings/deprecations. Check UX changes in a real VS Code too: the integration tests run headless under `xvfb-run`, and ImageMagick's `import -window root` can screenshot the Xvfb display.
+Add an end-to-end test in `server/tests/test_server.py` for every LSP feature change. `snippets.json` is compiled by `test_units.py`, so they must compile without warnings/deprecations. Check UX changes in a real VS Code too: the integration tests run headless under `xvfb-run`, and ImageMagick's `import -window root` can screenshot the Xvfb display.
 
 ## Releasing
 
-Bump `version` in `package.json` and `.claude-plugin/plugin.json`, add a `CHANGELOG.md` entry, merge to `master`, then push a tag `vX.Y.Z`. The Release workflow (`.github/workflows/release.yml`) builds the `.vsix`, creates a GitHub release, and publishes to the VS Code Marketplace and Open VSX using the `VSCE_PAT` and `OVSX_PAT` repository secrets (each step is skipped with a warning if its secret is missing; re-run the workflow after adding it). Package Control picks up the tag for Sublime Text; the Claude Code plugin is served straight from `master`. `make publish` does the same publishing locally.
+Bump `version` in `package.json`, add a `CHANGELOG.md` entry, merge to `master`, then push a tag `vX.Y.Z`. The Release workflow (`.github/workflows/release.yml`) builds the `.vsix`, creates a GitHub release, and publishes to the VS Code Marketplace and Open VSX using the `VSCE_PAT` and `OVSX_PAT` repository secrets (each step is skipped with a warning if its secret is missing; re-run the workflow after adding it). Package Control picks up the tag for Sublime Text. `make publish` does the same publishing locally.

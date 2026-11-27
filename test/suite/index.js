@@ -33,6 +33,9 @@ function hoverText(hovers) {
     return hovers.map((h) => h.contents.map((c) => (typeof c === "string" ? c : c.value)).join("\n")).join("\n");
 }
 
+// some features only exist in the server bundled with the extension
+const BUNDLED = (process.env.COCONUT_TEST_SERVER || "bundled") === "bundled";
+
 const tests = {
     async "reports diagnostics"(doc) {
         const diags = await waitFor("diagnostics", () => {
@@ -45,7 +48,10 @@ const tests = {
     async "hover shows Coconut docs for built-ins"(doc) {
         const hovers = await vscode.commands.executeCommand("vscode.executeHoverProvider", doc.uri, positionOf(doc, "fmap", 1));
         const text = hoverText(hovers);
-        assert.ok(text.includes("fmap") && text.includes("coconut.readthedocs.io"), text);
+        assert.ok(text.includes("fmap"), text);
+        if (BUNDLED) {
+            assert.ok(text.includes("coconut.readthedocs.io"), text);
+        }
     },
 
     async "hover on user code"(doc) {
@@ -63,8 +69,12 @@ const tests = {
 
     async "document symbols"(doc) {
         const symbols = await vscode.commands.executeCommand("vscode.executeDocumentSymbolProvider", doc.uri);
-        assert.deepStrictEqual(symbols.map((s) => s.name), ["Point", "add", "p"]);
-        assert.deepStrictEqual(symbols[0].children.map((s) => s.name), ["norm"]);
+        const names = symbols.map((s) => s.name);
+        assert.ok(["Point", "add"].every((n) => names.includes(n)), JSON.stringify(names));
+        if (BUNDLED) {
+            assert.deepStrictEqual(names, ["Point", "add", "p"]);
+            assert.deepStrictEqual(symbols[0].children.map((s) => s.name), ["norm"]);
+        }
     },
 
     async "completion while typing"(doc, editor) {
