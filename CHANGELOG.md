@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.3.1
+
+- The language server prefers Coconut's own `coconut --lsp` only when it's the full-featured server merged into Coconut (`coconut-develop` 3.2.0.post0.dev20 and later). Older `coconut --lsp` versions do less than the bundled server, so the bundled server runs instead (setting `coconut.languageServer.server` to `"coconut"` still forces Coconut's).
+- The Claude Code plugin now lives in the Coconut repository: `/plugin marketplace add evhub/coconut`.
+
 ## 2.3.0
 
 - **New: language server support.** The editor packages run Coconut's own language server (`coconut --lsp`, from `coconut[lsp]`) when the installed Coconut has one, and otherwise a language server bundled with both the VS Code extension and the Sublime Text package, providing:
