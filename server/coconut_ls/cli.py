@@ -261,7 +261,7 @@ def coconut_lsp_main():
     """Coconut's own language server entry point ('coconut --lsp'), or None if unavailable."""
     try:
         from coconut.lsp.server import main as coconut_lsp
-    except Exception:  # not installed, too old a Coconut, or missing pygls/jedi
+    except Exception:  # not installed, too old a Coconut, or (for older Coconut versions) a missing dependency
         return None
     return coconut_lsp
 
@@ -278,8 +278,8 @@ def serve(which="auto"):
             return 0
         if which == "coconut":
             sys.stderr.write(
-                "coconut --lsp isn't available for {exe} (it needs a Coconut version with a language server, "
-                "plus pygls and jedi: {exe} -m pip install -U \"coconut[lsp]\")\n".format(exe=sys.executable)
+                "coconut --lsp isn't available for {exe} (it needs a Coconut version with a language server: "
+                "{exe} -m pip install -U \"coconut[lsp]\")\n".format(exe=sys.executable)
             )
             return 2
         sys.stderr.write("using the bundled Coconut language server (the installed Coconut has no coconut --lsp)\n")
