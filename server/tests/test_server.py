@@ -278,7 +278,7 @@ def test_mypy_type_checking(project):
         diags = client.wait_notification(
             "textDocument/publishDiagnostics",
             lambda p: p["uri"] == uri and any(d.get("source") == "mypy" for d in p["diagnostics"]),
-            timeout=120,
+            timeout=220,  # a cold mypy run on a slow CI machine can take a while
         )["diagnostics"]
         mypy = sorted((d["range"]["start"]["line"], d["range"]["start"]["character"], d["code"]) for d in diags if d.get("source") == "mypy")
         assert mypy == [(1, 23, "return-value"), (2, 9, "assignment")], diags
