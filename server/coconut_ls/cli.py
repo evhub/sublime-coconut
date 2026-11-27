@@ -149,7 +149,8 @@ def make_parser():
     parser.add_argument(
         "--server", choices=("auto", "coconut", "bundled"), default=os.environ.get("COCONUT_LS_SERVER") or "auto",
         help="which language server to run: Coconut's own ('coconut --lsp', from coconut[lsp]), this bundled one, "
-        "or auto (the default): Coconut's own when the installed Coconut has it, else the bundled one",
+        "or auto (the default): Coconut's own when the installed Coconut has the full-featured one (coconut-develop "
+        "3.2.0.post0.dev20+), else the bundled one",
     )
     sub = parser.add_subparsers(dest="command")
 
@@ -257,9 +258,14 @@ def main(argv=None):
         return 2
 
 
-def coconut_lsp_main():
-    """Coconut's own language server entry point ('coconut --lsp'), or None if unavailable."""
+def coconut_lsp_main(require_full=True):
+    """Coconut's own language server entry point ('coconut --lsp'), or None if unavailable.
+
+    With require_full, only the full-featured server merged into Coconut (coconut-develop 3.2.0.post0.dev20
+    and later) counts: the earlier pygls-based 'coconut --lsp' does less than the bundled server."""
     try:
+        if require_full:
+            import coconut.lsp.mcp  # noqa: F401 (only exists in the full-featured server)
         from coconut.lsp.server import main as coconut_lsp
     except Exception:  # not installed, too old a Coconut, or (for older Coconut versions) a missing dependency
         return None
@@ -269,9 +275,9 @@ def coconut_lsp_main():
 def serve(which="auto"):
     """Run a language server over stdio, preferring Coconut's own 'coconut --lsp' in auto mode.
 
-    The bundled server remains as a fallback for Coconut versions that don't include one."""
+    The bundled server remains as a fallback for Coconut versions whose 'coconut --lsp' is missing or older."""
     if which in ("auto", "coconut"):
-        coconut_lsp = coconut_lsp_main()
+        coconut_lsp = coconut_lsp_main(require_full=which == "auto")
         if coconut_lsp is not None:
             sys.stderr.write("using Coconut's language server (coconut --lsp)\n")
             coconut_lsp()
@@ -282,7 +288,10 @@ def serve(which="auto"):
                 "{exe} -m pip install -U \"coconut[lsp]\")\n".format(exe=sys.executable)
             )
             return 2
-        sys.stderr.write("using the bundled Coconut language server (the installed Coconut has no coconut --lsp)\n")
+        sys.stderr.write(
+            "using the bundled Coconut language server (the installed Coconut has no coconut --lsp, "
+            "or only the older one from before coconut-develop 3.2.0.post0.dev20)\n"
+        )
     from .server import serve_stdio
     return serve_stdio()
 

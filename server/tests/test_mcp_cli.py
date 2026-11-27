@@ -192,6 +192,7 @@ def _initialize_server_info(*args):
 
 def test_prefers_coconut_lsp_when_available():
     try:
+        import coconut.lsp.mcp  # noqa (only in the full-featured coconut --lsp)
         import coconut.lsp.server  # noqa
     except Exception:
         pytest.skip("the installed Coconut has no coconut --lsp")
@@ -211,3 +212,22 @@ def test_falls_back_to_bundled_server():
     assert info.get("name") == "coconut-language-server", err
     code, out, err = run_cli("--server", "coconut")
     assert code == 2 and "coconut[lsp]" in err
+
+
+def test_auto_skips_older_coconut_lsp(monkeypatch):
+    """In auto mode, the pygls-based 'coconut --lsp' from before coconut-develop dev20 loses to the bundled server."""
+    import types
+    from coconut_ls import cli
+    old_server = types.ModuleType("coconut.lsp.server")
+    old_server.main = lambda: None
+    old_lsp = types.ModuleType("coconut.lsp")
+    old_lsp.__path__ = []
+    old_lsp.server = old_server
+    monkeypatch.setitem(sys.modules, "coconut.lsp", old_lsp)
+    monkeypatch.setitem(sys.modules, "coconut.lsp.server", old_server)
+    monkeypatch.delitem(sys.modules, "coconut.lsp.mcp", raising=False)
+    assert cli.coconut_lsp_main() is None
+    assert cli.coconut_lsp_main(require_full=False) is old_server.main
+    full_mcp = types.ModuleType("coconut.lsp.mcp")
+    monkeypatch.setitem(sys.modules, "coconut.lsp.mcp", full_mcp)
+    assert cli.coconut_lsp_main() is old_server.main

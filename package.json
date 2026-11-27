@@ -2,7 +2,7 @@
     "name": "coconut",
     "displayName": "Coconut (Official)",
     "description": "Coconut language support: syntax highlighting, snippets, and a language server with errors, linting, hover docs, completions, go to definition, references, rename, and more.",
-    "version": "2.3.0",
+    "version": "2.3.1",
     "publisher": "evhub",
     "author": {
         "name": "evhub"

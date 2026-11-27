@@ -2,7 +2,7 @@
 
 Editor support for the [Coconut](https://github.com/evhub/coconut) language: a VS Code extension, a Sublime Text package, and a language server (plus MCP server and CLI), all in one repository.
 
-Coconut's development version has its own language server, `coconut --lsp` (`coconut/lsp/` in the Coconut repo), which is meant to become canonical: the launcher (`server/coconut_language_server.py`, `--server auto` by default) runs it whenever `import coconut.lsp.server` works and otherwise falls back to the bundled server in `server/coconut_ls/`, whose extra features are being merged into Coconut. The Claude Code plugin lives in the Coconut repo.
+Coconut has its own language server, `coconut --lsp` (`coconut/lsp/` in the Coconut repo; this repository's server, merged in at `coconut-develop` 3.2.0.post0.dev20), which is canonical: the launcher (`server/coconut_language_server.py`, `--server auto` by default) runs it whenever the full-featured one is installed (`import coconut.lsp.mcp` works; older pygls-based versions don't count) and otherwise falls back to the bundled server in `server/coconut_ls/`, so released versions of Coconut keep full support. Make new server features in Coconut first and port them back here. The Claude Code plugin lives in the Coconut repo.
 
 ## Layout
 

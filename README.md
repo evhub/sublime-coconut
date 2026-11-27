@@ -79,11 +79,16 @@ The language server, a [Model Context Protocol](https://modelcontextprotocol.io)
 
 ### Claude Code
 
-A Claude Code plugin for Coconut is moving into the [Coconut repository](https://github.com/evhub/coconut), alongside Coconut's own language server (`coconut --lsp`) and AI documentation (`coconut --ai-docs`), so that it's versioned with the compiler. Until then, use the MCP server below.
+The Claude Code plugin for Coconut lives in the [Coconut repository](https://github.com/evhub/coconut), versioned with the compiler. It runs Coconut's own language server (`coconut --lsp`) and MCP server (`coconut --mcp`), and includes a skill built on `coconut --ai-docs`. It needs `coconut-develop` 3.2.0.post0.dev20 or later (`pip install -U "coconut-develop[lsp]"`):
+
+```
+/plugin marketplace add evhub/coconut
+/plugin install coconut@coconut
+```
 
 ### Other agents (MCP)
 
-Any MCP-capable agent (Cursor, Codex, VS Code Copilot, Claude Desktop, ...) can use the Coconut MCP server. Clone this repository and add a stdio server to your agent's MCP configuration:
+Any MCP-capable agent (Cursor, Codex, VS Code Copilot, Claude Desktop, ...) can use the Coconut MCP server. With `coconut-develop` 3.2.0.post0.dev20 or later, use `"command": "coconut", "args": ["--mcp"]`. With a released Coconut, clone this repository and add a stdio server to your agent's MCP configuration:
 
 ```json
 {
@@ -119,7 +124,7 @@ Any editor with LSP support (Neovim, Helix, Emacs, Zed, ...) can use the languag
 
 ## Which language server runs
 
-Coconut's development version includes its own language server, `coconut --lsp` (installed with `pip install "coconut[lsp]"`, Python 3.9+), which will become the canonical one. The editor packages and the launcher (`server/coconut_language_server.py`) use it automatically whenever the installed Coconut has it, and otherwise fall back to the language server bundled here, so released versions of Coconut get full support too. The bundled server's extra features (lint, mypy, rename, Coconut documentation on hover, following imports of uncompiled modules, ...) are being merged into `coconut --lsp`. To choose explicitly, set `coconut.languageServer.server` in VS Code to `"coconut"` or `"bundled"`, or pass `--server coconut|bundled` to the launcher.
+Coconut's development version includes its own language server, `coconut --lsp`: from `coconut-develop` 3.2.0.post0.dev20 on, it's this repository's language server, merged into Coconut and versioned with the compiler (install it with `pip install -U "coconut-develop[lsp]"`; it runs on Python 3.8+). The editor packages and the launcher (`server/coconut_language_server.py`) use it automatically whenever the installed Coconut has it, and otherwise fall back to the language server bundled here, so released versions of Coconut get full support too. Earlier development versions had a more limited `coconut --lsp`, so the bundled server is preferred over those. To choose explicitly, set `coconut.languageServer.server` in VS Code to `"coconut"` or `"bundled"`, or pass `--server coconut|bundled` to the launcher.
 
 ## How the bundled language server works
 
