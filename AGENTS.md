@@ -21,9 +21,11 @@ Editor support for the [Coconut](https://github.com/evhub/coconut) language: a V
 
 - `protocol.py`: JSON-RPC framing over stdio. `stdout` is reserved for protocol messages; `sys.stdout` is redirected to stderr. Set `COCONUT_LS_LOG=/path` to log every message.
 - `server.py`: LSP handlers. Documents use full text sync. A compile thread debounces changes and sends compiles to `worker.py` (a child process, killed on timeout). After a failed compile, `repaired_compile` neutralizes broken lines (`compiler.repair_source`) so analysis keeps working.
-- `compiler.py`: runs Coconut (`coconut.api.parse(code, "sys")` with `line_numbers=True`), converts `CoconutSyntaxError`s and captured warnings into diagnostics, lints compiled code with pyflakes.
+- `compiler.py`: runs Coconut (`coconut.api.parse(code, "sys")` with `line_numbers=True`), converts `CoconutSyntaxError`s and captured warnings into diagnostics, lints compiled code with pyflakes. The worker enables Coconut's incremental parsing for inputs under 20KB (much faster recompiles).
 - `sourcemap.py`: maps positions between Coconut source and compiled Python using the `#N (line in Coconut source)` comments plus identifier occurrence matching; `LineDiff` maps lines between the current text and the last successfully compiled text.
 - `intel.py`: jedi on the compiled code (`Analyzer`): hover, completion, signatures, definitions, references, rename. If the cursor's line changed since the last good compile, the expression under the cursor is spliced into the compiled code (`Analyzer.splice`).
+- `overlay.py`: a mirror of the workspace (in the temp dir) where the Coconut modules a document imports are compiled to `.py` next to copies of the real `.py` files, so jedi and mypy can follow imports of uncompiled `.coco` modules; results in the mirror are mapped back to the real files.
+- `typecheck.py`: optional mypy run over the compiled document in the mirror (setting `mypy`), on open/save in its own thread.
 - `symbols.py`: document symbols from the compiled AST; regex index for workspace symbols and cross-file fallbacks.
 - `docs.py`: lookup/formatting of the generated Coconut docs; `cli.py` and `mcp.py` reuse everything above in-process via `cli.Engine`.
 
@@ -37,7 +39,7 @@ COCONUT_TEST_PYTHON=$(which python) xvfb-run -a npm run test:vscode   # after np
 claude plugin validate .                       # plugin manifests
 ```
 
-Add an end-to-end test in `server/tests/test_server.py` for every LSP feature change. The skill's ```` ```coconut ```` examples are compiled by `test_units.py`, so they must compile without warnings.
+Add an end-to-end test in `server/tests/test_server.py` for every LSP feature change. The skill's ```` ```coconut ```` examples and `snippets.json` are compiled by `test_units.py`, so they must compile without warnings/deprecations. Check UX changes in a real VS Code too: the integration tests run headless under `xvfb-run`, and ImageMagick's `import -window root` can screenshot the Xvfb display.
 
 ## Releasing
 
