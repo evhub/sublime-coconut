@@ -2,7 +2,9 @@
 
 import json
 import os
+import queue
 import subprocess
+import threading
 import sys
 import textwrap
 
@@ -30,8 +32,16 @@ def coco_file(tmp_path_factory):
 
 @pytest.fixture(scope="module")
 def mcp():
+    # stderr must be drained (or discarded): a full pipe would block the server (Windows pipes are tiny)
     proc = subprocess.Popen([sys.executable, SERVER, "mcp"], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE, universal_newlines=True, bufsize=1)
+                            stderr=subprocess.DEVNULL, universal_newlines=True, bufsize=1)
+    lines = queue.Queue()
+
+    def reader():
+        for line in proc.stdout:
+            lines.put(line)
+
+    threading.Thread(target=reader, daemon=True).start()
     state = {"id": 0}
 
     def call(method, params=None, notify=False):
@@ -45,7 +55,7 @@ def mcp():
         proc.stdin.flush()
         if notify:
             return None
-        response = json.loads(proc.stdout.readline())
+        response = json.loads(lines.get(timeout=120))
         assert response["id"] == state["id"]
         return response
 
@@ -117,7 +127,8 @@ def test_mcp_unknown(mcp):
 
 
 def run_cli(*args):
-    proc = subprocess.run([sys.executable, SERVER] + list(args), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    proc = subprocess.run([sys.executable, SERVER] + list(args), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                          universal_newlines=True, timeout=240)
     return proc.returncode, proc.stdout, proc.stderr
 
 
