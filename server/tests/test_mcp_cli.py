@@ -150,3 +150,11 @@ def test_cli_accepts_stdio_flag():
     proc = subprocess.Popen([sys.executable, SERVER, "--stdio"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = proc.communicate(b"", timeout=30)
     assert b"unrecognized arguments" not in err
+
+
+def test_cli_check_mypy(tmp_path):
+    pytest.importorskip("mypy")
+    path = tmp_path / "typed.coco"
+    path.write_text("def f(x: int) -> str = x\n")
+    code, out, err = run_cli("check", str(path), "--mypy")
+    assert code == 1 and ":1:24: error: Incompatible return value type" in out, out + err

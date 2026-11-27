@@ -267,3 +267,20 @@ def test_cross_module_intelligence(client, project):
     result = client.request("textDocument/definition", {"textDocument": td(uri), "position": {"line": 3, "character": 2}})
     assert result and result[0]["uri"].endswith("helpers.coco")
     assert result[0]["range"]["start"] == {"line": 0, "character": 4}
+
+
+def test_mypy_type_checking(project):
+    pytest.importorskip("mypy")
+    client = LspClient(project, init_options={"mypy": True})
+    try:
+        text = "def g() -> int = 1\ndef f(x: int) -> str = x\nw: str = g()\nok: int = g()\n"
+        uri = client.open(os.path.join(project, "typed.coco"), text)
+        diags = client.wait_notification(
+            "textDocument/publishDiagnostics",
+            lambda p: p["uri"] == uri and any(d.get("source") == "mypy" for d in p["diagnostics"]),
+            timeout=120,
+        )["diagnostics"]
+        mypy = sorted((d["range"]["start"]["line"], d["range"]["start"]["character"], d["code"]) for d in diags if d.get("source") == "mypy")
+        assert mypy == [(1, 23, "return-value"), (2, 9, "assignment")], diags
+    finally:
+        client.close()

@@ -6,6 +6,7 @@ This repository contains [Coconut](https://github.com/evhub/coconut) language su
 - **A Coconut language server**, providing:
   - errors and warnings from the Coconut compiler as you type, with precise locations;
   - linting of the compiled code (undefined names, unused imports and variables, redefinitions), mapped back to your Coconut source;
+  - optional type checking with [mypy](https://mypy-lang.org), also mapped back to your Coconut source;
   - hover information: types, signatures, and docstrings, plus Coconut's own documentation for built-ins (`fmap`, `reduce`, ...), keywords (`match`, `data`, `where`, ...), and operators (`|>`, `..>`, `$`, `??`, ...);
   - completions (including while the file doesn't compile yet) and signature help;
   - go to definition (including across `.coco` files), go to type definition, find references, highlight references, and rename;
@@ -45,6 +46,7 @@ The language server runs with the interpreter selected in the [Python extension]
 | `coconut.languageServer.enabled` | `true` | Start the language server |
 | `coconut.languageServer.pythonPath` | `""` | Interpreter with Coconut installed (default: the Python extension's selection) |
 | `coconut.languageServer.lint` | `true` | Lint compiled code with pyflakes |
+| `coconut.languageServer.mypy` | `false` | Type-check with mypy on open/save (needs `pip install mypy`) |
 | `coconut.languageServer.compileTimeout` | `60` | Seconds before giving up on compiling a file |
 | `coconut.languageServer.command` | `[]` | Advanced: a custom command to start a language server |
 
@@ -97,7 +99,7 @@ Any MCP-capable agent (Cursor, Codex, VS Code Copilot, Claude Desktop, ...) can 
 }
 ```
 
-Tools: `coconut_check` (errors and warnings for a file, directory, or snippet), `coconut_compile` (the Python a snippet compiles to), `coconut_docs` (Coconut documentation for any built-in, keyword, or operator), `coconut_hover`, `coconut_definition`, `coconut_references`, and `coconut_symbols`.
+Tools: `coconut_check` (errors and warnings for a file, directory, or snippet, optionally type-checked with mypy), `coconut_compile` (the Python a snippet compiles to), `coconut_docs` (Coconut documentation for any built-in, keyword, or operator), `coconut_hover`, `coconut_definition`, `coconut_references`, and `coconut_symbols`.
 
 ### Command line
 
@@ -105,6 +107,7 @@ The same features are available as one-shot commands, for scripts, CI, and agent
 
 ```bash
 python3 server/coconut_language_server.py check src/              # exit code 1 if there are errors
+python3 server/coconut_language_server.py check src/ --mypy       # also type-check with mypy
 python3 server/coconut_language_server.py compile file.coco --no-line-comments
 python3 server/coconut_language_server.py hover file.coco 12 5
 python3 server/coconut_language_server.py definition file.coco 12 5
@@ -115,7 +118,7 @@ python3 server/coconut_language_server.py docs "|>"
 
 ### Other editors
 
-Any editor with LSP support (Neovim, Helix, Emacs, Zed, ...) can use the language server: run `python3 /path/to/sublime-coconut/server/coconut_language_server.py` (LSP over stdio) for files with the `coconut` language ID. Initialization options (also accepted through `workspace/didChangeConfiguration`): `target`, `strict`, `lint`, `compileTimeout`. The server also answers `coconut/compiled` (`{textDocument: {uri}}` → the compiled Python) and `coconut/info` requests.
+Any editor with LSP support (Neovim, Helix, Emacs, Zed, ...) can use the language server: run `python3 /path/to/sublime-coconut/server/coconut_language_server.py` (LSP over stdio) for files with the `coconut` language ID. Initialization options (also accepted through `workspace/didChangeConfiguration`): `target`, `strict`, `lint`, `mypy`, `compileTimeout`. The server also answers `coconut/compiled` (`{textDocument: {uri}}` → the compiled Python) and `coconut/info` requests.
 
 ## How the language server works
 

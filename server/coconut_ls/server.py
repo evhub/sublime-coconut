@@ -65,6 +65,8 @@ class Document(object):
         self.needs_compile = True
         self.compile_after = 0.0
         self.compiled_event = threading.Event()
+        self.mypy_diagnostics = []
+        self.mypy_source = None  # the text mypy_diagnostics were computed for
 
 
 class CoconutLanguageServer(object):
@@ -85,6 +87,11 @@ class CoconutLanguageServer(object):
         self.reported_fatal = False
         self.compile_thread = threading.Thread(target=self.compile_loop, name="coconut-compile")
         self.compile_thread.daemon = True
+        self.mypy_queue = []
+        self.mypy_cond = threading.Condition()
+        self.mypy_thread = threading.Thread(target=self.mypy_loop, name="coconut-mypy")
+        self.mypy_thread.daemon = True
+        self.reported_no_mypy = False
         self.handlers = {
             "initialize": self.on_initialize,
             "initialized": self.on_initialized,
@@ -120,6 +127,7 @@ class CoconutLanguageServer(object):
 
     def run(self):
         self.compile_thread.start()
+        self.mypy_thread.start()
         while self.exit_code is None:
             try:
                 message = self.conn.read_message()
@@ -207,6 +215,8 @@ class CoconutLanguageServer(object):
         self.shutting_down = True
         with self.cond:
             self.cond.notify_all()
+        with self.mypy_cond:
+            self.mypy_cond.notify_all()
         return None
 
     def on_exit(self, params):
@@ -230,10 +240,15 @@ class CoconutLanguageServer(object):
     def on_did_change_configuration(self, params):
         if self.update_settings(params.get("settings")):
             with self.cond:
-                for doc in self.docs.values():
+                docs = list(self.docs.values())
+                for doc in docs:
                     doc.needs_compile = True
                     doc.compile_after = 0
+                    if not self.settings.get("mypy"):
+                        doc.mypy_diagnostics = []
                 self.cond.notify_all()
+            for doc in docs:
+                self.request_mypy(doc)
 
     def on_did_change_workspace_folders(self, params):
         event = params.get("event") or {}
@@ -264,6 +279,7 @@ class CoconutLanguageServer(object):
             doc = Document(td["uri"], self.doc_path(td["uri"]), td.get("text", ""), td.get("version"))
             self.docs[td["uri"]] = doc
             self.schedule(doc, 0)
+        self.request_mypy(doc)
 
     def on_did_change(self, params):
         td = params["textDocument"]
@@ -284,6 +300,8 @@ class CoconutLanguageServer(object):
             doc = self.docs.get(params["textDocument"]["uri"])
             if doc is not None and doc.compiled_version != doc.version:
                 self.schedule(doc, 0)
+        if doc is not None:
+            self.request_mypy(doc)
 
     def on_did_close(self, params):
         uri = params["textDocument"]["uri"]
@@ -368,10 +386,73 @@ class CoconutLanguageServer(object):
             except Exception:
                 log("failed to prepare imports:", traceback.format_exc())
         if current:
-            self.conn.notify("textDocument/publishDiagnostics", {
-                "uri": doc.uri, "version": version, "diagnostics": doc.diagnostics,
-            })
+            self.publish(doc)
             self.conn.notify("coconut/compiled", {"uri": doc.uri, "version": version, "success": result.get("compiled") is not None})
+
+    def publish(self, doc):
+        """Publish the compiler/lint diagnostics plus any (line-adjusted) mypy diagnostics."""
+        with self.cond:
+            diagnostics = list(doc.diagnostics)
+            version = doc.version
+            if doc.mypy_diagnostics and doc.mypy_source is not None:
+                from .sourcemap import LineDiff
+                diff = LineDiff(doc.mypy_source.splitlines(), doc.text.splitlines())
+                for diag in doc.mypy_diagnostics:
+                    line = diff.old_to_new(diag["range"]["start"]["line"])
+                    if line is None:
+                        continue
+                    moved = dict(diag)
+                    moved["range"] = make_range(line, diag["range"]["start"]["character"], line, diag["range"]["end"]["character"])
+                    diagnostics.append(moved)
+        self.conn.notify("textDocument/publishDiagnostics", {"uri": doc.uri, "version": version, "diagnostics": diagnostics})
+
+    # ------------------------------------------------------------------ mypy
+
+    def request_mypy(self, doc):
+        if not self.settings.get("mypy"):
+            return
+        with self.mypy_cond:
+            if doc.uri not in self.mypy_queue:
+                self.mypy_queue.append(doc.uri)
+            self.mypy_cond.notify_all()
+
+    def mypy_loop(self):
+        from .typecheck import mypy_available, run_mypy
+        while True:
+            with self.mypy_cond:
+                while not self.mypy_queue and not self.shutting_down:
+                    self.mypy_cond.wait(1.0)
+                if self.shutting_down:
+                    return
+                uri = self.mypy_queue.pop(0)
+            doc = self.docs.get(uri)
+            if doc is None or not self.settings.get("mypy"):
+                continue
+            if not mypy_available():
+                if not self.reported_no_mypy:
+                    self.reported_no_mypy = True
+                    self.conn.notify("window/showMessage", {
+                        "type": MESSAGE_WARNING,
+                        "message": "Coconut: type checking is enabled but mypy isn't installed for {exe} (install it with: {exe} -m pip install mypy)".format(exe=sys.executable),
+                    })
+                continue
+            # type-check the version that was just saved/opened, once it has compiled
+            doc.compiled_event.wait(self.compiler.timeout)
+            with self.cond:
+                if doc.good is None or doc.good_version != doc.version:
+                    continue
+                source, compiled = doc.good.source, doc.good.compiled
+            try:
+                diagnostics = run_mypy(doc.path, source, compiled, self.overlay, self.roots)
+            except Exception:
+                log("mypy failed:", traceback.format_exc())
+                continue
+            with self.cond:
+                if self.docs.get(uri) is not doc:
+                    continue
+                doc.mypy_diagnostics = diagnostics
+                doc.mypy_source = source
+            self.publish(doc)
 
     def compile_for_overlay(self, text):
         result = self.compiler.call("compile", {"code": text, "settings": dict(self.settings, lint=False)})

@@ -36,8 +36,11 @@ TOOLS = [
             "imports/variables, ...) with 1-based line/column positions. Pass a file or directory 'path', or "
             "'code'. Use this after editing Coconut files to verify they compile."
         ),
-        "inputSchema": {"type": "object", "properties": dict(SOURCE_PROPS, strict={
-            "type": "boolean", "description": "Enable Coconut's --strict style checks"}), "additionalProperties": False},
+        "inputSchema": {"type": "object", "properties": dict(
+            SOURCE_PROPS,
+            strict={"type": "boolean", "description": "Enable Coconut's --strict style checks"},
+            mypy={"type": "boolean", "description": "Also type-check the compiled code with mypy (must be installed)"},
+        ), "additionalProperties": False},
         "annotations": {"readOnlyHint": True, "openWorldHint": False},
     },
     {
@@ -99,15 +102,17 @@ class McpServer(object):
         self.writer = writer or sys.stdout
         self.engines = {}
 
-    def engine(self, target=None, strict=False):
+    def engine(self, target=None, strict=False, mypy=False):
         from .cli import Engine
-        key = (target or "", bool(strict))
+        key = (target or "", bool(strict), bool(mypy))
         if key not in self.engines:
             settings = {}
             if target:
                 settings["target"] = target
             if strict:
                 settings["strict"] = True
+            if mypy:
+                settings["mypy"] = True
             self.engines[key] = Engine(settings)
         return self.engines[key]
 
@@ -200,7 +205,7 @@ class McpServer(object):
 
     def tool_check(self, args):
         from .cli import collect_files, diag_to_json
-        engine = self.engine(args.get("target"), args.get("strict"))
+        engine = self.engine(args.get("target"), args.get("strict"), args.get("mypy"))
         path, code = self._source(args)
         files = [path] if code is not None else collect_files([path])
         lines = []

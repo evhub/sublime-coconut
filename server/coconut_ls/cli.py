@@ -96,7 +96,15 @@ class Engine(object):
         result, good = self.compile(path, text)
         if result.get("fatal"):
             raise RuntimeError(result["fatal"])
-        return result.get("diagnostics", [])
+        diagnostics = list(result.get("diagnostics", []))
+        if self.settings.get("mypy") and result.get("compiled") is not None:
+            from .typecheck import mypy_available, run_mypy
+            if not mypy_available():
+                raise RuntimeError("mypy isn't installed (run: {exe} -m pip install mypy)".format(exe=sys.executable))
+            if text is None:
+                text = read_file(path)
+            diagnostics += run_mypy(os.path.abspath(path), text, result["compiled"], self.overlay, self.roots)
+        return diagnostics
 
 
 def diag_to_json(path, diag):
@@ -144,6 +152,8 @@ def make_parser():
         p.add_argument("--target", default=None, help="Python version to target (default: sys)")
         p.add_argument("--strict", action="store_true", help="enable Coconut's --strict style checks")
         p.add_argument("--no-lint", action="store_true", help="don't run pyflakes on the compiled code")
+        if json_flag == "check":
+            p.add_argument("--mypy", action="store_true", help="also type-check the compiled code with mypy")
         if json_flag:
             p.add_argument("--json", action="store_true", help="output JSON")
 
@@ -151,7 +161,7 @@ def make_parser():
     p = sub.add_parser("check", help="report compiler errors/warnings and lint results")
     p.add_argument("paths", nargs="+", help="Coconut files or directories")
     p.add_argument("--warnings-as-errors", "-W", action="store_true", help="exit with code 1 on warnings too")
-    common(p)
+    common(p, json_flag="check")
     p = sub.add_parser("compile", help="print the compiled Python for a file")
     p.add_argument("file")
     p.add_argument("--no-line-comments", action="store_true", help="strip the '#N (line in Coconut source)' comments")
@@ -188,6 +198,8 @@ def settings_from(args):
         settings["strict"] = True
     if getattr(args, "no_lint", False):
         settings["lint"] = False
+    if getattr(args, "mypy", False):
+        settings["mypy"] = True
     return settings
 
 
