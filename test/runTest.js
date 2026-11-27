@@ -18,11 +18,14 @@ async function main() {
     fs.mkdirSync(path.join(workspace, ".vscode"));
     fs.writeFileSync(path.join(workspace, ".vscode", "settings.json"), JSON.stringify({
         "coconut.languageServer.pythonPath": process.env.COCONUT_TEST_PYTHON || (process.platform === "win32" ? "python" : "python3"),
+        // COCONUT_TEST_SERVER=coconut tests with Coconut's own 'coconut --lsp' (needs coconut[lsp])
+        "coconut.languageServer.server": process.env.COCONUT_TEST_SERVER || "bundled",
     }));
     try {
         await runTests({
             extensionDevelopmentPath,
             extensionTestsPath,
+            extensionTestsEnv: { COCONUT_TEST_SERVER: process.env.COCONUT_TEST_SERVER || "bundled" },
             launchArgs: [workspace, "--disable-extensions", "--disable-workspace-trust", "--skip-welcome", "--skip-release-notes"],
         });
     } catch (err) {

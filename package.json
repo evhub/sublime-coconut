@@ -119,6 +119,21 @@
                     "default": true,
                     "description": "Whether to start the Coconut language server (errors, linting, hover, completions, go to definition, references, rename, outline)."
                 },
+                "coconut.languageServer.server": {
+                    "type": "string",
+                    "enum": [
+                        "auto",
+                        "coconut",
+                        "bundled"
+                    ],
+                    "enumDescriptions": [
+                        "Coconut's own language server (`coconut --lsp`) when the installed Coconut has one, otherwise the server bundled with this extension.",
+                        "Always Coconut's own language server (`coconut --lsp`; requires `pip install \"coconut[lsp]\"`).",
+                        "Always the server bundled with this extension (adds lint, mypy, rename, Coconut docs on hover, and more)."
+                    ],
+                    "default": "auto",
+                    "markdownDescription": "Which Coconut language server to run."
+                },
                 "coconut.languageServer.pythonPath": {
                     "type": "string",
                     "default": "",

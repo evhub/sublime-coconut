@@ -85,8 +85,18 @@ async function getServerCommand() {
         return command.map((part) => expandVariables(part, activeResource()));
     }
     const python = await getPython(activeResource());
-    return [python, extensionContext.asAbsolutePath(path.join("server", "coconut_language_server.py"))];
+    // the launcher runs Coconut's own server (coconut --lsp) when the installed Coconut has one,
+    // and otherwise the language server bundled with this extension
+    return [python, bundledEntryPoint(), "--server", config().get("languageServer.server", "auto")];
 }
+
+function bundledEntryPoint() {
+    return extensionContext.asAbsolutePath(path.join("server", "coconut_language_server.py"));
+}
+
+// "bundled" when this extension's own server is running (which supports the coconut/* extras),
+// "coconut" for Coconut's built-in 'coconut --lsp', null if unknown
+let serverKind = null;
 
 function serverSettings() {
     const cfg = config();
@@ -135,6 +145,18 @@ async function startClient() {
     client = newClient;
     try {
         await newClient.start();
+        const info = (newClient.initializeResult && newClient.initializeResult.serverInfo) || {};
+        serverKind = info.name === "coconut-language-server" ? "bundled" : (info.name === "coconut-lsp" ? "coconut" : null);
+        log("Connected to " + (info.name || "a language server") + (info.version ? " " + info.version : ""));
+        if (serverKind !== "bundled") {
+            // other servers don't send coconut/status; describe what's running from serverInfo instead
+            lastStatus = lastStatus || {
+                coconut_version: info.name === "coconut-lsp" ? info.version : null,
+                server_name: info.name === "coconut-lsp" ? "coconut --lsp" : (info.name || "custom server"),
+                python_executable: command,
+            };
+            updateStatusItem();
+        }
     } catch (err) {
         client = null;
         log("Failed to start the language server: " + err);
@@ -220,6 +242,10 @@ function updateStatusItem(extra) {
         statusItem.text = "$(warning) Coconut not installed";
         statusItem.tooltip = "Coconut isn't installed for " + lastStatus.python_executable + ". Click to install it.";
         statusItem.command = "coconut.installCoconut";
+    } else if (lastStatus && lastStatus.server_name) {
+        statusItem.text = "$(check) Coconut" + (lastStatus.coconut_version ? " " + lastStatus.coconut_version : "");
+        statusItem.tooltip = "Language server: " + lastStatus.server_name + " (" + lastStatus.python_executable + ")\n\nClick to show the compiled Python";
+        statusItem.command = "coconut.showCompiledPython";
     } else if (lastStatus) {
         statusItem.text = "$(check) Coconut " + lastStatus.coconut_version;
         const tooltip = new vscode.MarkdownString();
@@ -278,11 +304,14 @@ class CompiledContentProvider {
             return "# The Coconut language server isn't running.\n";
         }
         const sourceUri = uri.query;
+        if (serverKind !== "bundled") {
+            return compileWithCli(uri, sourceUri);
+        }
         let result;
         try {
             result = await client.sendRequest("coconut/compiled", { textDocument: { uri: sourceUri } });
         } catch (err) {
-            return "# Couldn't get the compiled code: " + err + "\n";
+            return compileWithCli(uri, sourceUri);
         }
         if (!result || result.compiled === null || result.compiled === undefined) {
             const errors = (result && result.errors || []).map((e) => "#   line " + (e.range.start.line + 1) + ": " + e.message);
@@ -292,6 +321,38 @@ class CompiledContentProvider {
         return stripLineComments(uri, prefix, result.compiled);
     }
 }
+
+// compile the current text with the bundled CLI (for servers without the coconut/compiled request)
+async function compileWithCli(uri, sourceUri) {
+    const doc = vscode.workspace.textDocuments.find((d) => d.uri.toString() === sourceUri);
+    if (!doc) {
+        return "# The Coconut file isn't open.\n";
+    }
+    const os = require("os");
+    const fs = require("fs");
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "coconut-compiled-"));
+    const file = path.join(dir, "source.coco");
+    fs.writeFileSync(file, doc.getText());
+    const python = await getPython(doc.uri);
+    const args = [bundledEntryPoint(), "compile", file];
+    const target = config().get("target");
+    if (target) {
+        args.push("--target", target);
+    }
+    return new Promise((resolve) => {
+        cp.execFile(python, args, { maxBuffer: 64 * 1024 * 1024 }, (err, stdout, stderr) => {
+            fs.rmSync(dir, { recursive: true, force: true });
+            if (err && !stdout) {
+                const lines = String(stderr || err).replace(/^.*source\.coco:/gm, "line ").split("\n");
+                resolve("# This file doesn't compile yet:\n" + lines.map((l) => "#   " + l).join("\n") + "\n");
+            } else {
+                resolve(stripLineComments(uri, [], stdout));
+            }
+        });
+    });
+}
+
+let compiledRefreshTimer = null;
 
 async function showCompiledPython() {
     const editor = vscode.window.activeTextEditor;
@@ -462,12 +523,20 @@ async function activate(context) {
         vscode.window.onDidChangeActiveTextEditor(() => updateStatusItem()),
         vscode.window.onDidChangeTextEditorSelection((event) => syncCompiledViews(event.textEditor)),
         vscode.workspace.onDidChangeTextDocument((event) => {
+            if (serverKind !== "bundled" && event.document.languageId === "coconut") {
+                const target = compiledUriFor(event.document.uri);
+                if (vscode.workspace.textDocuments.some((d) => d.uri.toString() === target.toString())) {
+                    clearTimeout(compiledRefreshTimer);
+                    compiledRefreshTimer = setTimeout(() => compiledViews.fire(target), 600);
+                }
+            }
             if (event.document.uri.scheme === COMPILED_SCHEME) {
                 setTimeout(() => syncCompiledViews(vscode.window.activeTextEditor), 50);
             }
         }),
         vscode.workspace.onDidChangeConfiguration((event) => {
             if (event.affectsConfiguration("coconut.languageServer.enabled")
+                || event.affectsConfiguration("coconut.languageServer.server")
                 || event.affectsConfiguration("coconut.languageServer.pythonPath")
                 || event.affectsConfiguration("coconut.languageServer.command")) {
                 restartClient();

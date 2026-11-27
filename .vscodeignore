@@ -18,9 +18,6 @@ build.py
 Makefile
 node_modules/@vscode/test-electron/**
 **/.pytest_cache/**
-.claude-plugin/**
-.lsp.json
-skills/**
 coconut_lsp.py
 LSP-coconut.sublime-settings
 Main.sublime-menu
